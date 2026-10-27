@@ -26,6 +26,20 @@
     padding: 4px 10px;
   }
 
+  /* Hero Flank Grid on Mobile/Tablet */
+  .hero-body-flank-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .hero-left-column, .hero-right-column {
+    max-width: 100%;
+  }
+
+  .hero-center-column {
+    min-height: 380px;
+  }
+
   /* Single Column Stack on Mobile */
   #stage-hero {
     grid-template-columns: 1fr;

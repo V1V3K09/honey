@@ -1,7 +1,7 @@
-# DESIGN.md — BIRTHDAY.EXE Design System & Art Direction
+# DESIGN.md — BIRTHDAY.EXE Design System & Image Choreography
 
-## 1. Aesthetic Identity: "Raw Paper-Cut Collage Meets High-Energy 3D"
-BIRTHDAY.EXE rejects template-like SaaS conventions (cream gradient cards, rounded pills, timid pastel buttons) in favor of a punchy, tactile, handmade editorial aesthetic. It combines physical paper-cut textures, bold ransom-note typography, washi-tape stickers, hard ink shadows, and a seamless 3D spatial camera ride.
+## 1. Aesthetic Identity: "Raw Paper-Cut Collage with Full-Body Character Integration"
+BIRTHDAY.EXE uses the real full-body photograph of Aki (`public/images/friend-fullbody.png`) seamlessly integrated into a paper-cut editorial universe. By removing rectangular borders and using transparent PNG compositing, the character feels alive inside the layout—accompanied by torn-paper badges, washi-tape stickers, hard ink drop shadows, and authentic newsprint textures.
 
 ## 2. Color Palette & Token Architecture
 
@@ -23,7 +23,7 @@ BIRTHDAY.EXE rejects template-like SaaS conventions (cream gradient cards, round
   --accent-mint: #00E599;
   --accent-violet: #7038FF;
 
-  /* Elevation & Border Craft */
+  /* Elevation & Border Craft (Better-UI Standards) */
   --border-ink: 2.5px solid var(--ink-primary);
   --border-ink-thin: 1.5px solid var(--ink-primary);
   --shadow-hard-sm: 2px 2px 0px var(--ink-primary);
@@ -44,42 +44,29 @@ BIRTHDAY.EXE rejects template-like SaaS conventions (cream gradient cards, round
 }
 ```
 
-## 3. Typographic Hierarchy & Ransom-Note Rules
-- **Headline Display (Paper-Cut Treatment):**
-  - Uppercase, high-weight (`font-weight: 800`).
-  - Rendered inside colored "cutout chunks" (alternating yellow, pink, white, mint backgrounds).
-  - Subtle varied rotation per word or letter segment (`transform: rotate(-2.5deg)`, `rotate(3deg)`).
-  - Hard ink drop-shadow (`box-shadow: 4px 4px 0 #121316`).
-  - Irregular borders simulating scissor cuts.
-- **Subheads & Badges:**
-  - Monospace or bold sans badges styled like labeled masking tape (`background: var(--tape-color)` with serrated edges or jagged ends).
-- **Body & Long Messages:**
-  - High-legibility `Space Grotesk` (`16px-18px`, `line-height: 1.6`) on high-contrast paper background (contrast ratio > 11:1).
+## 3. Persistent 2D Character Transformation Matrix
+The transparent character image has an aspect ratio of $764 \times 1024$ ($0.746$). Its normalized anatomical landmarks are:
+- **Head & Radhe Radhe Headwrap:** $X = 50.4\%$, $Y = 14.2\%$
+- **Torso & Scarf:** $X = 50.4\%$, $Y = 38.2\%$
+- **Knees & Trousers:** $X = 50.4\%$, $Y = 71.2\%$
+- **Bare Feet:** $X = 50.4\%$, $Y = 93.7\%$
+
+### Milestone Transformation Map (GSAP ScrollTrigger Timeline)
+
+| Milestone | Normalized Scroll | Target Focus | Scale | Desktop Offset ($X, Y$) | Mobile Offset ($X, Y$) | Visual Purpose |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **0: Full-Body** | `0.00 - 0.12` | Full Person | `1.0` | `0vw, 0vh` | `0vw, 0vh` | Heroic full-body view; head to bare feet fully visible. |
+| **1: Face Zoom** | `0.18 - 0.32` | Head & Eyes | `2.2` | `12vw, 3vh` | `0vw, 2vh` | Smooth zoom towards the Radhe Radhe headwrap. |
+| **2: Face & Card** | `0.35 - 0.48` | Face Close-up | `3.2` | `26vw, 6vh` | `0vw, -4vh` | Face framed on right; interactive birthday card on left. |
+| **3: Torso Descent** | `0.52 - 0.62` | Chest & Scarf | `2.6` | `-6vw, -36vh` | `0vw, -28vh` | Camera travels down chest; scarf in focus. |
+| **4: Knees & Cake** | `0.68 - 0.80` | Knee Region | `2.4` | `-25vw, -76vh` | `0vw, -62vh` | Knees on left; 3D Birthday Cake Boss Fight on right. |
+| **5: Foot Approach** | `0.85 - 0.92` | Lower Legs | `2.6` | `-6vw, -106vh` | `0vw, -92vh` | Gliding towards ankles and feet. |
+| **6: Feet & Footer** | `0.95 - 1.00` | Bare Feet | `2.9` | `0vw, -136vh` | `0vw, -122vh` | Bare feet centered in viewport; footer punchline surrounds them. |
 
 ## 4. UI Craft & Micro-Interactions (Better-UI Standards)
-- **Concentric Radii:** Outer container radius = inner container radius + padding.
-- **Button Physics (Press Scale):**
-  - Normal: `transform: translate(0, 0)`, `box-shadow: 4px 4px 0 var(--ink-primary)`.
-  - Hover: `transform: translate(-1px, -1px)`, `box-shadow: 5px 5px 0 var(--ink-primary)`.
-  - Active/Press: `transform: scale(0.96) translate(3px, 3px)`, `box-shadow: 1px 1px 0 var(--ink-primary)`, transition `120ms cubic-bezier(0.2, 0, 0, 1)`.
-- **Optical Alignment:**
-  - Glyphs, stickers, and icon buttons feature visual center-mass compensation (e.g. play triangles offset +2px towards point).
-- **No Floating Gradients:**
-  - Depth is communicated through physical paper layering, hard shadows, offset paper borders, and 3D spatial lighting.
-
-## 5. 3D & Spatial Choreography Rules
-- **Normalized Scroll Timeline:** 
-  - Single GSAP ScrollTrigger timeline tracking normalized scroll progress `0.0 -> 1.0`.
-  - Camera transitions between defined 3D anchor targets (`fullBody`, `faceApproach`, `faceSplit`, `torsoDescend`, `kneeSplit`, `feetCloseUp`, `footerOverview`).
-  - Independent vector spherical/linear interpolation (`camera.position.lerp(targetPos, alpha)` and `lookAtVector.lerp(targetLookAt, alpha)`).
-- **Scene Continuity:**
-  - Zero camera teleportation or sudden jumps.
-  - Bounding box auto-calculation ensures dynamic camera distance fits any aspect ratio or custom model scale.
-- **Mini-Game Containment:**
-  - Mini-game runs in an isolated WebGL sub-canvas / overlay layer with its own interaction loop.
-  - Keyboard events (`Space`) and clicks are captured inside the game element without propagating to document scroll.
-
-## 6. Accessibility & Resilience
-- Semantic HTML markup alongside 3D canvas (all headings, birthday messages, and footer text exist in accessible DOM).
-- `prefers-reduced-motion`: When active, scroll scrubbing snaps smoothly without dizzying rotations, and screen shake in the mini-game is disabled.
-- WebGL feature detection with immediate fallback banner and interactive cards still fully operable.
+- **Concentric Radii:** $R_{outer} = R_{inner} + \text{padding}$.
+- **Tactile Button Physics:**
+  - Normal: `transform: translate(0, 0)`, `box-shadow: 4px 4px 0 #121316`.
+  - Active/Press: `transform: scale(0.96) translate(3px, 3px)`, `box-shadow: 1px 1px 0 #121316`, transition $120\text{ms}$ `cubic-bezier(0.2, 0, 0, 1)`.
+- **Optical Centering:** Visual mass of stickers and annotations nudged by eye.
+- **Selective 3D:** The Birthday Cake Boss Fight uses a lightweight, isolated Three.js canvas that stops its render loop when scrolled offscreen.

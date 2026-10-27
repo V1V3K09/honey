@@ -1,9 +1,9 @@
 ---
-// index.astro — BIRTHDAY.EXE: The Unhinged 3D Birthday Experience for Aki
+// index.astro — BIRTHDAY.EXE: Scroll-Driven Birthday Website Using Full-Body Character Image
 import BaseLayout from '../layouts/BaseLayout.astro';
 import LoadingScreen from '../components/LoadingScreen.astro';
-import AkiIntroLanding from '../components/AkiIntroLanding.astro';
-import BirthdayScene from '../components/BirthdayScene.astro';
+import CharacterStage from '../components/CharacterStage.astro';
+import NewspaperCard from '../components/NewspaperCard.astro';
 import BirthdayCard from '../components/BirthdayCard.astro';
 import BirthdayGame from '../components/BirthdayGame.astro';
 import FooterExperience from '../components/FooterExperience.astro';
@@ -13,89 +13,109 @@ import FooterExperience from '../components/FooterExperience.astro';
   <!-- Designed Loading Screen -->
   <LoadingScreen />
 
-  <!-- Fixed 3D Canvas Viewport (Continuous 3D protagonist) -->
-  <BirthdayScene />
+  <!-- Persistent 2D Transparent Character Stage -->
+  <CharacterStage />
 
   <!-- Scroll-Driven Choreography Track -->
   <main id="experience-wrapper">
     <div id="scroll-container">
       
-      <!-- STAGE 0: Dedicated Landing Page with Sliding Cutout & Newspaper Clipping -->
-      <AkiIntroLanding />
-
-      <!-- STAGE A: Full-Body 3D Hero (Text around body on LEFT, Model on RIGHT) -->
+      <!-- SECTION A: Full-Body Landing Screen -->
       <section id="stage-hero" class="experience-stage">
-        <!-- LEFT COLUMN: Improved Anatomical Text Dossier around the character's body -->
-        <div class="hero-left-dossier interactive-content">
-          <div class="paper-card hero-dossier-card">
-            <div class="tape-strip tape-yellow" style="margin-bottom: 8px;">
-              ANATOMICAL DOSSIER #028
-            </div>
-
-            <h2 class="paper-headline" style="font-size: clamp(1.6rem, 3vw, 2.4rem); justify-content: flex-start; margin-bottom: 6px;">
-              <span class="cut-chunk cut-yellow">SPECIMEN:</span>
-              <span class="cut-chunk cut-pink">SAINT AKI</span>
-            </h2>
-
-            <p style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; color: var(--ink-muted); margin-bottom: 12px;">
-              "AN UNRIVALED BLEND OF INNER PEACE, SOLID LOYALTY & ZERO COMMON SENSE"
-            </p>
-
-            <!-- Anatomical Callouts around Aki's Body -->
-            <div class="anatomical-pointers-list">
-              <div class="anatomical-pointer-item">
-                <span class="pointer-badge">🧠 CRANIAL SECTOR • BANDANA</span>
-                <p class="pointer-desc">
-                  Locked at 100% <em>"राधे राधे"</em> frequency. Automatically dissipates tension, radiates positive vibrations, and repels bad vibes.
-                </p>
-              </div>
-
-              <div class="anatomical-pointer-item">
-                <span class="pointer-badge">🫀 THORACIC CORE • THE HEART</span>
-                <p class="pointer-desc">
-                  Solid 24-karat gold heart. Empathy and friendship telemetry exceed municipal safety guidelines.
-                </p>
-              </div>
-
-              <div class="anatomical-pointer-item">
-                <span class="pointer-badge">⚡ ARTICULATED KNEE JOINTS</span>
-                <p class="pointer-desc">
-                  Reinforced knee patches, primed for high-stakes combat against caloric threats in Stage E.
-                </p>
-              </div>
-
-              <div class="anatomical-pointer-item">
-                <span class="pointer-badge">👟 HIGH-TOP SNEAKERS</span>
-                <p class="pointer-desc">
-                  Ground contact thrusters. Crucial foundation for the literal foot punchline at the journey's end.
-                </p>
-              </div>
-            </div>
-
-            <!-- Specimen Vibe Stats -->
-            <div class="hero-stats-row">
-              <span class="stat-pill" style="background-color: var(--accent-yellow);">AURA: TRANSCENDENT</span>
-              <span class="stat-pill" style="background-color: var(--accent-mint);">LOYALTY: 100%</span>
-              <span class="stat-pill" style="background-color: var(--accent-pink); color: #FFF;">AGE: +1</span>
-              <span class="stat-pill">COMMON SENSE: 0%</span>
-            </div>
-
-            <div class="scroll-prompt-hero">
-              <span class="tape-strip tape-pink">PROCEED</span>
-              <p style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700;">
-                SCROLL DOWN TO DIVE INTO AKI'S FACE ↓
-              </p>
-            </div>
-          </div>
+        <!-- Top Full-Width Headline -->
+        <div class="hero-top-banner interactive-content">
+          <div class="tape-strip tape-yellow" style="margin-bottom: 8px;">TOP SECRET DISPATCH #028</div>
+          <h1 class="paper-headline" style="font-size: clamp(2rem, 4.5vw, 4rem);">
+            <span class="cut-chunk cut-yellow">THE SPECIMEN</span>
+            <span class="cut-chunk cut-pink">HAS ARRIVED</span>
+          </h1>
+          <p class="hero-subheading">
+            100% ORGANIC • 0% COMMON SENSE • HAPPY BIRTHDAY, YOU ABSOLUTE MENACE.
+          </p>
         </div>
 
-        <!-- RIGHT COLUMN: 3D Model Stands in this Spatial Coordinate -->
-        <div class="hero-right-space" aria-hidden="true">
-          <!-- The continuous Three.js PerspectiveCamera frames the 3D model here -->
+        <!-- 3-Column Flank Grid: Left Notes | Center Aki Character | Right Newspaper -->
+        <div class="hero-body-flank-grid">
+          
+          <!-- LEFT COLUMN: Anatomical Notes Placed Around Aki's Body -->
+          <div class="hero-left-column interactive-content">
+            <div class="paper-card hero-dossier-card">
+              <div class="tape-strip tape-pink" style="margin-bottom: 8px;">
+                ANATOMICAL NOTES
+              </div>
+
+              <h2 class="paper-headline" style="font-size: 1.4rem; justify-content: flex-start; margin-bottom: 6px;">
+                <span class="cut-chunk cut-yellow">SPECIMEN:</span>
+                <span class="cut-chunk cut-mint">SAINT AKI</span>
+              </h2>
+
+              <p style="font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; color: var(--ink-muted); margin-bottom: 10px;">
+                "UNSHAKEABLE INNER PEACE & UNPRECEDENTED CHARISMA"
+              </p>
+
+              <!-- Anatomical Pointers wrapping around the character -->
+              <div class="anatomical-pointers-list">
+                <div class="anatomical-pointer-item">
+                  <span class="pointer-badge">🧠 CRANIAL SECTOR • "राधे राधे"</span>
+                  <p class="pointer-desc">
+                    Signature headwrap locked at 100% devotional frequency. Dissipates bad vibes instantly.
+                  </p>
+                </div>
+
+                <div class="anatomical-pointer-item">
+                  <span class="pointer-badge">🫀 THORACIC CORE • SCARF & CHEST</span>
+                  <p class="pointer-desc">
+                    Pure 24-karat gold heart. Empathy telemetry exceeds municipal safety guidelines.
+                  </p>
+                </div>
+
+                <div class="anatomical-pointer-item">
+                  <span class="pointer-badge">⚡ KNEE JOINTS • TROUSERS</span>
+                  <p class="pointer-desc">
+                    Fully articulated for cake combat in Section D. Zero knee creaks detected.
+                  </p>
+                </div>
+
+                <div class="anatomical-pointer-item">
+                  <span class="pointer-badge">🦶 BARE FEET • GROUND ZERO</span>
+                  <p class="pointer-desc">
+                    100% shoe-free contact with the cosmos. The ultimate punchline awaiting at the footer.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Vibe Stats -->
+              <div class="hero-stats-row">
+                <span class="stat-pill" style="background-color: var(--accent-yellow);">AURA: MAX</span>
+                <span class="stat-pill" style="background-color: var(--accent-mint);">LOYALTY: 100%</span>
+                <span class="stat-pill" style="background-color: var(--accent-pink); color: #FFF;">AGE: +1</span>
+                <span class="stat-pill">COMMON SENSE: 0%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CENTER COLUMN: Visual Space for Centered Full-Body Character -->
+          <div class="hero-center-column" aria-hidden="true">
+            <!-- The persistent transparent character image stands here -->
+          </div>
+
+          <!-- RIGHT COLUMN: Newspaper Cutout & Dynamic Birthday Date Banner -->
+          <div class="hero-right-column">
+            <NewspaperCard />
+          </div>
+
+        </div>
+
+        <!-- Subtle Scroll Indicator -->
+        <div class="scroll-prompt-landing interactive-content">
+          <span class="tape-strip tape-pink">DIRECTIVE</span>
+          <p style="font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700;">
+            SCROLL TO INVESTIGATE THE SPECIMEN'S ANATOMY ↓
+          </p>
         </div>
       </section>
 
-      <!-- STAGE B: Face Approach Spacer & Interlude -->
+      <!-- SECTION B: Face Approach Spacer -->
       <section id="stage-approach" class="experience-stage">
         <div class="approach-card paper-card interactive-content">
           <div class="tape-strip tape-pink" style="margin-bottom: 8px;">OPTICAL ZOOM IN PROGRESS</div>
@@ -104,63 +124,33 @@ import FooterExperience from '../components/FooterExperience.astro';
             <span class="cut-chunk cut-vermilion">RECONNAISSANCE</span>
           </h2>
           <p style="font-size: 0.95rem; line-height: 1.6; color: var(--ink-muted);">
-            Locking camera coordinates onto the primary facial sector. 
+            Locking camera coordinates onto the headwrap and facial features. 
             Prepare for an unprecedented close encounter with genuine birthday charisma.
           </p>
         </div>
       </section>
 
-      <!-- STAGE C: Face Composition & Interactive Birthday Card (Split Screen) -->
+      <!-- SECTION C: Face Composition & Interactive Birthday Card (Split Screen) -->
       <section id="stage-card" class="experience-stage">
         <div class="card-column-left">
           <BirthdayCard />
         </div>
         <div class="card-column-right" aria-hidden="true">
-          <!-- 3D Model Face occupies this spatial coordinate -->
+          <!-- Aki's Face frames on the right side here -->
         </div>
       </section>
 
-      <!-- STAGE D: Torso Journey Spacer -->
-      <section id="stage-torso" class="experience-stage">
-        <div class="torso-card paper-card interactive-content">
-          <div class="tape-strip tape-yellow" style="margin-bottom: 8px;">CHEST & CORE TELEMETRY</div>
-          <h2 class="paper-headline" style="font-size: 1.6rem; justify-content: flex-start; margin-bottom: 12px;">
-            <span class="cut-chunk cut-pink">THORACIC</span>
-            <span class="cut-chunk cut-mint">ANALYSIS</span>
-          </h2>
-          <p style="font-size: 0.95rem; line-height: 1.6; color: var(--ink-muted);">
-            Camera passing down through the ribcage. Heart capacity: 1000% pure gold. 
-            Descending towards the lower extremities for high-stakes combat.
-          </p>
-        </div>
-      </section>
-
-      <!-- STAGE E: Knees & Cake Boss Fight (Split Screen) -->
+      <!-- SECTION D: Torso & Knees with 3D Cake Boss Fight (Split Screen) -->
       <section id="stage-game" class="experience-stage">
         <div class="game-column-left" aria-hidden="true">
-          <!-- 3D Model Knees occupy this spatial coordinate -->
+          <!-- Aki's Knees frame on the left side here -->
         </div>
         <div class="game-column-right">
           <BirthdayGame />
         </div>
       </section>
 
-      <!-- STAGE F: Feet Approach Spacer -->
-      <section id="stage-feet-approach" class="experience-stage">
-        <div class="paper-card interactive-content" style="max-width: 480px;">
-          <div class="tape-strip tape-pink" style="margin-bottom: 8px;">TERMINAL VELOCITY</div>
-          <h2 class="paper-headline" style="font-size: 1.6rem; margin-bottom: 12px;">
-            <span class="cut-chunk cut-yellow">APPROACHING</span>
-            <span class="cut-chunk cut-vermilion">GROUND LEVEL</span>
-          </h2>
-          <p style="font-size: 0.95rem; line-height: 1.6; color: var(--ink-muted);">
-            Camera descending toward the ultimate biological foundation. 
-            Brace yourself for the conclusion of this journey.
-          </p>
-        </div>
-      </section>
-
-      <!-- STAGE G: The Footer Punchline (Centered around Feet) -->
+      <!-- SECTION E: Feet & The Literal Footer -->
       <section id="stage-footer" class="experience-stage">
         <FooterExperience />
       </section>

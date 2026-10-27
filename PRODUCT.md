@@ -1,40 +1,39 @@
 # PRODUCT.md — BIRTHDAY.EXE
 
 ## 1. Vision & Concept
-**BIRTHDAY.EXE** is an unhinged, bespoke 3D interactive birthday experience built as a playful digital tribute for a close friend. Instead of another cookie-cutter SaaS-style landing page or static greeting card, it immerses the visitor into a continuous scroll journey where a full-body 3D model of the birthday friend serves as the protagonist. As the visitor scrolls, a single camera travels cinematographically through the model's anatomy—from head to toe—unlocking interactive paper-cut vignettes, personal greetings, and a playable 3D boss fight.
+**BIRTHDAY.EXE** is an unhinged, bespoke scroll-driven birthday experience built as a playful digital tribute for **Aki**. The central visual element is a full-body photograph of Aki (`public/images/friend-fullbody.png`) with transparent background, showing him wearing his iconic light grey-white headwrap with Hindi text reading *"राधे राधे"*, matching scarf, black T-shirt, dark trousers, and bare feet. 
+
+As the visitor scrolls, a single coordinated GSAP ScrollTrigger timeline transforms the transparent character image relative to a stable scene viewport—smoothly zooming into his face, descending through his torso and knees, and concluding with a close-up on his bare feet in the footer punchline.
 
 ## 2. Audience & Tonal Identity
-- **Recipient:** The Birthday Friend ("The Specimen" / `[FRIEND_NAME]`).
-- **Tone:** Unserious editorial humor, absurd internet culture, handmade paper-cut collage aesthetic, cinematic 3D choreography, and genuine personal celebration.
+- **Recipient:** Aki ("Saint Aki", "The Specimen").
+- **Birthday:** October 28th (with dynamic daily countdown / post-birthday tribute banner).
+- **Tone:** Unserious editorial humor, absurd internet culture, handmade paper-cut collage aesthetic, cinematic 2D image choreography, and genuine personal celebration.
 - **Experience Mode (Impeccable):** `Experience` + `Persuade` — high-fidelity craft, distinct visual perspective, zero generic templates, satisfying tactile feedback.
 
 ## 3. Experience Architecture & Journey
-The experience runs on a single, continuous Three.js scene synchronized with a deterministic, normalized GSAP ScrollTrigger timeline:
 
-1. **Stage A — Full-Body Landing:**
-   - Full 3D model in heroic view with gentle breathing/sway idle motion.
-   - Surrounded by scattered paper-cut display typography, sticker badges ("100% ORGANIC", "AGE +1"), and a tactile scroll indicator.
-2. **Stage B — Descent to the Face:**
-   - Smooth, scrubbed camera journey interpolating towards the model's head/face anchor point.
-   - No clipping, no scale hacks; genuine 3D spatial camera tracking with eased vectors.
-3. **Stage C — Face Composition & Interactive Birthday Card:**
-   - Split layout: 3D face anchored on the right, interactive paper-cut birthday envelope on the left.
-   - Click/tap/keyboard to unfold envelope, revealing personalized letter, photo frame placeholder, and custom birthday greetings.
-4. **Stage D — Descent to Torso & Knees:**
-   - Continuous camera trajectory panning down past the torso to the knees.
-   - Seamless transition reframing model to the left side while clearing the right viewport.
-5. **Stage E — Mini-Game: "BOSS FIGHT: THE BIRTHDAY CAKE":**
-   - Playable 3D combat module mounted on the right.
-   - Features an animated 3D birthday cake boss with dynamic candle flame, health bar (100 HP), floating damage text ("+42 EXP", "CRITICAL BASH!"), squash & stretch hit reactions, randomized witty taunts, victory confetti celebration, and an unlocked secret birthday perk.
-   - Isolated pointer and keyboard controls that prevent unintentional document scrolling.
-6. **Stage F — Journey to the Feet:**
-   - Camera tracks smoothly downwards from knees to shoes/feet with close framing.
-7. **Stage G — The Foot-Centered Footer:**
-   - The literal punchline: "YES, THIS IS THE FOOTER. NO MORE CONTENT. JUST FEET."
-   - Functional controls: "Teleport to Top", audio toggle (optional sound effects), credits, and customizable birthday signature.
+1. **Section A — Full-Body Landing:**
+   - The entire transparent character image (`friend-fullbody.png`) is displayed centered and large enough to dominate the viewport without clipping (head, torso, legs, and bare feet completely visible).
+   - Surrounded by paper-cut typography ("THE SPECIMEN HAS ARRIVED", "100% ORGANIC. 0% COMMON SENSE.", "HAPPY BIRTHDAY, YOU ABSOLUTE MENACE.", "SCROLL TO INVESTIGATE.").
+   - Includes authentic newspaper cutout article ("THE AKI CHRONICLE"), dynamic birthday calendar banner, and subtle scroll indicators.
+2. **Section B — Scroll-Driven Face Zoom:**
+   - Gradual zoom toward Aki's face ($Y \approx 14\%$ of image height) using smooth GSAP transforms (`scale`, `x`, `y`, with transform origin pegged to the face).
+   - Reversible, deterministic, and glitch-free under rapid scrolling.
+3. **Section C — Face Composition & Interactive Birthday Card:**
+   - Desktop: Aki's face on the right; interactive paper envelope on the left.
+   - Clicking/tapping the envelope unseals it into an unfolding letter modal with personal birthday greetings, photo frame, and celebratory confetti.
+   - Fully keyboard accessible (`Enter`, `Space`, `Esc`) without interfering with document scroll.
+4. **Section D — Torso & Knee Composition with 3D Cake Boss Fight:**
+   - Image translates upward and scales so the torso and knee region become the focal point on the left.
+   - Right side features an interactive 3D mini-game: "BOSS FIGHT: THE BIRTHDAY CAKE" (Three.js cake with health bar, click/spacebar attacks, hit squash & stretch, funny taunts, confetti victory).
+5. **Section E — Feet & The Literal Footer:**
+   - Image translates upward to center Aki's bare feet in the viewport.
+   - Surrounding punchline text: "YES, THIS IS THE FOOTER. NO MORE CONTENT. JUST FEET."
+   - Includes functional "Teleport to Top" control and confetti blaster.
 
 ## 4. Technical Guardrails & Constraints
-- **Static-first:** Astro + TypeScript + Vite + Three.js + GSAP ScrollTrigger + CSS.
-- **Single Source of Truth:** A unified render loop and coordinate system across the entire page.
-- **Asset Fallback:** Supports a drop-in GLB model at `public/models/friend-model.glb`; provides a stylized, fully rigged procedural 3D mannequin placeholder with customizable anchor points if no file is present.
-- **Accessibility & Resilience:** Respects `prefers-reduced-motion`, includes keyboard controls for all interactives, semantic HTML layer alongside WebGL canvas, and full responsive design for desktop & mobile.
+- **Static-First & Lightweight:** Astro + TypeScript + GSAP ScrollTrigger + CSS + HTML.
+- **2D Image Compositing:** Transparent PNG (`public/images/friend-fullbody.png`) preserves Aki's real photograph, proportions, and clothing without 3D model generation or distortion.
+- **Selective 3D:** Three.js is used strictly for the 3D Birthday Cake Mini-Game in Section D, keeping the main page ultra-fast and lightweight.
+- **Accessibility:** Keyboard navigable, ARIA labels, `prefers-reduced-motion` fallbacks, responsive desktop and mobile viewports.

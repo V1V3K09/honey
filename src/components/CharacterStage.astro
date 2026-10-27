@@ -1,0 +1,69 @@
+---
+// CharacterStage.astro — Persistent 2D Transparent Character Stage
+---
+
+<div id="character-stage-viewport" class="character-viewport" aria-hidden="true">
+  <div id="character-frame" class="character-frame">
+    <img 
+      id="character-img"
+      src="/images/friend-fullbody.png" 
+      alt="Aki - Full Body Character" 
+      class="character-img"
+      loading="eager"
+    />
+  </div>
+</div>
+
+<style>
+  .character-viewport {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 5;
+    pointer-events: none;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .character-frame {
+    position: relative;
+    height: 82vh;
+    max-height: 740px;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform-origin: 50% 14%;
+    will-change: transform;
+    filter: drop-shadow(0 14px 28px rgba(18, 19, 22, 0.22));
+  }
+
+  .character-img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    user-select: none;
+  }
+
+  @media (max-width: 768px) {
+    .character-frame {
+      height: 70vh;
+      max-height: 560px;
+    }
+  }
+</style>
+
+<script>
+  import { initCharacterScroll } from '../scripts/character-controller';
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCharacterScroll);
+  } else {
+    initCharacterScroll();
+  }
+</script>

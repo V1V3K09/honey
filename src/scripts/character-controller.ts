@@ -1,0 +1,113 @@
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { sfx } from './audio-fx';
+
+gsap.registerPlugin(ScrollTrigger);
+
+export function initCharacterScroll() {
+  const frame = document.getElementById('character-frame');
+  const scrollContainer = document.getElementById('scroll-container');
+  if (!frame || !scrollContainer) return;
+
+  const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let isMobile = window.innerWidth < 768;
+
+  // Milestone Transformation Definitions (anchored around face: transform-origin: 50% 14%)
+  const getMilestones = () => {
+    isMobile = window.innerWidth < 768;
+    return [
+      // 0. Full-body landing: entire body visible from head to bare feet
+      { scale: 1.0, x: '0vw', y: '0vh' },
+      // 1. Approach face: zooming towards headwrap
+      { scale: 2.0, x: isMobile ? '0vw' : '10vw', y: '3vh' },
+      // 2. Face & Birthday Card: face framed on right (desktop) or centered above (mobile)
+      { scale: 3.2, x: isMobile ? '0vw' : '26vw', y: isMobile ? '-4vh' : '6vh' },
+      // 3. Torso descent: camera travels down past chest and scarf
+      { scale: 2.5, x: isMobile ? '0vw' : '-6vw', y: isMobile ? '-28vh' : '-36vh' },
+      // 4. Knees & Cake Boss Fight: knees framed on left (desktop)
+      { scale: 2.3, x: isMobile ? '0vw' : '-24vw', y: isMobile ? '-58vh' : '-72vh' },
+      // 5. Approach feet: moving downwards towards lower legs and ankles
+      { scale: 2.5, x: isMobile ? '0vw' : '-6vw', y: isMobile ? '-88vh' : '-102vh' },
+      // 6. Feet & Footer punchline: bare feet centered in the viewport
+      { scale: 2.8, x: '0vw', y: isMobile ? '-118vh' : '-132vh' }
+    ];
+  };
+
+  let milestones = getMilestones();
+  let lastStage = -1;
+
+  // Build scrubbed timeline
+  let timeline: gsap.core.Timeline | null = null;
+
+  const buildTimeline = () => {
+    if (timeline) {
+      timeline.kill();
+    }
+    milestones = getMilestones();
+
+    // Set initial frame state
+    gsap.set(frame, {
+      scale: milestones[0].scale,
+      x: milestones[0].x,
+      y: milestones[0].y,
+      transformOrigin: '50% 14%'
+    });
+
+    timeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: scrollContainer,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: isReducedMotion ? 0.1 : 0.6,
+        onUpdate: (self) => {
+          const stageIndex = Math.min(
+            milestones.length - 1,
+            Math.floor(self.progress * (milestones.length - 0.1))
+          );
+          if (stageIndex !== lastStage) {
+            lastStage = stageIndex;
+            sfx.playWhoosh();
+            window.dispatchEvent(
+              new CustomEvent('birthday:stage-change', {
+                detail: {
+                  stage: stageIndex,
+                  progress: self.progress,
+                  stageName: [
+                    'Full-Body Landing',
+                    'Descent to Face',
+                    'Face & Birthday Card',
+                    'Torso Journey',
+                    'Knees & Cake Boss Fight',
+                    'Approach to Feet',
+                    'The Footer (Literally Feet)'
+                  ][stageIndex] || ''
+                }
+              })
+            );
+          }
+        }
+      }
+    });
+
+    // Sequence through the 6 transitions
+    for (let i = 1; i < milestones.length; i++) {
+      timeline.to(frame, {
+        scale: milestones[i].scale,
+        x: milestones[i].x,
+        y: milestones[i].y,
+        ease: 'power1.inOut',
+        duration: 1
+      });
+    }
+  };
+
+  buildTimeline();
+
+  window.addEventListener('resize', () => {
+    buildTimeline();
+    ScrollTrigger.refresh();
+  });
+
+  // Ready signal
+  window.dispatchEvent(new CustomEvent('birthday:scene-ready'));
+}
