@@ -323,7 +323,7 @@ export class AkiArcadeGame {
       }
 
       // Check Boss trigger at 200 points
-      if (this.score >= 200 && this.state !== 'boss') {
+      if (this.score >= 200 && (this.state as string) !== 'boss') {
         this.triggerBossWave();
       }
     } else if (this.state === 'boss') {
@@ -384,7 +384,7 @@ export class AkiArcadeGame {
     }
 
     // Check Win Condition
-    if (this.score >= this.targetScore && this.state !== 'victory') {
+    if (this.score >= this.targetScore && (this.state as string) !== 'victory') {
       this.triggerVictory();
     }
   }

@@ -158,6 +158,48 @@ body.slipboard-locked {
   gap: 12px;
 }
 
+.slipboard-sync-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--bg-paper);
+  border: var(--border-ink-thin);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ink-secondary);
+  box-shadow: 1px 1px 0 var(--ink-primary);
+  user-select: none;
+}
+
+.sync-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--accent-mint);
+  box-shadow: 0 0 6px var(--accent-mint);
+  display: inline-block;
+  animation: pulseSyncDot 2s infinite ease-in-out;
+}
+
+.sync-status-dot.is-local {
+  background-color: var(--accent-yellow);
+  box-shadow: 0 0 6px var(--accent-yellow);
+}
+
+.sync-status-dot.is-syncing {
+  background-color: var(--accent-vermilion);
+  box-shadow: 0 0 6px var(--accent-vermilion);
+  animation: pulseSyncDot 0.6s infinite ease-in-out;
+}
+
+@keyframes pulseSyncDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.85); }
+}
+
 .btn-compose-jump {
   display: inline-flex;
   align-items: center;

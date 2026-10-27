@@ -42,6 +42,12 @@ import '../styles/slipboard.css';
       </div>
 
       <div class="slipboard-header-actions">
+        <!-- Live Sync & io_uring Batching Telemetry Indicator -->
+        <div id="slipboard-sync-badge" class="slipboard-sync-badge" title="io_uring asynchronous batch ring buffer active">
+          <span id="sync-status-dot" class="sync-status-dot is-local"></span>
+          <span id="sync-status-label" class="sync-status-label">INITIALIZING...</span>
+        </div>
+
         <button id="btn-jump-composer" class="btn-compose-jump" type="button">
           <span>✍️</span>
           <span>WRITE A NOTE</span>
@@ -162,6 +168,9 @@ import '../styles/slipboard.css';
 <script>
   import confetti from 'canvas-confetti';
   import { sfx } from '../scripts/audio-fx';
+  import { ConvexClient } from 'convex/browser';
+  import { api, type SlipDoc } from '../../convex/_generated/api';
+  import { IoUringBatcher, type IoUringStats } from '../scripts/io-uring-buffer';
 
   interface Slip {
     id: string;
@@ -176,9 +185,6 @@ import '../styles/slipboard.css';
     isCustom?: boolean;
   }
 
-  // Clean Visitor Slip Board (No dummy notes — starts completely fresh)
-  const DEFAULT_SLIPS: Slip[] = [];
-
   class SlipBoardManager {
     private overlay: HTMLElement | null = null;
     private toggleBtn: HTMLElement | null = null;
@@ -189,6 +195,13 @@ import '../styles/slipboard.css';
     private form: HTMLFormElement | null = null;
     private messageInput: HTMLTextAreaElement | null = null;
     private charCounter: HTMLElement | null = null;
+    private syncBadge: HTMLElement | null = null;
+    private syncDot: HTMLElement | null = null;
+    private syncLabel: HTMLElement | null = null;
+
+    private batcher!: IoUringBatcher;
+    private convex: ConvexClient | null = null;
+    private myCreatedIds: Set<string> = new Set();
 
     private selectedColor: Slip['color'] = 'yellow';
     private selectedStamp: string = '🎂';
@@ -210,15 +223,95 @@ import '../styles/slipboard.css';
       this.form = document.getElementById('slip-composer-form') as HTMLFormElement;
       this.messageInput = document.getElementById('slip-message') as HTMLTextAreaElement;
       this.charCounter = document.getElementById('char-counter');
+      this.syncBadge = document.getElementById('slipboard-sync-badge');
+      this.syncDot = document.getElementById('sync-status-dot');
+      this.syncLabel = document.getElementById('sync-status-label');
 
-      this.loadSlips();
+      this.loadMyCreatedIds();
       this.loadLikes();
+      this.loadCachedSlips();
+      this.setupConvexAndBatcher();
       this.bindEvents();
       this.renderSlips();
       this.updateCountBadge();
     }
 
-    private loadSlips() {
+    private setupConvexAndBatcher() {
+      const convexUrl = (import.meta.env.PUBLIC_CONVEX_URL || '').trim();
+
+      if (convexUrl && convexUrl.startsWith('http')) {
+        try {
+          this.convex = new ConvexClient(convexUrl);
+          this.batcher = new IoUringBatcher(this.convex);
+          this.setSyncStatus('live', 'LIVE MULTIPLAYER ACTIVE');
+
+          // Real-time reactive query subscription
+          this.convex.onUpdate(api.slips.list, {}, (remoteDocs: SlipDoc[]) => {
+            this.handleRemoteSlipsUpdate(remoteDocs);
+          });
+        } catch (err) {
+          console.warn('[SlipBoard] Convex initialization skipped, using local ring buffer:', err);
+          this.batcher = new IoUringBatcher(null);
+          this.setSyncStatus('local', 'LOCAL RING BUFFER');
+        }
+      } else {
+        // Fallback: Local in-memory ring buffer with offline localStorage sync
+        this.batcher = new IoUringBatcher(null);
+        this.setSyncStatus('local', 'READY (LOCAL RING BUFFER)');
+      }
+
+      // Listen to io_uring background batch telemetry
+      window.addEventListener('birthday:io-uring-stats', (e: Event) => {
+        const stats = (e as CustomEvent<IoUringStats>).detail;
+        if (stats.sqPending > 0) {
+          this.setSyncStatus('syncing', `SYNCING (${stats.sqPending} IN SQ RING)`);
+        } else if (this.convex) {
+          this.setSyncStatus('live', 'LIVE MULTIPLAYER ACTIVE');
+        } else {
+          this.setSyncStatus('local', 'READY (LOCAL RING BUFFER)');
+        }
+      });
+    }
+
+    private setSyncStatus(mode: 'live' | 'local' | 'syncing', label: string) {
+      if (this.syncLabel) {
+        this.syncLabel.textContent = label;
+      }
+      if (this.syncDot) {
+        this.syncDot.className = `sync-status-dot is-${mode}`;
+      }
+    }
+
+    private handleRemoteSlipsUpdate(remoteDocs: SlipDoc[]) {
+      if (!Array.isArray(remoteDocs)) return;
+
+      const remoteSlips: Slip[] = remoteDocs.map(doc => {
+        const isMine = this.myCreatedIds.has(doc.clientSubmissionId) || this.myCreatedIds.has(doc._id);
+        return {
+          id: doc._id,
+          author: doc.author,
+          tag: doc.tag,
+          message: doc.message,
+          color: doc.color,
+          stamp: doc.stamp,
+          timestamp: this.formatRelativeTime(doc.createdAt),
+          likes: doc.likes,
+          rotation: doc.rotation,
+          isCustom: isMine
+        };
+      });
+
+      // Keep any optimistic items created by user that are not yet reflected in the remote list
+      const serverClientIds = new Set(remoteDocs.map(d => d.clientSubmissionId));
+      const pendingOptimistic = this.slips.filter(s => s.isCustom && !serverClientIds.has(s.id));
+
+      this.slips = [...pendingOptimistic, ...remoteSlips];
+      this.saveCachedSlips();
+      this.renderSlips();
+      this.updateCountBadge();
+    }
+
+    private loadCachedSlips() {
       try {
         const stored = localStorage.getItem('aki_birthday_slips');
         if (stored) {
@@ -243,7 +336,18 @@ import '../styles/slipboard.css';
       }
     }
 
-    private saveUserSlips() {
+    private loadMyCreatedIds() {
+      try {
+        const stored = localStorage.getItem('aki_my_created_ids');
+        if (stored) {
+          this.myCreatedIds = new Set(JSON.parse(stored));
+        }
+      } catch {
+        this.myCreatedIds = new Set();
+      }
+    }
+
+    private saveCachedSlips() {
       try {
         localStorage.setItem('aki_birthday_slips', JSON.stringify(this.slips));
       } catch (e) {
@@ -256,6 +360,14 @@ import '../styles/slipboard.css';
         localStorage.setItem('aki_slip_liked_ids', JSON.stringify(Array.from(this.likedSlipIds)));
       } catch (e) {
         console.warn('Could not save likes to localStorage:', e);
+      }
+    }
+
+    private saveMyCreatedIds() {
+      try {
+        localStorage.setItem('aki_my_created_ids', JSON.stringify(Array.from(this.myCreatedIds)));
+      } catch (e) {
+        console.warn('Could not save my created IDs:', e);
       }
     }
 
@@ -358,9 +470,14 @@ import '../styles/slipboard.css';
 
       // Random organic rotation between -2.5 and +2.5 degrees
       const rot = (Math.random() * 5 - 2.5);
+      const clientSubmissionId = `slip-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+
+      // Track local authorship
+      this.myCreatedIds.add(clientSubmissionId);
+      this.saveMyCreatedIds();
 
       const newSlip: Slip = {
-        id: `slip-user-${Date.now()}`,
+        id: clientSubmissionId,
         author,
         tag,
         message,
@@ -376,9 +493,9 @@ import '../styles/slipboard.css';
       this.likedSlipIds.add(newSlip.id);
       this.saveLikes();
 
-      // Prepend to list
+      // 1. Instant Optimistic UI (Zero latency for visitor)
       this.slips.unshift(newSlip);
-      this.saveUserSlips();
+      this.saveCachedSlips();
 
       // Audio & Confetti burst
       sfx.playVictory();
@@ -398,6 +515,17 @@ import '../styles/slipboard.css';
       // Re-render
       this.renderSlips();
       this.updateCountBadge();
+
+      // 2. Enqueue into io_uring ring buffer for coalesced batching
+      this.batcher.enqueueSlip({
+        author: newSlip.author,
+        tag: newSlip.tag,
+        message: newSlip.message,
+        color: newSlip.color,
+        stamp: newSlip.stamp,
+        rotation: newSlip.rotation,
+        clientSubmissionId,
+      });
 
       // Smooth scroll down to slips list
       setTimeout(() => {
@@ -495,23 +623,41 @@ import '../styles/slipboard.css';
 
     private handleLikeToggle(slip: Slip, btn: HTMLButtonElement) {
       const hasLiked = this.likedSlipIds.has(slip.id);
+      let delta = 0;
+
       if (hasLiked) {
         this.likedSlipIds.delete(slip.id);
         slip.likes = Math.max(0, slip.likes - 1);
+        delta = -1;
         btn.classList.remove('is-liked');
         btn.innerHTML = `<span>🤍</span><span class="like-count">${slip.likes}</span>`;
       } else {
         this.likedSlipIds.add(slip.id);
         slip.likes += 1;
+        delta = 1;
         btn.classList.add('is-liked');
         btn.innerHTML = `<span>❤️</span><span class="like-count">${slip.likes}</span>`;
         sfx.playPop();
       }
 
       this.saveLikes();
-      if (slip.isCustom) {
-        this.saveUserSlips();
-      }
+      this.saveCachedSlips();
+
+      // Enqueue like delta into io_uring write coalescer!
+      this.batcher.enqueueLike(slip.id, delta);
+    }
+
+    private formatRelativeTime(epochMs: number): string {
+      const diffSec = Math.floor((Date.now() - epochMs) / 1000);
+      if (diffSec < 60) return 'Just now';
+      const diffMin = Math.floor(diffSec / 60);
+      if (diffMin < 60) return `${diffMin}m ago`;
+      const diffHours = Math.floor(diffMin / 60);
+      if (diffHours < 24) return `${diffHours}h ago`;
+      const diffDays = Math.floor(diffHours / 24);
+      if (diffDays === 1) return 'Yesterday';
+      if (diffDays < 7) return `${diffDays}d ago`;
+      return new Date(epochMs).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
     }
 
     private escapeHTML(str: string): string {

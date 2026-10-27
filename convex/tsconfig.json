@@ -1,0 +1,14 @@
+{
+  /* This TypeScript configuration checks your Convex functions. */
+  "compilerOptions": {
+    /* Target latest JavaScript features. */
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["./**/*"]
+}
