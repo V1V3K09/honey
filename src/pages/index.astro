@@ -1,0 +1,130 @@
+---
+// index.astro — BIRTHDAY.EXE: The Unhinged 3D Birthday Experience
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LoadingScreen from '../components/LoadingScreen.astro';
+import BirthdayScene from '../components/BirthdayScene.astro';
+import BirthdayCard from '../components/BirthdayCard.astro';
+import BirthdayGame from '../components/BirthdayGame.astro';
+import FooterExperience from '../components/FooterExperience.astro';
+---
+
+<BaseLayout>
+  <!-- Designed Loading Screen -->
+  <LoadingScreen />
+
+  <!-- Fixed 3D Canvas Viewport -->
+  <BirthdayScene />
+
+  <!-- Scroll-Driven Choreography Track -->
+  <main id="experience-wrapper">
+    <div id="scroll-container">
+      
+      <!-- STAGE A: Full-Body Hero Landing -->
+      <section id="stage-hero" class="experience-stage">
+        <!-- Floating Sticker Annotations -->
+        <div class="sticker-badge hide-mobile" style="top: 140px; left: 8vw; --rot: -4deg;">
+          <span class="tape-strip tape-yellow" style="display: block; margin-bottom: 4px;">TELEMETRY</span>
+          ⚠️ 100% ORGANIC SPECIMEN
+        </div>
+
+        <div class="sticker-badge hide-mobile" style="top: 260px; right: 10vw; --rot: 5deg;">
+          <span class="tape-strip tape-pink" style="display: block; margin-bottom: 4px;">STATUS</span>
+          ⚡ AURA CAPACITY: MAXIMUM
+        </div>
+
+        <div class="sticker-badge hide-mobile" style="bottom: 180px; left: 12vw; --rot: -2deg;">
+          🎂 AGE +1 • LEVEL UP
+        </div>
+
+        <div class="hero-top-text interactive-content">
+          <div class="tape-strip tape-yellow" style="margin-bottom: 14px;">UNPRECEDENTED DISPATCH</div>
+          <h1 class="paper-headline" style="font-size: clamp(2rem, 5vw, 4.2rem);">
+            <span class="cut-chunk cut-yellow">THE SPECIMEN</span>
+            <span class="cut-chunk cut-pink">HAS ARRIVED</span>
+          </h1>
+          <p class="hero-subtitle">
+            A continuous anatomical exploration of the Birthday Legend.
+          </p>
+        </div>
+
+        <div class="scroll-prompt interactive-content">
+          <span class="tape-strip tape-pink">DIRECTIVE</span>
+          <p style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700;">
+            SCROLL DOWN TO DIVE THROUGH THE MODEL ↓
+          </p>
+        </div>
+      </section>
+
+      <!-- STAGE B: Face Approach Spacer & Interlude -->
+      <section id="stage-approach" class="experience-stage">
+        <div class="approach-card paper-card interactive-content">
+          <div class="tape-strip tape-pink" style="margin-bottom: 8px;">OPTICAL ZOOM IN PROGRESS</div>
+          <h2 class="paper-headline" style="font-size: 1.6rem; justify-content: flex-start; margin-bottom: 12px;">
+            <span class="cut-chunk cut-yellow">FACIAL</span>
+            <span class="cut-chunk cut-vermilion">RECONNAISSANCE</span>
+          </h2>
+          <p style="font-size: 0.95rem; line-height: 1.6; color: var(--ink-muted);">
+            Locking camera coordinates onto the primary facial sector. 
+            Prepare for an unprecedented close encounter with genuine birthday charisma.
+          </p>
+        </div>
+      </section>
+
+      <!-- STAGE C: Face Composition & Interactive Birthday Card (Split Screen) -->
+      <section id="stage-card" class="experience-stage">
+        <div class="card-column-left">
+          <BirthdayCard />
+        </div>
+        <div class="card-column-right" aria-hidden="true">
+          <!-- 3D Model Face occupies this spatial coordinate -->
+        </div>
+      </section>
+
+      <!-- STAGE D: Torso Journey Spacer -->
+      <section id="stage-torso" class="experience-stage">
+        <div class="torso-card paper-card interactive-content">
+          <div class="tape-strip tape-yellow" style="margin-bottom: 8px;">CHEST & CORE TELEMETRY</div>
+          <h2 class="paper-headline" style="font-size: 1.6rem; justify-content: flex-start; margin-bottom: 12px;">
+            <span class="cut-chunk cut-pink">THORACIC</span>
+            <span class="cut-chunk cut-mint">ANALYSIS</span>
+          </h2>
+          <p style="font-size: 0.95rem; line-height: 1.6; color: var(--ink-muted);">
+            Camera passing down through the ribcage. Heart capacity: 1000% pure gold. 
+            Descending towards the lower extremities for high-stakes combat.
+          </p>
+        </div>
+      </section>
+
+      <!-- STAGE E: Knees & Cake Boss Fight (Split Screen) -->
+      <section id="stage-game" class="experience-stage">
+        <div class="game-column-left" aria-hidden="true">
+          <!-- 3D Model Knees occupy this spatial coordinate -->
+        </div>
+        <div class="game-column-right">
+          <BirthdayGame />
+        </div>
+      </section>
+
+      <!-- STAGE F: Feet Approach Spacer -->
+      <section id="stage-feet-approach" class="experience-stage">
+        <div class="paper-card interactive-content" style="max-width: 480px;">
+          <div class="tape-strip tape-pink" style="margin-bottom: 8px;">TERMINAL VELOCITY</div>
+          <h2 class="paper-headline" style="font-size: 1.6rem; margin-bottom: 12px;">
+            <span class="cut-chunk cut-yellow">APPROACHING</span>
+            <span class="cut-chunk cut-vermilion">GROUND LEVEL</span>
+          </h2>
+          <p style="font-size: 0.95rem; line-height: 1.6; color: var(--ink-muted);">
+            Camera descending toward the ultimate biological foundation. 
+            Brace yourself for the conclusion of this journey.
+          </p>
+        </div>
+      </section>
+
+      <!-- STAGE G: The Footer Punchline (Centered around Feet) -->
+      <section id="stage-footer" class="experience-stage">
+        <FooterExperience />
+      </section>
+
+    </div>
+  </main>
+</BaseLayout>

@@ -1,0 +1,191 @@
+---
+// BirthdayCard.astro — Interactive paper envelope and unfolding personal birthday letter
+---
+
+<div class="birthday-card-container interactive-content">
+  <!-- Closed Envelope Trigger -->
+  <div 
+    id="envelope-trigger" 
+    class="envelope-trigger" 
+    role="button" 
+    tabindex="0"
+    aria-label="Open Birthday Card"
+  >
+    <div class="tape-strip tape-pink" style="margin-bottom: 12px;">TOP SECRET DISPATCH</div>
+    <div class="wax-seal" aria-hidden="true">🎂</div>
+    <h3 class="envelope-title">
+      <span class="cut-chunk cut-yellow" style="font-size: 1.15rem;">FOR THE SPECIMEN'S</span>
+      <span class="cut-chunk cut-pink" style="font-size: 1.15rem;">EYES ONLY</span>
+    </h3>
+    <p class="envelope-hint">CLICK OR PRESS ENTER TO UNSEAL</p>
+  </div>
+
+  <!-- Unfolded Letter Modal -->
+  <div id="letter-modal" class="letter-modal" role="dialog" aria-modal="true" aria-labelledby="letter-heading">
+    <div class="tape-strip tape-yellow" style="margin-bottom: 12px;">VERIFIED TRANSMISSION</div>
+    
+    <h3 id="letter-heading" class="letter-recipient">
+      DEAR <span class="cut-chunk cut-vermilion" style="font-size: 1.3rem;">[FRIEND_NAME]</span>,
+    </h3>
+
+    <div class="letter-body">
+      <p>
+        Another full solar rotation completed without voiding your manufacturer warranty. 
+        According to preliminary telemetry, your <strong>AURA</strong> has officially reached critical mass.
+      </p>
+      <p>
+        You are 100% organic, 0% common sense, and 1000% irreplaceable. 
+        May your next year bring zero lower back aches, maximum comedic timing, 
+        and an ungodly amount of sweet treats.
+      </p>
+    </div>
+
+    <!-- Polaroid Photo Frame Placeholder -->
+    <div class="letter-photo-frame">
+      <div class="photo-placeholder">
+        <span class="photo-icon" aria-hidden="true">📸</span>
+        <strong style="font-size: 0.85rem; margin-top: 6px;">[INSERT LEGENDARY PHOTO HERE]</strong>
+        <p style="font-size: 0.72rem; color: var(--ink-muted); margin-top: 2px;">
+          Replace with a photo of you and your friend in public/images/
+        </p>
+      </div>
+      <p class="photo-caption">"EXHIBIT A: A MENACE IN THEIR NATURAL HABITAT"</p>
+    </div>
+
+    <div class="letter-signature">
+      <p>HAPPY BIRTHDAY, YOU ABSOLUTE LEGEND.</p>
+      <p class="signature-handwritten">— From your favorite human</p>
+    </div>
+
+    <button id="btn-close-letter" class="btn-action btn-close-letter" type="button">
+      FOLD LETTER & RESUME JOURNEY ✕
+    </button>
+  </div>
+</div>
+
+<style>
+  .birthday-card-container {
+    width: 100%;
+    position: relative;
+  }
+
+  .envelope-title {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .envelope-hint {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .letter-recipient {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .letter-body {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--ink-primary);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .photo-icon {
+    font-size: 2rem;
+  }
+
+  .photo-caption {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-top: 8px;
+    color: var(--ink-muted);
+  }
+
+  .letter-signature {
+    margin-top: 20px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.05rem;
+  }
+
+  .signature-handwritten {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--accent-vermilion);
+    margin-top: 4px;
+  }
+</style>
+
+<script>
+  import confetti from 'canvas-confetti';
+  import { sfx } from '../scripts/audio-fx';
+
+  function setupBirthdayCard() {
+    const trigger = document.getElementById('envelope-trigger');
+    const modal = document.getElementById('letter-modal');
+    const closeBtn = document.getElementById('btn-close-letter');
+
+    if (!trigger || !modal || !closeBtn) return;
+
+    const openCard = () => {
+      trigger.style.display = 'none';
+      modal.classList.add('is-open');
+      sfx.playPop();
+
+      // Gentle celebratory confetti flutter on card open
+      confetti({
+        particleCount: 45,
+        spread: 55,
+        origin: { y: 0.6 }
+      });
+
+      closeBtn.focus();
+    };
+
+    const closeCard = () => {
+      modal.classList.remove('is-open');
+      trigger.style.display = 'block';
+      sfx.playPop();
+      trigger.focus();
+    };
+
+    trigger.addEventListener('click', openCard);
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openCard();
+      }
+    });
+
+    closeBtn.addEventListener('click', closeCard);
+
+    // Esc key close
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('is-open')) {
+        closeCard();
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupBirthdayCard);
+  } else {
+    setupBirthdayCard();
+  }
+</script>

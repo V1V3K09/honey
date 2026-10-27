@@ -1,0 +1,104 @@
+---
+// LoadingScreen.astro — Tactile paper-cut loader that disappears when 3D scene is ready
+---
+
+<div id="loading-screen" class="loading-overlay">
+  <div class="loading-paper-box">
+    <div class="tape-strip tape-yellow" style="margin-bottom: 14px;">SYSTEM INITIALIZING</div>
+    <h2 class="loading-title">
+      <span class="cut-chunk cut-yellow">BOOTING</span>
+      <span class="cut-chunk cut-pink">BIRTHDAY.EXE</span>
+    </h2>
+    <p class="loading-status" id="loading-status-text">CALIBRATING 3D SPECIMEN...</p>
+    <div class="loading-bar-container">
+      <div class="loading-bar-fill" id="loading-bar-fill"></div>
+    </div>
+    <p class="loading-hint">PRO TIP: DON'T BLINK.</p>
+  </div>
+</div>
+
+<style>
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background-color: var(--bg-paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    transition: opacity 400ms ease, visibility 400ms ease;
+  }
+
+  .loading-overlay.is-loaded {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .loading-paper-box {
+    background-color: #FFFFFF;
+    border: var(--border-ink);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-hard-lg);
+    padding: 36px 32px;
+    text-align: center;
+    max-width: 440px;
+    width: 100%;
+  }
+
+  .loading-title {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    font-size: 1.5rem;
+  }
+
+  .loading-status {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--ink-muted);
+    margin-bottom: 16px;
+  }
+
+  .loading-bar-container {
+    width: 100%;
+    height: 18px;
+    border: var(--border-ink);
+    background-color: var(--bg-paper-alt);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+
+  .loading-bar-fill {
+    width: 25%;
+    height: 100%;
+    background-color: var(--accent-vermilion);
+    border-radius: 999px;
+    transition: width 300ms ease;
+  }
+
+  .loading-hint {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-muted);
+  }
+</style>
+
+<script>
+  window.addEventListener('birthday:scene-ready', () => {
+    const loader = document.getElementById('loading-screen');
+    const fill = document.getElementById('loading-bar-fill');
+    const status = document.getElementById('loading-status-text');
+
+    if (fill) fill.style.width = '100%';
+    if (status) status.textContent = 'THE SPECIMEN HAS ARRIVED!';
+
+    setTimeout(() => {
+      if (loader) loader.classList.add('is-loaded');
+    }, 350);
+  });
+</script>

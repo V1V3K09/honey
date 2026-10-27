@@ -1,0 +1,22 @@
+{
+  "name": "birthday-exe",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev --host",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^5.4.2",
+    "canvas-confetti": "^1.9.4",
+    "gsap": "^3.12.7",
+    "three": "^0.174.0"
+  },
+  "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/three": "^0.174.0",
+    "typescript": "^5.8.0"
+  }
+}

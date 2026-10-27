@@ -1,0 +1,142 @@
+/* Paper-Cut Ransom Note & Collage Styles */
+
+.paper-headline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 14px;
+  margin: 0 auto;
+  line-height: 1.1;
+  text-transform: uppercase;
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.cut-chunk {
+  display: inline-block;
+  padding: 6px 14px;
+  border: var(--border-ink);
+  box-shadow: var(--shadow-hard-md);
+  border-radius: var(--radius-cut);
+  transform: rotate(var(--rot, 0deg));
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  user-select: none;
+}
+
+.cut-chunk:hover {
+  transform: scale(1.04) rotate(0deg);
+  box-shadow: var(--shadow-hard-lg);
+}
+
+/* Palette Variations */
+.cut-yellow {
+  background-color: var(--accent-yellow);
+  color: var(--ink-primary);
+  --rot: -2deg;
+}
+
+.cut-pink {
+  background-color: var(--accent-pink);
+  color: var(--ink-inverted);
+  --rot: 2.5deg;
+}
+
+.cut-vermilion {
+  background-color: var(--accent-vermilion);
+  color: var(--ink-inverted);
+  --rot: -3deg;
+}
+
+.cut-mint {
+  background-color: var(--accent-mint);
+  color: var(--ink-primary);
+  --rot: 1.8deg;
+}
+
+.cut-white {
+  background-color: #FFFFFF;
+  color: var(--ink-primary);
+  --rot: -1.2deg;
+}
+
+.cut-violet {
+  background-color: var(--accent-violet);
+  color: var(--ink-inverted);
+  --rot: 2deg;
+}
+
+/* Masking Tape Stickers */
+.tape-strip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--tape-color);
+  color: var(--ink-primary);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 14px;
+  border-left: 2px dashed rgba(18, 19, 22, 0.4);
+  border-right: 2px dashed rgba(18, 19, 22, 0.4);
+  box-shadow: 2px 2px 0 rgba(18, 19, 22, 0.15);
+  transform: rotate(var(--tape-rot, -1.5deg));
+  letter-spacing: 0.05em;
+}
+
+.tape-strip.tape-pink {
+  background-color: #ffd6e0;
+}
+
+.tape-strip.tape-yellow {
+  background-color: #fef08a;
+}
+
+/* Scattered Sticker Annotations */
+.sticker-badge {
+  position: absolute;
+  z-index: 10;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: var(--border-ink);
+  box-shadow: var(--shadow-hard-sm);
+  background-color: #FFFFFF;
+  pointer-events: auto;
+  user-select: none;
+  animation: floatSlight 4s ease-in-out infinite alternate;
+}
+
+@keyframes floatSlight {
+  0% { transform: translateY(0px) rotate(var(--rot, 0deg)); }
+  100% { transform: translateY(-6px) rotate(calc(var(--rot, 0deg) + 1.5deg)); }
+}
+
+/* Paper Card Container (Concentric radii) */
+.paper-card {
+  background-color: #FFFFFF;
+  border: var(--border-ink);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-hard-lg);
+  padding: 24px;
+  position: relative;
+}
+
+.paper-card::before {
+  /* Corner tape ornament */
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 24px;
+  width: 70px;
+  height: 22px;
+  background-color: var(--tape-color);
+  border-left: 1px dashed rgba(18, 19, 22, 0.3);
+  border-right: 1px dashed rgba(18, 19, 22, 0.3);
+  transform: rotate(-3deg);
+  opacity: 0.9;
+  pointer-events: none;
+}

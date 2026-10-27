@@ -1,0 +1,141 @@
+---
+// BirthdayGame.astro — "BOSS FIGHT: THE BIRTHDAY CAKE" Interactive 3D Mini-Game
+---
+
+<div 
+  id="cake-boss-container" 
+  class="cake-boss-card interactive-content" 
+  tabindex="0"
+  role="region"
+  aria-label="Birthday Cake Boss Fight Game"
+>
+  <!-- Game Header -->
+  <div class="cake-boss-header">
+    <div class="tape-strip tape-pink">BOSS ENCOUNTER</div>
+    <div class="boss-level-badge">LVL 99 CALORIC THREAT</div>
+  </div>
+
+  <h3 class="boss-title">
+    <span class="cut-chunk cut-yellow">BOSS:</span>
+    <span class="cut-chunk cut-pink">THE BIRTHDAY CAKE</span>
+  </h3>
+
+  <!-- Health Bar -->
+  <div class="health-section">
+    <div class="health-meta">
+      <span class="health-label">BOSS HEALTH</span>
+      <span class="game-health-text">100 / 100 HP</span>
+    </div>
+    <div class="game-health-bar">
+      <div class="game-health-fill"></div>
+    </div>
+  </div>
+
+  <!-- 3D Mini Scene Canvas -->
+  <div class="game-canvas-wrapper" title="Click or tap to hit the cake!">
+    <canvas class="game-canvas"></canvas>
+  </div>
+
+  <!-- Dynamic Taunt Bubble -->
+  <div class="game-taunt" aria-live="polite">
+    "YOU DARE CHALLENGE THE SACRED BIRTHDAY CAKE?!"
+  </div>
+
+  <!-- Controls Hints -->
+  <div class="game-controls-hint">
+    <span>👊 CLICK / TAP TO STRIKE</span>
+    <span>⌨️ SPACEBAR ATTACKS</span>
+  </div>
+
+  <!-- Victory Overlay (Shown when health reaches 0) -->
+  <div class="game-victory-overlay" role="dialog" aria-modal="true" aria-label="Boss Defeated Victory">
+    <div class="tape-strip tape-yellow" style="margin-bottom: 12px;">VICTORY CONFIRMED</div>
+    <div class="victory-trophy" aria-hidden="true">🏆</div>
+    <h3 class="victory-title">
+      <span class="cut-chunk cut-mint">BOSS DEFEATED!</span>
+    </h3>
+    <p class="victory-perk">
+      <strong>UNLOCKED PERK:</strong> UNLIMITED BIRTHDAY CAKE PRIVILEGES & +9999 REPUTATION AURA!
+    </p>
+    <button class="btn-action game-restart-btn" type="button">
+      FIGHT AGAIN? ↺
+    </button>
+  </div>
+</div>
+
+<style>
+  .boss-level-badge {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent-vermilion);
+  }
+
+  .boss-title {
+    display: flex;
+    gap: 8px;
+    margin: 8px 0 14px;
+    font-size: 1.25rem;
+  }
+
+  .health-section {
+    margin-bottom: 12px;
+  }
+
+  .health-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .health-label {
+    color: var(--ink-muted);
+  }
+
+  .victory-trophy {
+    font-size: 3rem;
+    margin-bottom: 8px;
+    animation: bounceTrophy 1s ease-in-out infinite alternate;
+  }
+
+  @keyframes bounceTrophy {
+    from { transform: scale(1); }
+    to { transform: scale(1.15) rotate(5deg); }
+  }
+
+  .victory-title {
+    margin-bottom: 12px;
+  }
+
+  .victory-perk {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 18px;
+    max-width: 320px;
+  }
+</style>
+
+<script>
+  import { BirthdayCakeGame } from '../scripts/birthday-game';
+
+  function initGame() {
+    const container = document.getElementById('cake-boss-container');
+    if (!container) return;
+
+    try {
+      new BirthdayCakeGame(container);
+    } catch (err) {
+      console.warn('Could not initialize 3D Cake Boss:', err);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGame);
+  } else {
+    initGame();
+  }
+</script>

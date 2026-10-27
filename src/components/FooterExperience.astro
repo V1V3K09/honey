@@ -1,0 +1,88 @@
+---
+// FooterExperience.astro — The literal feet punchline, credits, and interactive navigation
+---
+
+<footer class="footer-punchline-card paper-card interactive-content">
+  <div class="tape-strip tape-yellow" style="margin-bottom: 12px;">OFFICIAL REPORT</div>
+
+  <h3 class="paper-headline" style="font-size: 1.6rem; margin-bottom: 14px;">
+    <span class="cut-chunk cut-yellow">YES, THIS IS</span>
+    <span class="cut-chunk cut-pink">THE FOOTER.</span>
+    <span class="cut-chunk cut-mint">LITERALLY FEET.</span>
+  </h3>
+
+  <p class="footer-desc">
+    You have officially navigated from head to toe through the anatomical marvel known as 
+    <strong>[FRIEND_NAME]</strong>. No further biological data exists past this point.
+  </p>
+
+  <div class="footer-nav">
+    <button id="btn-scroll-top" class="btn-action" type="button">
+      TELEPORT TO TOP ⤒
+    </button>
+    <button id="btn-confetti-footer" class="btn-action" type="button" style="background-color: var(--accent-pink); color: #FFF;">
+      CONFETTI BLASTER 🎉
+    </button>
+  </div>
+
+  <div class="footer-credit">
+    <p>BIRTHDAY.EXE • COMPILED WITH UNHINGED LOVE FOR [FRIEND_NAME]</p>
+    <p style="font-size: 0.72rem; color: var(--ink-muted); margin-top: 4px;">
+      100% STATIC • ZERO COOKIES • INFINITE BIRTHDAY AURA
+    </p>
+  </div>
+</footer>
+
+<style>
+  .footer-desc {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--ink-primary);
+    max-width: 480px;
+    margin: 0 auto 18px;
+  }
+
+  .footer-credit {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px dashed rgba(18, 19, 22, 0.2);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+</style>
+
+<script>
+  import confetti from 'canvas-confetti';
+  import { sfx } from '../scripts/audio-fx';
+
+  function setupFooter() {
+    const scrollTopBtn = document.getElementById('btn-scroll-top');
+    const confettiBtn = document.getElementById('btn-confetti-footer');
+
+    if (scrollTopBtn) {
+      scrollTopBtn.addEventListener('click', () => {
+        sfx.playWhoosh();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    if (confettiBtn) {
+      confettiBtn.addEventListener('click', () => {
+        sfx.playVictory();
+        confetti({
+          particleCount: 90,
+          spread: 80,
+          origin: { y: 0.85 },
+          colors: ['#ff4b00', '#ffe600', '#ff2e7e', '#00e599', '#7038ff']
+        });
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupFooter);
+  } else {
+    setupFooter();
+  }
+</script>

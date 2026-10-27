@@ -1,0 +1,97 @@
+/* Responsive Adaptations & Accessibility */
+
+@media (max-width: 768px) {
+  .hud-header {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+  }
+
+  .hud-logo {
+    font-size: 0.9rem;
+    padding: 4px 10px;
+  }
+
+  .stage-pill {
+    font-size: 0.65rem;
+    padding: 4px 10px;
+  }
+
+  .paper-headline {
+    gap: 6px 8px;
+  }
+
+  .cut-chunk {
+    font-size: 1.25rem;
+    padding: 4px 10px;
+  }
+
+  /* Single Column Stack on Mobile */
+  #stage-card {
+    grid-template-columns: 1fr;
+    padding: 60px 16px;
+    gap: 24px;
+  }
+
+  .card-column-left {
+    max-width: 100%;
+  }
+
+  .card-column-right {
+    min-height: 240px;
+  }
+
+  #stage-game {
+    grid-template-columns: 1fr;
+    padding: 60px 16px;
+    gap: 24px;
+  }
+
+  .game-column-left {
+    min-height: 220px;
+  }
+
+  .game-column-right {
+    max-width: 100%;
+  }
+
+  .game-canvas-wrapper {
+    height: 230px;
+  }
+
+  .footer-punchline-card {
+    width: 95%;
+    padding: 20px 16px;
+  }
+
+  /* Hide decorative floating stickers on small screens to prevent clutter */
+  .sticker-badge.hide-mobile {
+    display: none;
+  }
+
+  /* Ensure touch targets meet minimum 44px */
+  button, .btn-action, .envelope-trigger {
+    min-height: 44px;
+  }
+}
+
+/* Reduced Motion Mode */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .game-shake {
+    animation: none !important;
+  }
+
+  .sticker-badge {
+    animation: none !important;
+  }
+
+  .scroll-prompt {
+    animation: none !important;
+  }
+}

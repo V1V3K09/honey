@@ -1,0 +1,77 @@
+---
+// BirthdayScene.astro — Main 3D Canvas Viewport and WebGL Orchestrator
+---
+
+<div id="canvas-viewport" aria-hidden="true">
+  <canvas id="webgl-canvas"></canvas>
+  
+  <div id="webgl-fallback" class="webgl-fallback-banner">
+    <p>⚠️ 3D hardware acceleration unavailable. Experience running in 2D paper-mode!</p>
+  </div>
+</div>
+
+<style>
+  .webgl-fallback-banner {
+    display: none;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #FFFFFF;
+    border: var(--border-ink);
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-hard-sm);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    z-index: 100;
+  }
+</style>
+
+<script>
+  import { BirthdayMainScene } from '../scripts/scene';
+
+  function isWebGLSupported(): boolean {
+    try {
+      const canvas = document.createElement('canvas');
+      return !!(window.WebGLRenderingContext && 
+        (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+    } catch {
+      return false;
+    }
+  }
+
+  async function bootstrapScene() {
+    const canvas = document.getElementById('webgl-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    if (!isWebGLSupported()) {
+      const fallback = document.getElementById('webgl-fallback');
+      if (fallback) fallback.style.display = 'block';
+      window.dispatchEvent(new CustomEvent('birthday:scene-ready'));
+      return;
+    }
+
+    try {
+      const scene = new BirthdayMainScene(canvas);
+      const { isPlaceholder } = await scene.init();
+
+      if (isPlaceholder) {
+        console.info('BIRTHDAY.EXE: Procedural character active. Drop friend-model.glb into public/models/ to replace.');
+      } else {
+        console.info('BIRTHDAY.EXE: Custom friend-model.glb loaded successfully!');
+      }
+
+      window.dispatchEvent(new CustomEvent('birthday:scene-ready'));
+    } catch (err) {
+      console.error('Error starting WebGL scene:', err);
+      window.dispatchEvent(new CustomEvent('birthday:scene-ready'));
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootstrapScene);
+  } else {
+    bootstrapScene();
+  }
+</script>

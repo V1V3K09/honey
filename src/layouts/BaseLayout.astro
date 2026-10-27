@@ -1,0 +1,87 @@
+---
+// BaseLayout.astro — Root HTML Shell with Persistent HUD, Meta & Design Foundations
+import '../styles/global.css';
+import '../styles/paper-cut.css';
+import '../styles/experience.css';
+import '../styles/responsive.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "BIRTHDAY.EXE — An Unhinged 3D Birthday Experience",
+  description = "A bespoke, continuous 3D scroll-journey through the anatomy of the Birthday Legend."
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+  </head>
+  <body>
+    <!-- Persistent HUD Header -->
+    <header class="hud-header">
+      <div class="hud-logo">
+        <span aria-hidden="true">🎂</span>
+        <span>BIRTHDAY.EXE</span>
+      </div>
+
+      <div class="hud-right">
+        <div id="hud-stage-pill" class="stage-pill" aria-live="polite">
+          STAGE: FULL BODY
+        </div>
+        <button id="btn-toggle-sound" class="btn-action btn-mute" type="button" aria-label="Toggle Sound Effects">
+          <span id="sound-icon" aria-hidden="true">🔊</span>
+          <span id="sound-label">SFX: ON</span>
+        </button>
+      </div>
+    </header>
+
+    <slot />
+
+    <script>
+      import { sfx } from '../scripts/audio-fx';
+
+      // Sound Toggle Setup
+      const soundBtn = document.getElementById('btn-toggle-sound');
+      const soundIcon = document.getElementById('sound-icon');
+      const soundLabel = document.getElementById('sound-label');
+
+      if (soundBtn && soundIcon && soundLabel) {
+        soundBtn.addEventListener('click', () => {
+          const isMuted = sfx.toggleMute();
+          if (isMuted) {
+            soundIcon.textContent = '🔇';
+            soundLabel.textContent = 'SFX: OFF';
+          } else {
+            soundIcon.textContent = '🔊';
+            soundLabel.textContent = 'SFX: ON';
+            sfx.playPop();
+          }
+        });
+      }
+
+      // Dynamic Stage Indicator Setup
+      const stagePill = document.getElementById('hud-stage-pill');
+      window.addEventListener('birthday:stage-change', (e: Event) => {
+        const customEvent = e as CustomEvent<{ stage: number; stageName: string }>;
+        if (stagePill && customEvent.detail?.stageName) {
+          stagePill.textContent = `STAGE: ${customEvent.detail.stageName.toUpperCase()}`;
+        }
+      });
+    </script>
+  </body>
+</html>
