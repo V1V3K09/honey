@@ -62,11 +62,11 @@
   }
 
   .card-column-left {
-    max-width: 100%;
+    min-height: 220px;
   }
 
   .card-column-right {
-    min-height: 240px;
+    max-width: 100%;
   }
 
   #stage-game {
@@ -76,11 +76,18 @@
   }
 
   .game-column-left {
-    min-height: 220px;
+    max-width: 100%;
   }
 
   .game-column-right {
-    max-width: 100%;
+    min-height: 200px;
+    align-items: center;
+  }
+
+  .brain-owner-callout {
+    margin-right: 0;
+    margin-left: 0;
+    margin-top: 20px;
   }
 
   /* Single Column Footer on Mobile */

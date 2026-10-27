@@ -273,23 +273,25 @@
   max-width: 440px;
 }
 
-/* Stage C — Face & Birthday Card (Split Desktop) */
+/* Stage C — Face & Birthday Card (Split Desktop: Face on Left, Card on Right) */
 #stage-card {
   min-height: 130vh;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 0.85fr 1.15fr;
   align-items: center;
   padding: 80px 6vw;
+  gap: 32px;
 }
 
 .card-column-left {
-  max-width: 520px;
-  z-index: 20;
+  /* Aki's Face frames here on the left */
+  min-height: 400px;
 }
 
 .card-column-right {
-  /* 3D Model Face frames here */
-  min-height: 400px;
+  max-width: 540px;
+  width: 100%;
+  z-index: 20;
 }
 
 /* Interactive Birthday Card Component */
@@ -385,23 +387,19 @@
   max-width: 420px;
 }
 
-/* Stage E — Knees & "Protect His Last Brain Cell" 3D Mini-Game */
+/* Stage E — Knees & "Protect His Last Brain Cell" 3D Mini-Game (Game on Left, Knees on Right) */
 #stage-game {
   min-height: 140vh;
   display: grid;
-  grid-template-columns: 1fr 1.15fr;
+  grid-template-columns: 1.15fr 0.85fr;
   align-items: center;
   padding: 80px 6vw;
   gap: 32px;
 }
 
 .game-column-left {
-  /* Model Knees frame on left, annotation callout placed here */
-  min-height: 380px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
+  max-width: 560px;
+  width: 100%;
   z-index: 20;
 }
 
@@ -409,7 +407,7 @@
   max-width: 320px;
   padding: 16px 18px;
   margin-top: 140px;
-  margin-left: 12px;
+  margin-right: 12px;
 }
 
 .callout-tag {
@@ -427,8 +425,12 @@
 }
 
 .game-column-right {
-  max-width: 540px;
-  width: 100%;
+  /* Aki's Knees frame on right, annotation callout placed here */
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
   z-index: 20;
 }
 

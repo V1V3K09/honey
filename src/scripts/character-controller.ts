@@ -19,15 +19,15 @@ export function initCharacterScroll() {
       // 0. Full-body landing: entire body visible from head to bare feet
       { scale: 1.0, x: '0vw', y: '0vh' },
       // 1. Approach face: zooming towards headwrap
-      { scale: 2.0, x: isMobile ? '0vw' : '10vw', y: '3vh' },
-      // 2. Face & Birthday Card: face framed on right (desktop) or centered above (mobile)
-      { scale: 3.2, x: isMobile ? '0vw' : '26vw', y: isMobile ? '-4vh' : '6vh' },
+      { scale: 2.0, x: isMobile ? '0vw' : '-10vw', y: '3vh' },
+      // 2. Face & Birthday Card: face framed on LEFT (desktop) opposite card on right
+      { scale: 3.2, x: isMobile ? '0vw' : '-24vw', y: isMobile ? '-4vh' : '6vh' },
       // 3. Torso descent: camera travels down past chest and scarf
-      { scale: 2.5, x: isMobile ? '0vw' : '-6vw', y: isMobile ? '-28vh' : '-36vh' },
-      // 4. Knees & Cake Boss Fight: knees framed on left (desktop)
-      { scale: 2.3, x: isMobile ? '0vw' : '-24vw', y: isMobile ? '-58vh' : '-72vh' },
+      { scale: 2.5, x: isMobile ? '0vw' : '0vw', y: isMobile ? '-28vh' : '-36vh' },
+      // 4. Knees & Mini-Game: knees framed on RIGHT (desktop) opposite game on left
+      { scale: 2.3, x: isMobile ? '0vw' : '24vw', y: isMobile ? '-58vh' : '-72vh' },
       // 5. Approach feet: moving downwards towards lower legs and ankles
-      { scale: 2.5, x: isMobile ? '0vw' : '12vw', y: isMobile ? '-82vh' : '-96vh' },
+      { scale: 2.5, x: isMobile ? '0vw' : '20vw', y: isMobile ? '-82vh' : '-96vh' },
       // 6. Feet & Footer punchline: feet framed on the RIGHT, feet section on the LEFT
       { scale: 2.7, x: isMobile ? '0vw' : '24vw', y: isMobile ? '-106vh' : '-122vh' }
     ];
@@ -77,7 +77,7 @@ export function initCharacterScroll() {
                     'Face Zoom',
                     'Birthday Note',
                     'Good Energy',
-                    'Birthday Feast Catcher',
+                    'Protect The Brain',
                     'Feet Approach',
                     'The Footer (Literally Feet)'
                   ][stageIndex] || ''

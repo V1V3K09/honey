@@ -123,32 +123,32 @@ import FooterExperience from '../components/FooterExperience.astro';
         </div>
       </section>
 
-      <!-- SECTION C: Face Composition & Interactive Birthday Card (Split Screen) -->
+      <!-- SECTION C: Face Composition & Interactive Birthday Card (Split Screen: Face on LEFT, Card on RIGHT) -->
       <section id="stage-card" class="experience-stage">
-        <div class="card-column-left">
-          <BirthdayCard />
+        <div class="card-column-left" aria-hidden="true">
+          <!-- Aki's Face frames on the left side here -->
         </div>
-        <div class="card-column-right" aria-hidden="true">
-          <!-- Aki's Face frames on the right side here -->
+        <div class="card-column-right">
+          <BirthdayCard />
         </div>
       </section>
 
-      <!-- SECTION D: Torso & Knees with 3D "Protect His Last Brain Cell" Game (Split Screen) -->
+      <!-- SECTION D: Torso & Knees with 3D "Protect His Last Brain Cell" Game (Split Screen: Game on LEFT, Knees on RIGHT) -->
       <section id="stage-game" class="experience-stage">
-        <div class="game-column-left interactive-content">
+        <div class="game-column-left">
+          <BirthdayGame />
+        </div>
+        <div class="game-column-right interactive-content">
           <!-- Paper-cut annotation near character: "THE OWNER OF THIS BRAIN" -->
           <div class="brain-owner-callout paper-card">
             <div class="callout-tag">
-              <span>👉</span>
+              <span>👈</span>
               <span class="cut-chunk cut-yellow" style="font-size: 0.92rem;">THE OWNER OF THIS BRAIN</span>
             </div>
             <p class="callout-caption">
               "Preserving his single lone neuron through pure Radhe Radhe serenity."
             </p>
           </div>
-        </div>
-        <div class="game-column-right">
-          <BirthdayGame />
         </div>
       </section>
 
