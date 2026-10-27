@@ -148,6 +148,10 @@ export class RocketLandingSystem {
     this.isLanding = false;
     this.throttle = 0;
 
+    if (this.viewport) {
+      this.viewport.style.zIndex = '5';
+    }
+
     if (this.landingWrapper) {
       gsap.killTweensOf(this.landingWrapper);
       gsap.set(this.landingWrapper, { clearProps: 'all' });
@@ -203,6 +207,11 @@ export class RocketLandingSystem {
     if (this.telemetryBadge) {
       this.telemetryBadge.classList.add('is-active');
       this.telemetryBadge.classList.remove('is-landed');
+    }
+
+    // Bring viewport to the front during the rocket landing descent
+    if (this.viewport) {
+      this.viewport.style.zIndex = '35';
     }
 
     // Start particle render loop
@@ -404,6 +413,11 @@ export class RocketLandingSystem {
   // Smoothly move Aki from the foreground into the original position used for scrolling
   private moveToOriginalPosition(fromScale: number, fromY: string) {
     if (!this.landingWrapper) return;
+
+    // Drop character behind cards for the scroll experience
+    if (this.viewport) {
+      this.viewport.style.zIndex = '5';
+    }
 
     this.updateTelemetry(0, 0, 'MISSION CONTROL: DOCKING INTO STATION');
 

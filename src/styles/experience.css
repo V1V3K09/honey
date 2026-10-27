@@ -158,6 +158,8 @@
 
 .hero-dossier-card {
   padding: 24px 22px;
+  position: relative;
+  z-index: 25;
 }
 
 .anatomical-pointers-list {
@@ -404,6 +406,8 @@
 
 .approach-card {
   max-width: 440px;
+  position: relative;
+  z-index: 25;
 }
 
 /* Stage C — Face & Birthday Card (Split Desktop: Face on Left, Card on Right) */
@@ -424,7 +428,8 @@
 .card-column-right {
   max-width: 540px;
   width: 100%;
-  z-index: 20;
+  position: relative;
+  z-index: 30;
 }
 
 /* Interactive Birthday Card Component */
@@ -438,6 +443,7 @@
   text-align: center;
   cursor: pointer;
   position: relative;
+  z-index: 30;
   transition: transform 140ms ease, box-shadow 140ms ease;
 }
 
@@ -469,6 +475,7 @@
   box-shadow: var(--shadow-hard-lg);
   padding: 32px;
   position: relative;
+  z-index: 35;
   animation: unfoldLetter 320ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
@@ -533,7 +540,8 @@
 .game-column-left {
   max-width: 560px;
   width: 100%;
-  z-index: 20;
+  position: relative;
+  z-index: 30;
 }
 
 .brain-owner-callout {
@@ -541,6 +549,8 @@
   padding: 16px 18px;
   margin-top: 140px;
   margin-right: 12px;
+  position: relative;
+  z-index: 30;
 }
 
 .callout-tag {
@@ -564,7 +574,8 @@
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-end;
-  z-index: 20;
+  position: relative;
+  z-index: 30;
 }
 
 /* Mini-Game Container */
@@ -575,6 +586,7 @@
   box-shadow: var(--shadow-hard-lg);
   padding: 24px;
   position: relative;
+  z-index: 30;
   overflow: hidden;
   outline: none;
 }
@@ -715,7 +727,8 @@
 .footer-column-left {
   max-width: 540px;
   margin-top: 14px;
-  z-index: 20;
+  position: relative;
+  z-index: 30;
 }
 
 .footer-column-right {
@@ -726,6 +739,8 @@
 .footer-punchline-card {
   max-width: 540px;
   padding: 20px 22px;
+  position: relative;
+  z-index: 30;
 }
 
 .footer-pointer-arrow {
