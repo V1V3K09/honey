@@ -1,5 +1,5 @@
 ---
-// FooterExperience.astro — The literal feet punchline, credits, and interactive navigation
+// FooterExperience.astro — The literal feet punchline, credits, social link, and interactive navigation
 ---
 
 <footer class="footer-punchline-card paper-card interactive-content">
@@ -18,6 +18,23 @@
   <div class="footer-pointer-arrow">
     <span>👉</span>
     <span>EXHIBIT B: 100% UNBOTHERED, BAREFOOT & THRIVING</span>
+  </div>
+
+  <!-- Social Link: You can find me at @aki.medicos -->
+  <div class="footer-find-me">
+    <span class="find-me-label">YOU CAN FIND ME AT</span>
+    <a 
+      href="https://instagram.com/aki.medicos" 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      class="find-me-pill"
+      aria-label="Find Aki at @aki.medicos on Instagram"
+      title="Open @aki.medicos on Instagram"
+    >
+      <span class="find-me-icon" aria-hidden="true">📸</span>
+      <span class="find-me-handle">@aki.medicos</span>
+      <span class="find-me-arrow" aria-hidden="true">↗</span>
+    </a>
   </div>
 
   <div class="footer-nav">
@@ -43,11 +60,74 @@
     line-height: 1.6;
     color: var(--ink-secondary);
     max-width: 480px;
-    margin: 0 auto 16px;
+    margin: 0 auto 14px;
+  }
+
+  /* Social Link / Find Me Pill */
+  .footer-find-me {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    margin: 4px 0 16px;
+    background: var(--bg-paper-alt);
+    border: var(--border-ink-thin);
+    border-radius: var(--radius-md);
+    padding: 8px 14px;
+    box-shadow: var(--shadow-hard-sm);
+  }
+
+  .find-me-label {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--ink-muted);
+  }
+
+  .find-me-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--accent-yellow);
+    color: var(--ink-primary);
+    border: var(--border-ink-thin);
+    border-radius: var(--radius-sm);
+    padding: 5px 12px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: var(--shadow-hard-sm);
+    transition-property: transform, box-shadow, background-color;
+    transition-duration: 140ms;
+    transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  @media (hover: hover) {
+    .find-me-pill:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hard-md);
+      background-color: #FFF04D;
+    }
+    .find-me-pill:hover .find-me-arrow {
+      transform: translate(2px, -2px);
+    }
+  }
+
+  .find-me-pill:active {
+    transform: scale(0.96) translateY(1px);
+    box-shadow: var(--shadow-hard-press);
+  }
+
+  .find-me-arrow {
+    font-size: 0.85rem;
+    color: var(--accent-vermilion);
+    transition: transform 140ms ease;
   }
 
   .footer-credit {
-    margin-top: 20px;
+    margin-top: 18px;
     padding-top: 14px;
     border-top: 1px dashed rgba(18, 19, 22, 0.2);
     font-family: var(--font-mono);
