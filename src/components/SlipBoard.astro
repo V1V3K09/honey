@@ -169,8 +169,11 @@ import '../styles/slipboard.css';
   import confetti from 'canvas-confetti';
   import { sfx } from '../scripts/audio-fx';
   import { ConvexClient } from 'convex/browser';
-  import { api, type SlipDoc } from '../../convex/_generated/api';
+  import { api } from '../../convex/_generated/api';
+  import type { Doc } from '../../convex/_generated/dataModel';
   import { IoUringBatcher, type IoUringStats } from '../scripts/io-uring-buffer';
+
+  type SlipDoc = Doc<'slips'>;
 
   interface Slip {
     id: string;

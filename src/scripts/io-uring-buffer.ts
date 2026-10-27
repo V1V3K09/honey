@@ -1,6 +1,23 @@
 // io-uring-buffer.ts — Asynchronous Ring Buffer, Write Coalescing & Batch Subsystem for Convex DB
 import type { ConvexClient } from 'convex/browser';
-import { api, type NewSlipPayload, type LikeDeltaPayload } from '../../convex/_generated/api';
+import { api } from '../../convex/_generated/api';
+
+export type SlipColor = 'yellow' | 'pink' | 'mint' | 'sky' | 'kraft';
+
+export interface NewSlipPayload {
+  author: string;
+  tag: string;
+  message: string;
+  color: SlipColor;
+  stamp: string;
+  rotation: number;
+  clientSubmissionId: string;
+}
+
+export interface LikeDeltaPayload {
+  slipId: string;
+  delta: number;
+}
 
 export type IoOpType = 'INSERT_SLIP' | 'TOGGLE_LIKE';
 
