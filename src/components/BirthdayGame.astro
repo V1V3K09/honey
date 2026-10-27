@@ -1,305 +1,344 @@
 ---
-// BirthdayGame.astro — Interactive Arcade Mini-Game for Aki's Birthday Feast
+// BirthdayGame.astro — "PROTECT HIS LAST BRAIN CELL" 3D Mini-Game Component
+import '../styles/game-styles.css';
 ---
 
 <div 
-  id="cake-boss-container" 
-  class="cake-boss-card arcade-game-card interactive-content" 
+  id="brain-game-container" 
+  class="brain-game-card interactive-content" 
   tabindex="0"
   role="region"
-  aria-label="Aki's Birthday Feast Arcade Game"
+  aria-label="Protect His Last Brain Cell Mini-Game"
 >
-  <h3 class="boss-title">
-    <span class="cut-chunk cut-yellow">CATCH</span>
-    <span class="cut-chunk cut-pink">AKI'S BIRTHDAY TREATS</span>
-  </h3>
+  <!-- Header -->
+  <div class="brain-game-header">
+    <h3 class="paper-headline brain-game-title">
+      <span class="cut-chunk cut-yellow">PROTECT</span>
+      <span class="cut-chunk cut-pink">HIS LAST BRAIN CELL</span>
+    </h3>
+    <button id="btn-game-pause" class="btn-game-pause" type="button" aria-label="Pause or Resume Game">
+      ⏸ PAUSE
+    </button>
+  </div>
 
-  <!-- Arcade HUD Bar -->
-  <div class="arcade-hud">
-    <div class="hud-item">
-      <span class="hud-label">SCORE</span>
-      <div class="hud-score-display">
-        <span class="arcade-score-val">0</span>
-        <span class="hud-score-target">/ 300</span>
+  <!-- Primary HUD Bar -->
+  <div class="brain-hud-grid">
+    <!-- Timer -->
+    <div class="hud-cell">
+      <span class="hud-cell-label">SURVIVE</span>
+      <span id="hud-timer-display" class="hud-timer-display">00:45</span>
+    </div>
+
+    <!-- Brain Integrity Bar -->
+    <div class="hud-cell">
+      <div class="hud-integrity-meta">
+        <span class="hud-cell-label">BRAIN INTEGRITY</span>
+        <span id="hud-integrity-display" class="hud-integrity-text">100%</span>
+      </div>
+      <div class="brain-integrity-bar">
+        <div id="hud-integrity-fill" class="brain-integrity-fill" style="width: 100%;"></div>
       </div>
     </div>
-    <div class="hud-item">
-      <span class="hud-label">COMBO</span>
-      <span class="arcade-combo-val hud-highlight">x0</span>
-    </div>
-    <div class="hud-item">
-      <span class="hud-label">CANDLES</span>
-      <span class="arcade-lives-val">🕯️🕯️🕯️</span>
+
+    <!-- Score -->
+    <div class="hud-cell" style="text-align: right;">
+      <span class="hud-cell-label">SCORE</span>
+      <span id="hud-score-display" class="hud-score-val">0 PTS</span>
     </div>
   </div>
 
-  <!-- Progress Bar toward Victory -->
-  <div class="arcade-progress-bar" title="Target: 300 points to complete the feast!">
-    <div class="arcade-progress-fill" style="width: 0%;"></div>
+  <!-- Secondary Metrics Bar -->
+  <div class="brain-metrics-subbar">
+    <span id="hud-blocked-display">🛡️ 0 BLOCKED</span>
+    <span id="hud-samosas-display">🥟 0 SAMOSAS</span>
+    <span id="hud-rank-preview">RANK: INTERN</span>
   </div>
 
-  <!-- Game Canvas Stage -->
-  <div class="game-canvas-wrapper" title="Move your mouse or finger to slide Aki's Feast Plate!">
-    <canvas class="game-canvas"></canvas>
+  <!-- 3D Game Canvas Stage -->
+  <div class="brain-canvas-wrapper" title="Drag your mouse or finger to move the energy shield!">
+    <canvas class="brain-game-canvas"></canvas>
 
-    <!-- Start Screen Overlay -->
-    <div class="game-start-overlay">
-      <div class="game-intro-icon">🎂 🪔 🍬</div>
-      <h4 class="game-intro-title">AKI'S BIRTHDAY FEAST</h4>
-      <p class="game-intro-desc">
-        Catch birthday cake slices (+20), Radhe Radhe blessings (+50) & gift boxes (+70)!<br />
-        Dodge falling Monday alarms, bills & back aches!
+    <!-- START SCREEN OVERLAY -->
+    <div id="overlay-start" class="brain-overlay">
+      <div class="overlay-icon">🧠 🛡️</div>
+      <h4 class="overlay-title">PROTECT HIS LAST BRAIN CELL</h4>
+      <p class="overlay-desc">
+        Survive <strong>45 seconds</strong> of adult life! Move your shield to intercept alarm clocks, exams, and responsibilities. Collect golden samosas!
       </p>
-      <button class="btn-action btn-start-game" type="button">
-        START FEAST ▶
+      <button id="btn-start-game" class="btn-action" type="button">
+        START DEFENSE ▶
       </button>
     </div>
 
-    <!-- Game Over Overlay -->
-    <div class="game-over-overlay" style="display: none;">
-      <div class="game-intro-icon">🕯️💔</div>
-      <h4 class="game-over-title">ALMOST HAD IT!</h4>
-      <p class="game-intro-desc">Those Monday alarms got in the way! Give it another shot for Aki.</p>
-      <button class="btn-action game-restart-btn" type="button">
+    <!-- PAUSED OVERLAY -->
+    <div id="overlay-paused" class="brain-overlay" style="display: none;">
+      <div class="overlay-icon">⏸️</div>
+      <h4 class="overlay-title">BRAIN CELL PAUSED</h4>
+      <p class="overlay-desc">
+        Taking a quick breather from adult responsibilities.
+      </p>
+      <button id="btn-resume-game" class="btn-action" type="button">
+        RESUME DEFENSE ▶
+      </button>
+    </div>
+
+    <!-- DEFEAT OVERLAY -->
+    <div id="overlay-defeat" class="brain-overlay" style="display: none;">
+      <div class="overlay-icon">💀</div>
+      <h4 class="overlay-title" style="color: var(--accent-vermilion);">
+        THE LAST BRAIN CELL HAS LEFT THE CHAT
+      </h4>
+      <p class="overlay-desc">
+        Overwhelmed by alarm clocks and responsibilities! His thoughts have flatlined.
+      </p>
+      <div class="stats-summary-card">
+        <div>
+          <div class="stat-item-label">TIME SURVIVED</div>
+          <div id="defeat-time-val" class="stat-item-val">0s</div>
+        </div>
+        <div>
+          <div class="stat-item-label">FINAL SCORE</div>
+          <div id="defeat-score-val" class="stat-item-val">0 PTS</div>
+        </div>
+        <div id="defeat-rank-val" class="rank-pill">RANK: BRAIN CELL INTERN</div>
+      </div>
+      <button id="btn-retry-game" class="btn-action" type="button">
         TRY AGAIN ↺
       </button>
     </div>
 
-    <!-- Victory Overlay -->
-    <div class="game-victory-overlay" role="dialog" aria-modal="true" aria-label="Arcade Feast Conquered Victory">
-      <div class="victory-trophy" aria-hidden="true">🏆</div>
-      <h3 class="victory-title">
-        <span class="cut-chunk cut-mint">FEAST COMPLETE!</span>
-      </h3>
-      <p class="victory-perk">
-        You collected all the birthday sweets for Aki! Wishing him infinite happiness and blessings!
-      </p>
-      <button class="btn-action game-restart-btn" type="button">
+    <!-- VICTORY OVERLAY -->
+    <div id="overlay-victory" class="brain-overlay" style="display: none;">
+      <div class="overlay-icon">🏆</div>
+      <h4 class="overlay-title" style="color: var(--accent-mint);">
+        THE LAST BRAIN CELL SURVIVED!
+      </h4>
+      
+      <!-- Birthday Reward Box -->
+      <div class="victory-reward-box">
+        <div class="reward-heading">BIRTHDAY REWARD UNLOCKED</div>
+        <div class="reward-quote">"HAPPY BIRTHDAY, YOU ABSOLUTE MENACE."</div>
+      </div>
+
+      <div class="stats-summary-card">
+        <div>
+          <div class="stat-item-label">TIME SURVIVED</div>
+          <div class="stat-item-val">45.0s (FULL)</div>
+        </div>
+        <div>
+          <div class="stat-item-label">FINAL SCORE</div>
+          <div id="victory-score-val" class="stat-item-val">0 PTS</div>
+        </div>
+        <div>
+          <div class="stat-item-label">THREATS BLOCKED</div>
+          <div id="victory-blocked-val" class="stat-item-val">0</div>
+        </div>
+        <div>
+          <div class="stat-item-label">SAMOSAS GRABBED</div>
+          <div id="victory-samosas-val" class="stat-item-val">0</div>
+        </div>
+        <div id="victory-rank-val" class="rank-pill">GUARDIAN OF THE LAST NEURON</div>
+      </div>
+
+      <button id="btn-unlock-card" class="btn-action btn-unlock-card" type="button">
+        UNLOCK YOUR BIRTHDAY CARD ✉️
+      </button>
+      <button id="btn-replay-game" class="btn-action" type="button" style="font-size: 0.85rem; padding: 6px 14px;">
         PLAY AGAIN ↺
       </button>
     </div>
   </div>
 
-  <!-- Dynamic Taunt / Tip Bubble -->
-  <div class="game-taunt" aria-live="polite">
-    "SLIDE THE PLATE TO CATCH CAKES & SWEET BLESSINGS!"
+  <!-- Dynamic Dialogue / Status Bubble -->
+  <div id="game-dialogue-bubble" class="brain-dialogue-bubble" aria-live="polite">
+    "DEFEND THE LAST NEURON FROM ADULT REALITY!"
   </div>
 
-  <!-- Controls Hints -->
-  <div class="game-controls-hint">
-    <span>🖱️ MOUSE / DRAG TO MOVE</span>
-    <span>⌨️ [A][D] OR ARROWS TO SLIDE</span>
+  <!-- Controls Hint -->
+  <div class="brain-controls-hint">
+    <span>🖱️ MOUSE / TOUCH DRAG TO MOVE SHIELD</span>
+    <span>⌨️ [A][D] / ARROWS • [ESC] PAUSE</span>
   </div>
 </div>
 
-<style>
-  .arcade-game-card {
-    position: relative;
-    user-select: none;
-    background-color: var(--glass-paper);
-    backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
-    border: var(--border-ink);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-elevation);
-    padding: 24px;
-    outline: none;
-  }
-
-  .boss-title {
-    display: flex;
-    justify-content: flex-start;
-    gap: 8px;
-    margin: 0 0 14px;
-    font-size: 1.25rem;
-    letter-spacing: -0.02em;
-  }
-
-  /* Arcade HUD */
-  .arcade-hud {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #FAF7F0;
-    border: var(--border-ink-thin);
-    border-radius: var(--radius-md);
-    padding: 8px 16px;
-    margin-bottom: 10px;
-  }
-
-  .hud-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-  }
-
-  .hud-label {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    color: var(--ink-muted);
-  }
-
-  .hud-score-display {
-    display: flex;
-    align-items: baseline;
-    gap: 4px;
-    font-family: var(--font-mono);
-    font-weight: 800;
-  }
-
-  .arcade-score-val {
-    font-size: 1.2rem;
-    color: var(--accent-vermilion);
-  }
-
-  .hud-score-target {
-    font-size: 0.78rem;
-    color: var(--ink-muted);
-  }
-
-  .arcade-combo-val {
-    font-family: var(--font-mono);
-    font-size: 1.05rem;
-    font-weight: 800;
-    color: var(--accent-violet);
-  }
-
-  .arcade-lives-val {
-    font-size: 1rem;
-    letter-spacing: 2px;
-  }
-
-  /* Progress Bar */
-  .arcade-progress-bar {
-    width: 100%;
-    height: 10px;
-    background-color: #ECE5D8;
-    border: var(--border-ink-thin);
-    border-radius: 999px;
-    overflow: hidden;
-    margin-bottom: 12px;
-  }
-
-  .arcade-progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent-yellow), var(--accent-mint));
-    transition: width 180ms ease;
-  }
-
-  /* Canvas and Overlays */
-  .game-canvas-wrapper {
-    position: relative;
-    width: 100%;
-    height: 320px;
-    background-color: #FAF7F0;
-    border: var(--border-ink);
-    border-radius: var(--radius-md);
-    margin-bottom: 12px;
-    overflow: hidden;
-    touch-action: none;
-    cursor: grab;
-  }
-
-  .game-canvas-wrapper:active {
-    cursor: grabbing;
-  }
-
-  .game-canvas {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
-
-  .game-start-overlay,
-  .game-over-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(251, 248, 241, 0.95);
-    backdrop-filter: blur(8px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    text-align: center;
-    z-index: 35;
-  }
-
-  .game-intro-icon {
-    font-size: 2.2rem;
-    margin-bottom: 8px;
-  }
-
-  .game-intro-title {
-    font-family: var(--font-display);
-    font-size: 1.3rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    margin-bottom: 6px;
-  }
-
-  .game-intro-desc {
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    line-height: 1.5;
-    color: var(--ink-secondary);
-    max-width: 320px;
-    margin-bottom: 18px;
-  }
-
-  .game-over-title {
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    font-weight: 800;
-    color: var(--accent-vermilion);
-    margin: 4px 0 8px;
-  }
-
-  .victory-trophy {
-    font-size: 3rem;
-    margin-bottom: 8px;
-    animation: bounceTrophy 1s ease-in-out infinite alternate;
-  }
-
-  @keyframes bounceTrophy {
-    from { transform: scale(1); }
-    to { transform: scale(1.15) rotate(5deg); }
-  }
-
-  .victory-title {
-    margin-bottom: 12px;
-  }
-
-  .victory-perk {
-    font-family: var(--font-body);
-    font-size: 0.95rem;
-    line-height: 1.55;
-    margin-bottom: 18px;
-    max-width: 340px;
-    color: var(--ink-primary);
-  }
-</style>
-
 <script>
-  import { AkiArcadeGame } from '../scripts/arcade-game';
+  import confetti from 'canvas-confetti';
+  import { BrainGameLogic, type GameState, type GameStats } from '../scripts/brain-game/game-logic';
+  import { BrainGameScene } from '../scripts/brain-game/game-scene';
+  import { sfx } from '../scripts/audio-fx';
 
-  function initArcadeGame() {
-    const container = document.getElementById('cake-boss-container');
+  function initBrainGame() {
+    const container = document.getElementById('brain-game-container');
     if (!container) return;
 
+    // UI Element references
+    const timerDisplay = document.getElementById('hud-timer-display');
+    const integrityDisplay = document.getElementById('hud-integrity-display');
+    const integrityFill = document.getElementById('hud-integrity-fill');
+    const scoreDisplay = document.getElementById('hud-score-display');
+    const blockedDisplay = document.getElementById('hud-blocked-display');
+    const samosasDisplay = document.getElementById('hud-samosas-display');
+    const rankPreview = document.getElementById('hud-rank-preview');
+    const dialogueBubble = document.getElementById('game-dialogue-bubble');
+    const pauseToggleBtn = document.getElementById('btn-game-pause');
+
+    // Overlays
+    const startOverlay = document.getElementById('overlay-start');
+    const pausedOverlay = document.getElementById('overlay-paused');
+    const defeatOverlay = document.getElementById('overlay-defeat');
+    const victoryOverlay = document.getElementById('overlay-victory');
+
+    // Action buttons
+    const startBtn = document.getElementById('btn-start-game');
+    const resumeBtn = document.getElementById('btn-resume-game');
+    const retryBtn = document.getElementById('btn-retry-game');
+    const replayBtn = document.getElementById('btn-replay-game');
+    const unlockCardBtn = document.getElementById('btn-unlock-card');
+
+    let scene: BrainGameScene | null = null;
+
+    const logic = new BrainGameLogic({
+      onStateChange: (state: GameState) => {
+        if (startOverlay) startOverlay.style.display = state === 'ready' ? 'flex' : 'none';
+        if (pausedOverlay) pausedOverlay.style.display = state === 'paused' ? 'flex' : 'none';
+        if (defeatOverlay) defeatOverlay.style.display = state === 'defeat' ? 'flex' : 'none';
+        if (victoryOverlay) victoryOverlay.style.display = state === 'victory' ? 'flex' : 'none';
+
+        if (pauseToggleBtn) {
+          pauseToggleBtn.textContent = state === 'paused' ? '▶ RESUME' : '⏸ PAUSE';
+          pauseToggleBtn.style.display = (state === 'playing' || state === 'paused') ? 'block' : 'none';
+        }
+      },
+
+      onIntegrityChange: (integrity: number, max: number) => {
+        const pct = Math.max(0, Math.min(100, (integrity / max) * 100));
+        if (integrityDisplay) integrityDisplay.textContent = `${Math.round(pct)}%`;
+        if (integrityFill) {
+          integrityFill.style.width = `${pct}%`;
+          integrityFill.classList.toggle('is-warning', pct <= 50 && pct > 20);
+          integrityFill.classList.toggle('is-danger', pct <= 20);
+        }
+      },
+
+      onTimerUpdate: (secondsLeft: number) => {
+        const wholeSecs = Math.ceil(secondsLeft);
+        const mins = Math.floor(wholeSecs / 60);
+        const secs = wholeSecs % 60;
+        const str = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        if (timerDisplay) {
+          timerDisplay.textContent = str;
+          timerDisplay.classList.toggle('is-low', wholeSecs <= 10);
+        }
+      },
+
+      onScoreUpdate: (score: number) => {
+        if (scoreDisplay) scoreDisplay.textContent = `${score} PTS`;
+      },
+
+      onStatsUpdate: (stats: GameStats) => {
+        if (blockedDisplay) blockedDisplay.textContent = `🛡️ ${stats.threatsBlocked} BLOCKED`;
+        if (samosasDisplay) samosasDisplay.textContent = `🥟 ${stats.samosasCollected} SAMOSAS`;
+        if (rankPreview) rankPreview.textContent = `RANK: ${stats.rank.split(' ')[0]}`;
+      },
+
+      onDialogue: (text: string, type: 'info' | 'warn' | 'success' | 'danger' = 'info') => {
+        if (dialogueBubble) {
+          dialogueBubble.textContent = `"${text}"`;
+          dialogueBubble.className = `brain-dialogue-bubble is-${type}`;
+        }
+      },
+
+      onThreatBlocked: (threat) => {
+        if (scene) scene.onThreatBlocked(threat.x, threat.y);
+      },
+
+      onDamageTaken: (damage, threat) => {
+        if (scene) scene.onDamageTaken(threat.x, threat.y);
+      },
+
+      onCollectibleGrabbed: (item) => {
+        if (scene) scene.onCollectibleGrabbed(item.x, item.y, item.type === 'golden-samosa');
+      },
+
+      onVictory: (stats: GameStats) => {
+        sfx.playVictory();
+        confetti({
+          particleCount: 150,
+          spread: 85,
+          origin: { y: 0.6 },
+          colors: ['#00e599', '#ffe600', '#ff2e7e', '#7038ff', '#ff4b00']
+        });
+
+        const vScore = document.getElementById('victory-score-val');
+        const vBlocked = document.getElementById('victory-blocked-val');
+        const vSamosas = document.getElementById('victory-samosas-val');
+        const vRank = document.getElementById('victory-rank-val');
+
+        if (vScore) vScore.textContent = `${stats.score} PTS`;
+        if (vBlocked) vBlocked.textContent = stats.threatsBlocked.toString();
+        if (vSamosas) vSamosas.textContent = stats.samosasCollected.toString();
+        if (vRank) vRank.textContent = `RANK: ${stats.rank} 🏆`;
+      },
+
+      onDefeat: (stats: GameStats) => {
+        sfx.playHit(true);
+        const dTime = document.getElementById('defeat-time-val');
+        const dScore = document.getElementById('defeat-score-val');
+        const dRank = document.getElementById('defeat-rank-val');
+
+        if (dTime) dTime.textContent = `${stats.timeSurvived}s`;
+        if (dScore) dScore.textContent = `${stats.score} PTS`;
+        if (dRank) dRank.textContent = `RANK: ${stats.rank}`;
+      }
+    });
+
     try {
-      new AkiArcadeGame(container);
+      scene = new BrainGameScene(container, logic);
     } catch (err) {
-      console.warn('Could not initialize Aki Arcade Game:', err);
+      console.warn('Could not initialize Three.js Brain Game Scene:', err);
+    }
+
+    // Bind Button Actions
+    const handleStart = () => {
+      sfx.playPop();
+      logic.start();
+    };
+
+    if (startBtn) startBtn.addEventListener('click', handleStart);
+    if (resumeBtn) resumeBtn.addEventListener('click', () => logic.resume());
+    if (retryBtn) retryBtn.addEventListener('click', handleStart);
+    if (replayBtn) replayBtn.addEventListener('click', handleStart);
+
+    if (pauseToggleBtn) {
+      pauseToggleBtn.addEventListener('click', () => {
+        if (logic.getState() === 'playing') {
+          logic.pause();
+        } else if (logic.getState() === 'paused') {
+          logic.resume();
+        }
+      });
+    }
+
+    // Connect Birthday Card Integration
+    if (unlockCardBtn) {
+      unlockCardBtn.addEventListener('click', () => {
+        sfx.playVictory();
+        
+        // Dispatch global birthday card unseal event
+        window.dispatchEvent(new CustomEvent('birthday:open-card'));
+
+        // Smooth scroll to the birthday card section
+        const cardSection = document.getElementById('stage-card');
+        if (cardSection) {
+          cardSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
     }
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initArcadeGame);
+    document.addEventListener('DOMContentLoaded', initBrainGame);
   } else {
-    initArcadeGame();
+    initBrainGame();
   }
 </script>

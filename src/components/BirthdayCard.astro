@@ -293,6 +293,11 @@
         closeCard();
       }
     });
+
+    // Global integration event from mini-game or other components
+    window.addEventListener('birthday:open-card', () => {
+      openCard();
+    });
   }
 
   if (document.readyState === 'loading') {

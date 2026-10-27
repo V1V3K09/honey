@@ -1,0 +1,367 @@
+/* game-styles.css — Responsive UI & States for "PROTECT HIS LAST BRAIN CELL" */
+
+.brain-game-card {
+  position: relative;
+  background-color: var(--glass-paper);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--border-ink);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-elevation);
+  padding: 22px;
+  outline: none;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.brain-game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.brain-game-title {
+  display: flex;
+  gap: 8px;
+  font-size: 1.22rem;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.btn-game-pause {
+  background-color: var(--bg-paper-alt);
+  border: var(--border-ink-thin);
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-hard-sm);
+  transition-property: transform, box-shadow;
+  transition-duration: 120ms;
+}
+
+.btn-game-pause:active {
+  transform: scale(0.95);
+  box-shadow: none;
+}
+
+/* Primary HUD Bar */
+.brain-hud-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr 1.1fr;
+  gap: 10px;
+  background-color: #FAF7F0;
+  border: var(--border-ink-thin);
+  border-radius: var(--radius-md);
+  padding: 8px 14px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.hud-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hud-cell-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+}
+
+.hud-timer-display {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--ink-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.hud-timer-display.is-low {
+  color: var(--accent-vermilion);
+  animation: pulseWarning 0.8s infinite alternate;
+}
+
+@keyframes pulseWarning {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
+}
+
+.hud-integrity-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hud-integrity-text {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: var(--ink-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.brain-integrity-bar {
+  width: 100%;
+  height: 9px;
+  background-color: #ECE5D8;
+  border: 1px solid rgba(18, 19, 22, 0.4);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 3px;
+}
+
+.brain-integrity-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--accent-mint), var(--accent-yellow));
+  border-radius: 999px;
+  transition: width 160ms ease, background-color 200ms ease;
+}
+
+.brain-integrity-fill.is-warning {
+  background: linear-gradient(90deg, #F59E0B, var(--accent-yellow));
+}
+
+.brain-integrity-fill.is-danger {
+  background: var(--accent-vermilion);
+}
+
+.hud-score-val {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--accent-vermilion);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Secondary Metrics (Blocks & Samosas) */
+.brain-metrics-subbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ink-secondary);
+  padding: 0 4px 6px;
+}
+
+/* 3D Canvas Arena Container */
+.brain-canvas-wrapper {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  background: radial-gradient(circle at center, #FFFFFF 0%, #F5EFE6 100%);
+  border: var(--border-ink);
+  border-radius: var(--radius-md);
+  margin-bottom: 10px;
+  overflow: hidden;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.brain-game-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Dynamic Dialogue / Status Bubble */
+.brain-dialogue-bubble {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--ink-secondary);
+  background-color: var(--bg-paper-alt);
+  border: var(--border-ink-thin);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  min-height: 2.3em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  transition: color 180ms ease, background-color 180ms ease;
+}
+
+.brain-dialogue-bubble.is-warn {
+  color: #B45309;
+  background-color: #FEF3C7;
+}
+
+.brain-dialogue-bubble.is-danger {
+  color: #BE123C;
+  background-color: #FFE4E6;
+}
+
+.brain-dialogue-bubble.is-success {
+  color: #047857;
+  background-color: #D1FAE5;
+}
+
+/* Game Controls Hint */
+.brain-controls-hint {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+
+/* Overlays (Start, Pause, Victory, Defeat) */
+.brain-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(251, 248, 241, 0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 20px;
+  text-align: center;
+  z-index: 40;
+  animation: unfoldOverlay 260ms cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+}
+
+@keyframes unfoldOverlay {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.overlay-icon {
+  font-size: 2.2rem;
+  margin-bottom: 4px;
+}
+
+.overlay-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+
+.overlay-desc {
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: var(--ink-secondary);
+  max-width: 320px;
+  margin-bottom: 14px;
+}
+
+/* Stats Breakdown in Victory / Defeat */
+.stats-summary-card {
+  background-color: #FFFFFF;
+  border: var(--border-ink-thin);
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  margin-bottom: 12px;
+  width: 100%;
+  max-width: 320px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 12px;
+  text-align: left;
+}
+
+.stat-item-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--ink-muted);
+}
+
+.stat-item-val {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--ink-primary);
+}
+
+.rank-pill {
+  grid-column: span 2;
+  background-color: var(--accent-yellow);
+  border: var(--border-ink-thin);
+  border-radius: var(--radius-cut);
+  padding: 3px 6px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--ink-primary);
+  margin-top: 2px;
+}
+
+.victory-reward-box {
+  background-color: #FFFBEB;
+  border: 1.5px dashed #F59E0B;
+  border-radius: var(--radius-sm);
+  padding: 6px 14px;
+  margin-bottom: 10px;
+  max-width: 320px;
+}
+
+.reward-heading {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #B45309;
+  letter-spacing: 0.05em;
+  margin-bottom: 1px;
+}
+
+.reward-quote {
+  font-family: var(--font-display);
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: var(--ink-primary);
+}
+
+.btn-unlock-card {
+  background-color: var(--accent-pink);
+  color: #FFFFFF;
+  font-size: 0.9rem;
+  padding: 9px 20px;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 14px rgba(255, 46, 126, 0.35), var(--shadow-hard-md);
+}
+
+/* Screen rumble animation on damage */
+.game-shake {
+  animation: gameRumble 180ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes gameRumble {
+  10%, 90% { transform: translate3d(-2px, 0, 0); }
+  20%, 80% { transform: translate3d(3px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+  40%, 60% { transform: translate3d(2px, 0, 0); }
+}
+
+@media (max-width: 600px) {
+  .brain-game-card {
+    padding: 16px 14px;
+  }
+  .brain-canvas-wrapper {
+    height: 260px;
+  }
+  .brain-hud-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .hud-cell:nth-child(2) {
+    grid-column: span 2;
+  }
+}
