@@ -513,23 +513,53 @@
   text-align: center;
 }
 
-/* Stage G — The Footer Punchline */
+/* Stage G — The Footer Punchline (Feet Section on the LEFT, Bare Feet on the RIGHT) */
 #stage-footer {
-  min-height: 110vh;
-  justify-content: flex-end;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
   align-items: center;
-  text-align: center;
-  padding-bottom: 40px;
+  padding: 80px 6vw 40px;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.footer-column-left {
+  max-width: 540px;
+  margin-top: 14px;
+  z-index: 20;
+}
+
+.footer-column-right {
+  /* Aki's bare feet are framed cleanly on the right with zero obstruction */
+  min-height: 480px;
 }
 
 .footer-punchline-card {
-  max-width: 580px;
-  margin-bottom: 24px;
+  max-width: 540px;
+  padding: 20px 22px;
+}
+
+.footer-pointer-arrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-vermilion);
+  margin: 12px 0 16px;
+  background: var(--bg-paper-alt);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: var(--border-ink-thin);
+  box-shadow: var(--shadow-hard-sm);
 }
 
 .footer-nav {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
-  justify-content: center;
+  justify-content: flex-start;
   margin-top: 20px;
 }

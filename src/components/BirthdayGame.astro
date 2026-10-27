@@ -1,69 +1,111 @@
 ---
-// BirthdayGame.astro — "BOSS FIGHT: THE BIRTHDAY CAKE" Interactive 3D Mini-Game
+// BirthdayGame.astro — "SAINT AKI'S BIRTHDAY CATCHER" Interactive Arcade Mini-Game
 ---
 
 <div 
   id="cake-boss-container" 
-  class="cake-boss-card interactive-content" 
+  class="cake-boss-card arcade-game-card interactive-content" 
   tabindex="0"
   role="region"
-  aria-label="Birthday Cake Boss Fight Game"
+  aria-label="Aki's Birthday Feast Arcade Game"
 >
   <!-- Game Header -->
   <div class="cake-boss-header">
-    <div class="tape-strip tape-pink">BOSS ENCOUNTER</div>
-    <div class="boss-level-badge">LVL 99 CALORIC THREAT</div>
+    <div class="tape-strip tape-pink">ARCADE MISSION</div>
+    <div class="boss-level-badge">OCT 28 BIRTHDAY SPECIAL</div>
   </div>
 
   <h3 class="boss-title">
-    <span class="cut-chunk cut-yellow">BOSS:</span>
-    <span class="cut-chunk cut-pink">THE BIRTHDAY CAKE</span>
+    <span class="cut-chunk cut-yellow">CATCH:</span>
+    <span class="cut-chunk cut-pink">AKI'S BIRTHDAY FEAST</span>
   </h3>
 
-  <!-- Health Bar -->
-  <div class="health-section">
-    <div class="health-meta">
-      <span class="health-label">BOSS HEALTH</span>
-      <span class="game-health-text">100 / 100 HP</span>
+  <!-- Arcade HUD Bar -->
+  <div class="arcade-hud">
+    <div class="hud-item">
+      <span class="hud-label">SCORE</span>
+      <div class="hud-score-display">
+        <span class="arcade-score-val">0</span>
+        <span class="hud-score-target">/ 300</span>
+      </div>
     </div>
-    <div class="game-health-bar">
-      <div class="game-health-fill"></div>
+    <div class="hud-item">
+      <span class="hud-label">COMBO</span>
+      <span class="arcade-combo-val hud-highlight">x0</span>
+    </div>
+    <div class="hud-item">
+      <span class="hud-label">CANDLES</span>
+      <span class="arcade-lives-val">🕯️🕯️🕯️</span>
     </div>
   </div>
 
-  <!-- 3D Mini Scene Canvas -->
-  <div class="game-canvas-wrapper" title="Click or tap to hit the cake!">
+  <!-- Progress Bar toward Victory -->
+  <div class="arcade-progress-bar" title="Target: 300 points to conquer the feast!">
+    <div class="arcade-progress-fill" style="width: 0%;"></div>
+  </div>
+
+  <!-- Game Canvas Stage -->
+  <div class="game-canvas-wrapper" title="Move your mouse or finger to slide Aki's Feast Plate!">
     <canvas class="game-canvas"></canvas>
+
+    <!-- Start Screen Overlay -->
+    <div class="game-start-overlay">
+      <div class="tape-strip tape-yellow" style="margin-bottom: 10px;">SAINT AKI'S CATCHER</div>
+      <div class="game-intro-icon">🎂 🪔 🍬</div>
+      <p class="game-intro-desc">
+        Catch birthday cakes (+20), Radhe Radhe blessings (+50) & gifts (+70)!<br />
+        <strong>DODGE</strong> lower back pain, bills & 6 AM alarms!
+      </p>
+      <button class="btn-action btn-start-game" type="button">
+        START FEAST ▶
+      </button>
+    </div>
+
+    <!-- Game Over Overlay -->
+    <div class="game-over-overlay" style="display: none;">
+      <div class="tape-strip tape-pink" style="margin-bottom: 10px;">ALL CANDLES BLOWN OUT</div>
+      <div class="game-intro-icon">⚡💀⚡</div>
+      <h4 class="game-over-title">ADULTHOOD HAS WON...</h4>
+      <p class="game-intro-desc">Aki got hit by too many adult responsibilities!</p>
+      <button class="btn-action game-restart-btn" type="button">
+        TRY AGAIN ↺
+      </button>
+    </div>
+
+    <!-- Victory Overlay -->
+    <div class="game-victory-overlay" role="dialog" aria-modal="true" aria-label="Arcade Feast Conquered Victory">
+      <div class="tape-strip tape-yellow" style="margin-bottom: 12px;">ROYAL CONQUEST CONFIRMED</div>
+      <div class="victory-trophy" aria-hidden="true">🏆</div>
+      <h3 class="victory-title">
+        <span class="cut-chunk cut-mint">FEAST CONQUERED!</span>
+      </h3>
+      <p class="victory-perk">
+        <strong>SAINT AKI IS SATIATED:</strong> You collected the sacred birthday feast & unlocked +9999 Aura!
+      </p>
+      <button class="btn-action game-restart-btn" type="button">
+        PLAY AGAIN ↺
+      </button>
+    </div>
   </div>
 
-  <!-- Dynamic Taunt Bubble -->
+  <!-- Dynamic Taunt / Tip Bubble -->
   <div class="game-taunt" aria-live="polite">
-    "YOU DARE CHALLENGE THE SACRED BIRTHDAY CAKE?!"
+    "CATCH THE CAKES & BLESSINGS! DODGE ADULT TAXES & BACK PAIN!"
   </div>
 
   <!-- Controls Hints -->
   <div class="game-controls-hint">
-    <span>👊 CLICK / TAP TO STRIKE</span>
-    <span>⌨️ SPACEBAR ATTACKS</span>
-  </div>
-
-  <!-- Victory Overlay (Shown when health reaches 0) -->
-  <div class="game-victory-overlay" role="dialog" aria-modal="true" aria-label="Boss Defeated Victory">
-    <div class="tape-strip tape-yellow" style="margin-bottom: 12px;">VICTORY CONFIRMED</div>
-    <div class="victory-trophy" aria-hidden="true">🏆</div>
-    <h3 class="victory-title">
-      <span class="cut-chunk cut-mint">BOSS DEFEATED!</span>
-    </h3>
-    <p class="victory-perk">
-      <strong>UNLOCKED PERK:</strong> UNLIMITED BIRTHDAY CAKE PRIVILEGES & +9999 REPUTATION AURA!
-    </p>
-    <button class="btn-action game-restart-btn" type="button">
-      FIGHT AGAIN? ↺
-    </button>
+    <span>🖱️ MOUSE / DRAG TO STEER</span>
+    <span>⌨️ [A][D] OR ARROWS TO SLIDE</span>
   </div>
 </div>
 
 <style>
+  .arcade-game-card {
+    position: relative;
+    user-select: none;
+  }
+
   .boss-level-badge {
     font-family: var(--font-mono);
     font-size: 0.75rem;
@@ -74,25 +116,142 @@
   .boss-title {
     display: flex;
     gap: 8px;
-    margin: 8px 0 14px;
+    margin: 8px 0 12px;
     font-size: 1.25rem;
   }
 
-  .health-section {
-    margin-bottom: 12px;
-  }
-
-  .health-meta {
+  /* Arcade HUD */
+  .arcade-hud {
     display: flex;
     justify-content: space-between;
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    font-weight: 700;
-    margin-bottom: 4px;
+    align-items: center;
+    background: #fbf8f1;
+    border: var(--border-ink-thin);
+    border-radius: var(--radius-sm);
+    padding: 8px 14px;
+    margin-bottom: 8px;
   }
 
-  .health-label {
+  .hud-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .hud-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
     color: var(--ink-muted);
+  }
+
+  .hud-score-display {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    font-family: var(--font-mono);
+    font-weight: 800;
+  }
+
+  .arcade-score-val {
+    font-size: 1.15rem;
+    color: var(--accent-vermilion);
+  }
+
+  .hud-score-target {
+    font-size: 0.75rem;
+    color: var(--ink-muted);
+  }
+
+  .arcade-combo-val {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--accent-purple);
+  }
+
+  .arcade-lives-val {
+    font-size: 1rem;
+    letter-spacing: 2px;
+  }
+
+  /* Progress Bar */
+  .arcade-progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #ECE5D8;
+    border: var(--border-ink-thin);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+
+  .arcade-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-yellow), var(--accent-mint));
+    transition: width 180ms ease;
+  }
+
+  /* Canvas and Overlays */
+  .game-canvas-wrapper {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    background-color: #FAF7F0;
+    border: var(--border-ink);
+    border-radius: var(--radius-md);
+    margin-bottom: 12px;
+    overflow: hidden;
+    touch-action: none;
+    cursor: grab;
+  }
+
+  .game-canvas-wrapper:active {
+    cursor: grabbing;
+  }
+
+  .game-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .game-start-overlay,
+  .game-over-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(251, 248, 241, 0.94);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+    z-index: 35;
+  }
+
+  .game-intro-icon {
+    font-size: 2.2rem;
+    margin: 6px 0;
+  }
+
+  .game-intro-desc {
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--ink-secondary);
+    max-width: 320px;
+    margin-bottom: 16px;
+  }
+
+  .game-over-title {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--accent-vermilion);
+    margin: 4px 0 8px;
   }
 
   .victory-trophy {
@@ -112,7 +271,7 @@
 
   .victory-perk {
     font-family: var(--font-body);
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     line-height: 1.5;
     margin-bottom: 18px;
     max-width: 320px;
@@ -120,22 +279,22 @@
 </style>
 
 <script>
-  import { BirthdayCakeGame } from '../scripts/birthday-game';
+  import { AkiArcadeGame } from '../scripts/arcade-game';
 
-  function initGame() {
+  function initArcadeGame() {
     const container = document.getElementById('cake-boss-container');
     if (!container) return;
 
     try {
-      new BirthdayCakeGame(container);
+      new AkiArcadeGame(container);
     } catch (err) {
-      console.warn('Could not initialize 3D Cake Boss:', err);
+      console.warn('Could not initialize Aki Arcade Game:', err);
     }
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initGame);
+    document.addEventListener('DOMContentLoaded', initArcadeGame);
   } else {
-    initGame();
+    initArcadeGame();
   }
 </script>

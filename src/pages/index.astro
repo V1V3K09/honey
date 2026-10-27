@@ -150,9 +150,14 @@ import FooterExperience from '../components/FooterExperience.astro';
         </div>
       </section>
 
-      <!-- SECTION E: Feet & The Literal Footer -->
+      <!-- SECTION E: Feet & The Literal Footer (Feet Section on LEFT, Bare Feet on RIGHT) -->
       <section id="stage-footer" class="experience-stage">
-        <FooterExperience />
+        <div class="footer-column-left">
+          <FooterExperience />
+        </div>
+        <div class="footer-column-right" aria-hidden="true">
+          <!-- Aki's bare feet frame cleanly in this spatial area on the right -->
+        </div>
       </section>
 
     </div>

@@ -83,6 +83,27 @@
     max-width: 100%;
   }
 
+  /* Single Column Footer on Mobile */
+  #stage-footer {
+    grid-template-columns: 1fr;
+    padding: 76px 16px 40px;
+    gap: 20px;
+    box-sizing: border-box;
+  }
+
+  .footer-column-left {
+    max-width: 100%;
+    margin-top: 0;
+  }
+
+  .footer-column-right {
+    min-height: 240px;
+  }
+
+  .footer-nav {
+    justify-content: center;
+  }
+
   .game-canvas-wrapper {
     height: 230px;
   }

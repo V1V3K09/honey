@@ -27,9 +27,9 @@ export function initCharacterScroll() {
       // 4. Knees & Cake Boss Fight: knees framed on left (desktop)
       { scale: 2.3, x: isMobile ? '0vw' : '-24vw', y: isMobile ? '-58vh' : '-72vh' },
       // 5. Approach feet: moving downwards towards lower legs and ankles
-      { scale: 2.5, x: isMobile ? '0vw' : '-6vw', y: isMobile ? '-88vh' : '-102vh' },
-      // 6. Feet & Footer punchline: bare feet centered in the viewport
-      { scale: 2.8, x: '0vw', y: isMobile ? '-118vh' : '-132vh' }
+      { scale: 2.5, x: isMobile ? '0vw' : '12vw', y: isMobile ? '-82vh' : '-96vh' },
+      // 6. Feet & Footer punchline: feet framed on the RIGHT, feet section on the LEFT
+      { scale: 2.7, x: isMobile ? '0vw' : '24vw', y: isMobile ? '-106vh' : '-122vh' }
     ];
   };
 
