@@ -69,19 +69,20 @@ export function createCameraWaypoints(anchors: AnchorPoints, isMobile: boolean =
   const h = size.y > 0 ? size.y : 2.0;
 
   // Responsive offsets: mobile requires slightly wider view or centered framing
+  const heroXOffset = isMobile ? 0 : -0.42;
   const faceXOffset = isMobile ? 0 : -0.45;
   const kneeXOffset = isMobile ? 0 : 0.52;
   const distanceMultiplier = isMobile ? 1.35 : 1.0;
 
   return [
-    // 0: Stage A — Full-Body Landing
+    // 0: Stage A — Full-Body Hero (Model on RIGHT, Annotations on LEFT)
     {
       position: new THREE.Vector3(
-        anchors.center.x,
+        anchors.center.x + heroXOffset,
         anchors.center.y + h * 0.08,
         anchors.center.z + h * 1.55 * distanceMultiplier
       ),
-      target: new THREE.Vector3(anchors.center.x, anchors.center.y, anchors.center.z),
+      target: new THREE.Vector3(anchors.center.x + (isMobile ? 0 : 0.1), anchors.center.y, anchors.center.z),
       fov: isMobile ? 48 : 42
     },
 

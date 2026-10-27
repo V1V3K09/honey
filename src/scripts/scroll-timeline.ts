@@ -123,13 +123,16 @@ export class ScrollTimelineController {
   }
 
   private initScrollTrigger() {
+    const heroSection = document.getElementById('stage-hero');
+    const footerSection = document.getElementById('stage-footer');
     const scrollContainer = document.getElementById('scroll-container');
     if (!scrollContainer) return;
 
-    // Use a master scrubbed ScrollTrigger tied to the full document scroll
+    // The 3D camera journey starts when scrolling past the intro into #stage-hero
     ScrollTrigger.create({
-      trigger: scrollContainer,
+      trigger: heroSection || scrollContainer,
       start: 'top top',
+      endTrigger: footerSection || scrollContainer,
       end: 'bottom bottom',
       scrub: this.isReducedMotion ? 0.1 : 0.6,
       onUpdate: (self) => {

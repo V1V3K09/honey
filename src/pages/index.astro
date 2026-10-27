@@ -1,7 +1,8 @@
 ---
-// index.astro — BIRTHDAY.EXE: The Unhinged 3D Birthday Experience
+// index.astro — BIRTHDAY.EXE: The Unhinged 3D Birthday Experience for Aki
 import BaseLayout from '../layouts/BaseLayout.astro';
 import LoadingScreen from '../components/LoadingScreen.astro';
+import AkiIntroLanding from '../components/AkiIntroLanding.astro';
 import BirthdayScene from '../components/BirthdayScene.astro';
 import BirthdayCard from '../components/BirthdayCard.astro';
 import BirthdayGame from '../components/BirthdayGame.astro';
@@ -12,46 +13,85 @@ import FooterExperience from '../components/FooterExperience.astro';
   <!-- Designed Loading Screen -->
   <LoadingScreen />
 
-  <!-- Fixed 3D Canvas Viewport -->
+  <!-- Fixed 3D Canvas Viewport (Continuous 3D protagonist) -->
   <BirthdayScene />
 
   <!-- Scroll-Driven Choreography Track -->
   <main id="experience-wrapper">
     <div id="scroll-container">
       
-      <!-- STAGE A: Full-Body Hero Landing -->
+      <!-- STAGE 0: Dedicated Landing Page with Sliding Cutout & Newspaper Clipping -->
+      <AkiIntroLanding />
+
+      <!-- STAGE A: Full-Body 3D Hero (Text around body on LEFT, Model on RIGHT) -->
       <section id="stage-hero" class="experience-stage">
-        <!-- Floating Sticker Annotations -->
-        <div class="sticker-badge hide-mobile" style="top: 140px; left: 8vw; --rot: -4deg;">
-          <span class="tape-strip tape-yellow" style="display: block; margin-bottom: 4px;">TELEMETRY</span>
-          ⚠️ 100% ORGANIC SPECIMEN
+        <!-- LEFT COLUMN: Improved Anatomical Text Dossier around the character's body -->
+        <div class="hero-left-dossier interactive-content">
+          <div class="paper-card hero-dossier-card">
+            <div class="tape-strip tape-yellow" style="margin-bottom: 8px;">
+              ANATOMICAL DOSSIER #028
+            </div>
+
+            <h2 class="paper-headline" style="font-size: clamp(1.6rem, 3vw, 2.4rem); justify-content: flex-start; margin-bottom: 6px;">
+              <span class="cut-chunk cut-yellow">SPECIMEN:</span>
+              <span class="cut-chunk cut-pink">SAINT AKI</span>
+            </h2>
+
+            <p style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; color: var(--ink-muted); margin-bottom: 12px;">
+              "AN UNRIVALED BLEND OF INNER PEACE, SOLID LOYALTY & ZERO COMMON SENSE"
+            </p>
+
+            <!-- Anatomical Callouts around Aki's Body -->
+            <div class="anatomical-pointers-list">
+              <div class="anatomical-pointer-item">
+                <span class="pointer-badge">🧠 CRANIAL SECTOR • BANDANA</span>
+                <p class="pointer-desc">
+                  Locked at 100% <em>"राधे राधे"</em> frequency. Automatically dissipates tension, radiates positive vibrations, and repels bad vibes.
+                </p>
+              </div>
+
+              <div class="anatomical-pointer-item">
+                <span class="pointer-badge">🫀 THORACIC CORE • THE HEART</span>
+                <p class="pointer-desc">
+                  Solid 24-karat gold heart. Empathy and friendship telemetry exceed municipal safety guidelines.
+                </p>
+              </div>
+
+              <div class="anatomical-pointer-item">
+                <span class="pointer-badge">⚡ ARTICULATED KNEE JOINTS</span>
+                <p class="pointer-desc">
+                  Reinforced knee patches, primed for high-stakes combat against caloric threats in Stage E.
+                </p>
+              </div>
+
+              <div class="anatomical-pointer-item">
+                <span class="pointer-badge">👟 HIGH-TOP SNEAKERS</span>
+                <p class="pointer-desc">
+                  Ground contact thrusters. Crucial foundation for the literal foot punchline at the journey's end.
+                </p>
+              </div>
+            </div>
+
+            <!-- Specimen Vibe Stats -->
+            <div class="hero-stats-row">
+              <span class="stat-pill" style="background-color: var(--accent-yellow);">AURA: TRANSCENDENT</span>
+              <span class="stat-pill" style="background-color: var(--accent-mint);">LOYALTY: 100%</span>
+              <span class="stat-pill" style="background-color: var(--accent-pink); color: #FFF;">AGE: +1</span>
+              <span class="stat-pill">COMMON SENSE: 0%</span>
+            </div>
+
+            <div class="scroll-prompt-hero">
+              <span class="tape-strip tape-pink">PROCEED</span>
+              <p style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700;">
+                SCROLL DOWN TO DIVE INTO AKI'S FACE ↓
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div class="sticker-badge hide-mobile" style="top: 260px; right: 10vw; --rot: 5deg;">
-          <span class="tape-strip tape-pink" style="display: block; margin-bottom: 4px;">STATUS</span>
-          ⚡ AURA CAPACITY: MAXIMUM
-        </div>
-
-        <div class="sticker-badge hide-mobile" style="bottom: 180px; left: 12vw; --rot: -2deg;">
-          🎂 AGE +1 • LEVEL UP
-        </div>
-
-        <div class="hero-top-text interactive-content">
-          <div class="tape-strip tape-yellow" style="margin-bottom: 14px;">UNPRECEDENTED DISPATCH</div>
-          <h1 class="paper-headline" style="font-size: clamp(2rem, 5vw, 4.2rem);">
-            <span class="cut-chunk cut-yellow">THE SPECIMEN</span>
-            <span class="cut-chunk cut-pink">HAS ARRIVED</span>
-          </h1>
-          <p class="hero-subtitle">
-            A continuous anatomical exploration of the Birthday Legend.
-          </p>
-        </div>
-
-        <div class="scroll-prompt interactive-content">
-          <span class="tape-strip tape-pink">DIRECTIVE</span>
-          <p style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700;">
-            SCROLL DOWN TO DIVE THROUGH THE MODEL ↓
-          </p>
+        <!-- RIGHT COLUMN: 3D Model Stands in this Spatial Coordinate -->
+        <div class="hero-right-space" aria-hidden="true">
+          <!-- The continuous Three.js PerspectiveCamera frames the 3D model here -->
         </div>
       </section>
 

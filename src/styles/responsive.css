@@ -27,6 +27,20 @@
   }
 
   /* Single Column Stack on Mobile */
+  #stage-hero {
+    grid-template-columns: 1fr;
+    padding: 60px 16px;
+    gap: 20px;
+  }
+
+  .hero-left-dossier {
+    max-width: 100%;
+  }
+
+  .hero-right-space {
+    min-height: 280px;
+  }
+
   #stage-card {
     grid-template-columns: 1fr;
     padding: 60px 16px;

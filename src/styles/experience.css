@@ -102,30 +102,96 @@
   pointer-events: auto;
 }
 
-/* Stage A — Full-Body Hero */
+/* Stage A — Full-Body Hero (Text on LEFT, 3D Model on RIGHT) */
 #stage-hero {
-  min-height: 110vh;
-  justify-content: space-between;
-  text-align: center;
+  min-height: 125vh;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: center;
+  padding: 80px 6vw;
+  text-align: left;
 }
 
-.hero-top-text {
-  margin-top: 40px;
-}
-
-.hero-subtitle {
-  margin-top: 16px;
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--ink-muted);
-}
-
-.scroll-prompt {
-  margin-bottom: 24px;
+.hero-left-dossier {
+  max-width: 540px;
+  z-index: 20;
   display: flex;
   flex-direction: column;
+  gap: 14px;
+}
+
+.hero-dossier-card {
+  padding: 24px;
+}
+
+.anatomical-pointers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 12px 0;
+}
+
+.anatomical-pointer-item {
+  background-color: var(--bg-paper-alt);
+  border: var(--border-ink-thin);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  box-shadow: var(--shadow-hard-sm);
+  position: relative;
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.anatomical-pointer-item:hover {
+  transform: translateX(4px);
+  box-shadow: var(--shadow-hard-md);
+}
+
+.pointer-badge {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent-vermilion);
+  display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+}
+
+.pointer-desc {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--ink-primary);
+}
+
+.hero-stats-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.stat-pill {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: #FFFFFF;
+  border: var(--border-ink-thin);
+  padding: 4px 10px;
+  border-radius: var(--radius-cut);
+}
+
+.hero-right-space {
+  /* 3D Model stands in this coordinate space */
+  min-height: 480px;
+}
+
+.scroll-prompt-hero {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   animation: bouncePrompt 2s infinite ease-in-out;
 }
 

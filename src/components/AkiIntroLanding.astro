@@ -1,0 +1,527 @@
+---
+// AkiIntroLanding.astro — Dedicated Landing Stage with Sliding Cutout & Authentic Newspaper Clipping
+---
+
+<section id="stage-intro" class="intro-section">
+  <div class="intro-grid">
+    
+    <!-- LEFT COLUMN: Sliding Cutout of Aki -->
+    <div class="intro-left">
+      <div id="aki-cutout-wrapper" class="aki-cutout-container">
+        <!-- Masking Tape Sticker on Photo -->
+        <div class="tape-strip tape-yellow tape-badge-top">
+          ★ SAINT AKI: THE BIRTHDAY ASCETIC ★
+        </div>
+
+        <div class="aki-image-frame">
+          <img 
+            id="aki-photo"
+            src="/images/aki.png" 
+            alt="Aki peacefully meditating with Radhe Radhe bandana" 
+            class="aki-cutout-img"
+            loading="eager"
+          />
+        </div>
+
+        <!-- Floating Aura Tag -->
+        <div class="tape-strip tape-pink tape-badge-bottom">
+          AURA STATUS: TRANSCENDENT RADHE RADHE ✨
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: Dynamic Birthday Banner + Newspaper Cutout -->
+    <div class="intro-right">
+      
+      <!-- DYNAMIC BIRTHDAY BANNER -->
+      <div class="dynamic-birthday-card paper-card">
+        <div class="tape-strip tape-pink" style="margin-bottom: 8px;">
+          CALENDAR SATELLITE TELEMETRY
+        </div>
+        
+        <h1 id="dynamic-bday-headline" class="dynamic-headline">
+          <span class="cut-chunk cut-yellow">IT'S 28TH OCT</span>
+          <span class="cut-chunk cut-pink">TODAY IS MY BIRTHDAY!</span>
+        </h1>
+        
+        <p id="dynamic-bday-subtext" class="dynamic-subtext">
+          ALL TRIBUTES, SWEETS & GOOD VIBES ARE NOW MANDATORY FOR SAINT AKI.
+        </p>
+
+        <div class="date-meta-chip">
+          <span class="chip-dot"></span>
+          <span id="current-calendar-date">LIVE CALENDAR: OCT 28</span>
+        </div>
+      </div>
+
+      <!-- AUTHENTIC NEWSPAPER CUTOUT -->
+      <article class="newspaper-clipping">
+        <!-- Decorative Vintage Tape -->
+        <div class="tape-strip tape-yellow newspaper-tape-tl">SPECIAL REPORT</div>
+        <div class="tape-strip tape-pink newspaper-tape-tr">VOL. XXVIII</div>
+
+        <!-- Newspaper Masthead -->
+        <div class="newspaper-masthead">
+          <div class="newspaper-meta-bar">
+            <span>THE NATION'S MOST UNHINGED JOURNAL</span>
+            <span>OCTOBER 28 • SPECIAL JUBILEE EDITION</span>
+            <span>PRICE: 1 SLICE OF CAKE</span>
+          </div>
+          <h2 class="newspaper-title">THE AKI CHRONICLE</h2>
+          <div class="newspaper-tagline">
+            "ALL THE NEWS THAT'S FIT TO CELEBRATE — SERENITY, DEVOTION & ZERO COMMON SENSE"
+          </div>
+        </div>
+
+        <!-- Newspaper Main Headline -->
+        <h3 class="newspaper-headline">
+          SAINT AKI ACHIEVES SUPREME NIRVANA; REMAINS DEDICATED TO RADHE RADHE & SWEET BIRTHDAY TREATS
+        </h3>
+
+        <!-- Multi-column Story -->
+        <div class="newspaper-columns">
+          <div class="newspaper-col">
+            <p class="story-lead">
+              <span class="drop-cap">I</span>N AN UNPRECEDENTED occurrence that has left local scientists and spiritual scholars in absolute awe, resident legend <strong>Aki</strong> has officially turned one year older today while achieving a level of inner tranquility never before documented in human history.
+            </p>
+            <p>
+              Adorned in his signature <em>Radhe Radhe</em> bandana and traditional stole, Aki was spotted in deep contemplation, palms gently folded in eternal blessing, emitting a calming aura so potent that traffic signals turned green out of sheer respect.
+            </p>
+          </div>
+          <div class="newspaper-col">
+            <p>
+              "He is the kind of friend who brings peace to a hurricane," stated close witnesses. "You can come to Aki with total chaos, and he will look at you with those serene eyes, offer a heartfelt smile, and suddenly everything feels completely manageable."
+            </p>
+            <blockquote class="newspaper-pullquote">
+              "INNER PEACE IS SACRED, BUT DID SOMEONE REMEMBER TO CUT THE BIRTHDAY CAKE?"
+              <cite>— Saint Aki (Unofficial Statement)</cite>
+            </blockquote>
+            <p>
+              Municipal authorities have confirmed that despite aging by +1 whole solar year, his loyalty, pure-hearted kindness, and unhinged humor remain 100% intact.
+            </p>
+          </div>
+        </div>
+
+        <!-- Newspaper Footer Stamp -->
+        <div class="newspaper-stamp-bar">
+          <span>VERIFIED BY THE COUNCIL OF BEST FRIENDS</span>
+          <span class="official-seal">CERTIFIED LEGEND ★★★★★</span>
+        </div>
+      </article>
+
+      <!-- Scroll Prompt to Begin 3D Anatomy -->
+      <a href="#stage-hero" class="btn-action btn-begin-3d" id="btn-dive-3d">
+        ENTER 3D ANATOMICAL EXPEDITION ↓
+      </a>
+
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .intro-section {
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 90px 4vw 60px;
+    background-color: var(--bg-paper);
+    overflow: hidden;
+  }
+
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 40px;
+    max-width: 1300px;
+    width: 100%;
+    align-items: center;
+  }
+
+  /* LEFT: Cutout Image Container with Slide-in */
+  .intro-left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  .aki-cutout-container {
+    position: relative;
+    max-width: 480px;
+    width: 100%;
+    /* Initial state before animation kicks in */
+    opacity: 0;
+    transform: translateX(-90px);
+    transition: opacity 900ms cubic-bezier(0.16, 1, 0.3, 1), transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .aki-cutout-container.is-revealed {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .aki-image-frame {
+    position: relative;
+    border-radius: var(--radius-lg);
+    filter: drop-shadow(10px 14px 0px rgba(18, 19, 22, 0.9));
+  }
+
+  .aki-cutout-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    animation: gentleAkiSway 5s ease-in-out infinite alternate;
+  }
+
+  @keyframes gentleAkiSway {
+    0% { transform: translateY(0px) rotate(-0.5deg); }
+    100% { transform: translateY(-8px) rotate(0.8deg); }
+  }
+
+  .tape-badge-top {
+    position: absolute;
+    top: -14px;
+    left: 20px;
+    z-index: 5;
+    font-size: 0.8rem;
+    box-shadow: 2px 2px 0 rgba(18, 19, 22, 0.4);
+    transform: rotate(-2deg);
+  }
+
+  .tape-badge-bottom {
+    position: absolute;
+    bottom: -10px;
+    right: 20px;
+    z-index: 5;
+    font-size: 0.8rem;
+    box-shadow: 2px 2px 0 rgba(18, 19, 22, 0.4);
+    transform: rotate(2deg);
+  }
+
+  /* RIGHT: Dynamic Card & Newspaper */
+  .intro-right {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  /* Dynamic Birthday Headline Card */
+  .dynamic-birthday-card {
+    background-color: #FFFFFF;
+    padding: 22px 24px;
+  }
+
+  .dynamic-headline {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+    font-weight: 800;
+    line-height: 1.2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 10px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .dynamic-subtext {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--ink-muted);
+    letter-spacing: 0.03em;
+    margin-bottom: 12px;
+  }
+
+  .date-meta-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--bg-paper-alt);
+    border: var(--border-ink-thin);
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  .chip-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--accent-mint);
+    animation: pulseDot 1.5s infinite;
+  }
+
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.3); }
+  }
+
+  /* NEWSPAPER CLIPPING STYLING */
+  .newspaper-clipping {
+    background-color: #F8F5EC;
+    border: 2px solid #23252A;
+    box-shadow: var(--shadow-hard-lg);
+    padding: 26px 24px;
+    position: relative;
+    /* Newspaper texture feel */
+    background-image: 
+      radial-gradient(#23252a 0.5px, transparent 0.5px),
+      radial-gradient(#d3cbbd 0.5px, #F8F5EC 0.5px);
+    background-size: 16px 16px;
+    background-position: 0 0, 8px 8px;
+  }
+
+  .newspaper-tape-tl {
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    transform: rotate(-3deg);
+  }
+
+  .newspaper-tape-tr {
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    transform: rotate(2deg);
+  }
+
+  .newspaper-masthead {
+    border-bottom: 2px double #23252A;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+
+  .newspaper-meta-bar {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--ink-muted);
+    border-bottom: 1px solid #C4BEB2;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .newspaper-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: #121316;
+    line-height: 1;
+    margin: 4px 0;
+    text-transform: uppercase;
+  }
+
+  .newspaper-tagline {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-style: italic;
+    color: var(--ink-muted);
+  }
+
+  .newspaper-headline {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 800;
+    line-height: 1.25;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    border-bottom: 1px solid #D2CDC2;
+    padding-bottom: 8px;
+  }
+
+  .newspaper-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: #1A1A1A;
+    text-align: justify;
+  }
+
+  .drop-cap {
+    float: left;
+    font-family: var(--font-display);
+    font-size: 3rem;
+    line-height: 0.8;
+    padding-top: 4px;
+    padding-right: 6px;
+    padding-bottom: 2px;
+    font-weight: 800;
+    color: var(--accent-vermilion);
+  }
+
+  .newspaper-pullquote {
+    border-left: 3px solid var(--accent-vermilion);
+    padding-left: 10px;
+    margin: 10px 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    color: var(--ink-primary);
+  }
+
+  .newspaper-pullquote cite {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    font-style: normal;
+    color: var(--accent-vermilion);
+    margin-top: 4px;
+  }
+
+  .newspaper-stamp-bar {
+    margin-top: 14px;
+    padding-top: 8px;
+    border-top: 1px dashed #B8B0A2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--ink-muted);
+  }
+
+  .official-seal {
+    background-color: var(--accent-mint);
+    color: #121316;
+    padding: 2px 8px;
+    border-radius: var(--radius-cut);
+    border: 1px solid #121316;
+  }
+
+  .btn-begin-3d {
+    align-self: flex-start;
+    background-color: var(--accent-yellow);
+    font-size: 1.05rem;
+    padding: 14px 26px;
+  }
+
+  /* Responsive Stacking */
+  @media (max-width: 900px) {
+    .intro-grid {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    .aki-cutout-container {
+      max-width: 360px;
+    }
+
+    .newspaper-columns {
+      grid-template-columns: 1fr;
+      text-align: left;
+    }
+
+    .newspaper-meta-bar {
+      flex-direction: column;
+      gap: 2px;
+    }
+  }
+</style>
+
+<script>
+  import { sfx } from '../scripts/audio-fx';
+
+  function initIntro() {
+    // 1. Smoothly reveal the sliding photo of Aki
+    const cutout = document.getElementById('aki-cutout-wrapper');
+    if (cutout) {
+      setTimeout(() => {
+        cutout.classList.add('is-revealed');
+      }, 150);
+    }
+
+    // 2. Dynamic Birthday Date calculation (Target: October 28)
+    const headline = document.getElementById('dynamic-bday-headline');
+    const subtext = document.getElementById('dynamic-bday-subtext');
+    const calendarDate = document.getElementById('current-calendar-date');
+
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth(); // 9 is October (0-indexed)
+    const currentDate = now.getDate();
+
+    // Target: Oct 28 of current year
+    const bdayDate = new Date(currentYear, 9, 28);
+    const todayMidnight = new Date(currentYear, currentMonth, currentDate);
+    const diffDays = Math.round((todayMidnight.getTime() - bdayDate.getTime()) / (1000 * 60 * 60 * 24));
+
+    const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+    if (calendarDate) {
+      calendarDate.textContent = `LIVE CALENDAR: ${monthNames[currentMonth]} ${currentDate}`;
+    }
+
+    if (headline && subtext) {
+      if (diffDays === 0) {
+        headline.innerHTML = `
+          <span class="cut-chunk cut-yellow">IT'S 28TH OCT</span>
+          <span class="cut-chunk cut-pink">TODAY IS MY BIRTHDAY!</span>
+        `;
+        subtext.textContent = 'ALL HOMAGE, BLESSINGS & CAKE SLICES MUST BE SUBMITTED IMMEDIATELY.';
+      } else if (diffDays === 1) {
+        headline.innerHTML = `
+          <span class="cut-chunk cut-yellow">YESTERDAY WAS</span>
+          <span class="cut-chunk cut-pink">MY BIRTHDAY!</span>
+        `;
+        subtext.textContent = 'ON 28TH OF OCT I OFFICIALLY LEVELED UP. TRIBUTES STILL GRACIOUSLY ACCEPTED.';
+      } else if (diffDays > 1 && diffDays <= 7) {
+        headline.innerHTML = `
+          <span class="cut-chunk cut-yellow">ON 28TH OF OCT</span>
+          <span class="cut-chunk cut-pink">IT WAS MY BIRTHDAY</span>
+          <span class="cut-chunk cut-mint">(${diffDays} DAYS AGO)</span>
+        `;
+        subtext.textContent = 'THE BIRTHDAY ERA IS STILL ONGOING. THE RADHE RADHE ENERGY REMAINS PEAK.';
+      } else if (diffDays > 7 && diffDays <= 365) {
+        headline.innerHTML = `
+          <span class="cut-chunk cut-yellow">ON 28TH OF OCT</span>
+          <span class="cut-chunk cut-pink">IT WAS MY BIRTHDAY</span>
+        `;
+        subtext.textContent = `CELEBRATING ${diffDays} DAYS OF SAINT AKI'S RADIANT ASCENSION.`;
+      } else {
+        const daysUntil = -diffDays;
+        headline.innerHTML = `
+          <span class="cut-chunk cut-yellow">MY BIRTHDAY IS ON</span>
+          <span class="cut-chunk cut-pink">28TH OCT</span>
+          <span class="cut-chunk cut-mint">(${daysUntil} DAYS TO GO)</span>
+        `;
+        subtext.textContent = "PREPARATIONS FOR SAINT AKI'S ASCENSION ARE CURRENTLY UNDERWAY.";
+      }
+    }
+
+    // 3. Button to dive into 3D
+    const diveBtn = document.getElementById('btn-dive-3d');
+    if (diveBtn) {
+      diveBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        sfx.playWhoosh();
+        const heroSection = document.getElementById('stage-hero');
+        if (heroSection) {
+          heroSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initIntro);
+  } else {
+    initIntro();
+  }
+</script>
