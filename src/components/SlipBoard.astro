@@ -15,7 +15,7 @@ import '../styles/slipboard.css';
   >
     <span class="toggle-icon" aria-hidden="true">📌</span>
     <span>BIRTHDAY SLIP BOARD</span>
-    <span id="slipboard-count-badge" class="slip-count-badge">6 SLIPS</span>
+    <span id="slipboard-count-badge" class="slip-count-badge">0 SLIPS</span>
   </button>
 </div>
 
@@ -176,75 +176,8 @@ import '../styles/slipboard.css';
     isCustom?: boolean;
   }
 
-  // Initial Pre-Seeded Community Notes for Aki
-  const DEFAULT_SLIPS: Slip[] = [
-    {
-      id: 'slip-seed-1',
-      author: 'Medicos Study Crew',
-      tag: 'College Gang',
-      message: 'Happy Birthday Aki! The only medical student on earth whose blood pressure remains at a calm 120/80 even 10 minutes before the viva exam. May your last brain cell thrive forever!',
-      color: 'yellow',
-      stamp: '🧠',
-      timestamp: 'Today, 28th Oct',
-      likes: 24,
-      rotation: -1.8
-    },
-    {
-      id: 'slip-seed-2',
-      author: 'Rahul V.',
-      tag: 'Childhood Homie',
-      message: 'Happy Birthday Aki!! Never let anyone tell you to stop wearing the signature Radhe Radhe headwrap. It radiates immaculate energy wherever you walk. Have a legendary year ahead brother!',
-      color: 'mint',
-      stamp: '🚀',
-      timestamp: 'Today, 28th Oct',
-      likes: 31,
-      rotation: 1.5
-    },
-    {
-      id: 'slip-seed-3',
-      author: 'Priya & Neha',
-      tag: 'Samosa Squadron',
-      message: 'Wishing our favorite friend the happiest birthday! Your only official task today is devouring at least 5 golden samosas and completely ignoring adulthood. Radhe Radhe!',
-      color: 'pink',
-      stamp: '🥟',
-      timestamp: 'Today, 28th Oct',
-      likes: 19,
-      rotation: -2.2
-    },
-    {
-      id: 'slip-seed-4',
-      author: 'Tanmay S.',
-      tag: 'Hostel Room 204',
-      message: 'Happy 28th October to the Barefoot King! You are genuinely one of the sweetest, calmest souls I know. Thanks for always having our backs with zero drama and 100% warmth.',
-      color: 'sky',
-      stamp: '👑',
-      timestamp: 'Today, 28th Oct',
-      likes: 27,
-      rotation: 2.0
-    },
-    {
-      id: 'slip-seed-5',
-      author: 'Aniket M.',
-      tag: 'Gym Buddy (Infrequent)',
-      message: 'Happy Birthday Aki bhai! Another trip around the sun looking completely unbothered by worldly chaos. Keep shining that tranquil aura on all of us!',
-      color: 'kraft',
-      stamp: '✨',
-      timestamp: 'Yesterday',
-      likes: 16,
-      rotation: -1.2
-    },
-    {
-      id: 'slip-seed-6',
-      author: 'Sneha K.',
-      tag: 'Medicos Batch',
-      message: 'Happy Birthday Aki! Wishing you boundless peace, good health, exam distinctions, and endless laughs with friends. Have the best celebration ever!',
-      color: 'yellow',
-      stamp: '🪷',
-      timestamp: 'Yesterday',
-      likes: 22,
-      rotation: 1.8
-    }
-  ];
+  // Clean Visitor Slip Board (No dummy notes — starts completely fresh)
+  const DEFAULT_SLIPS: Slip[] = [];
 
   class SlipBoardManager {
     private overlay: HTMLElement | null = null;
@@ -290,12 +223,12 @@ import '../styles/slipboard.css';
         const stored = localStorage.getItem('aki_birthday_slips');
         if (stored) {
           const userSlips: Slip[] = JSON.parse(stored);
-          this.slips = [...userSlips, ...DEFAULT_SLIPS];
+          this.slips = userSlips;
         } else {
-          this.slips = [...DEFAULT_SLIPS];
+          this.slips = [];
         }
       } catch {
-        this.slips = [...DEFAULT_SLIPS];
+        this.slips = [];
       }
     }
 
@@ -312,8 +245,7 @@ import '../styles/slipboard.css';
 
     private saveUserSlips() {
       try {
-        const userSlips = this.slips.filter(s => s.isCustom);
-        localStorage.setItem('aki_birthday_slips', JSON.stringify(userSlips));
+        localStorage.setItem('aki_birthday_slips', JSON.stringify(this.slips));
       } catch (e) {
         console.warn('Could not save slips to localStorage:', e);
       }
@@ -477,17 +409,44 @@ import '../styles/slipboard.css';
     private updateCountBadge() {
       const total = this.slips.length;
       if (this.countBadge) {
-        this.countBadge.textContent = `${total} SLIPS`;
+        this.countBadge.textContent = total === 1 ? '1 SLIP' : `${total} SLIPS`;
       }
       const summary = document.getElementById('pinned-summary-text');
       if (summary) {
-        summary.textContent = `SHOWING ${total} TOTAL SLIPS`;
+        summary.textContent = total === 0 ? 'NO SLIPS YET' : `SHOWING ${total} TOTAL ${total === 1 ? 'SLIP' : 'SLIPS'}`;
       }
     }
 
     private renderSlips() {
       if (!this.container) return;
       this.container.innerHTML = '';
+
+      if (this.slips.length === 0) {
+        const emptyEl = document.createElement('div');
+        emptyEl.className = 'empty-slips-card';
+        emptyEl.innerHTML = `
+          <div class="empty-tape" aria-hidden="true"></div>
+          <span class="empty-icon" aria-hidden="true">📌</span>
+          <h4 class="empty-headline">THE SLIP BOARD IS FRESH & CLEAN</h4>
+          <p class="empty-desc">
+            No notes have been pinned yet. Be the first friend to leave Aki a birthday note, roast, or sweet wish!
+          </p>
+          <button id="btn-empty-write" class="btn-compose-jump" type="button" style="margin-top: 6px;">
+            <span>✍️</span>
+            <span>WRITE THE FIRST NOTE</span>
+          </button>
+        `;
+
+        emptyEl.querySelector('#btn-empty-write')?.addEventListener('click', () => {
+          const comp = document.getElementById('composer-section');
+          comp?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          const authorField = document.getElementById('slip-author') as HTMLInputElement;
+          setTimeout(() => authorField?.focus(), 300);
+        });
+
+        this.container.appendChild(emptyEl);
+        return;
+      }
 
       this.slips.forEach(slip => {
         const isLiked = this.likedSlipIds.has(slip.id);

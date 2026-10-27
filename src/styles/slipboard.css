@@ -546,6 +546,55 @@ body.slipboard-locked {
   transform: rotate(10deg);
 }
 
+/* Empty State for Clean Board */
+.empty-slips-card {
+  grid-column: 1 / -1;
+  background-color: #FFFFFF;
+  border: 2px dashed rgba(18, 19, 22, 0.35);
+  border-radius: var(--radius-lg);
+  padding: 42px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  margin: 12px 0;
+}
+
+.empty-tape {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 24px;
+  background-color: rgba(254, 240, 138, 0.7);
+  border: 1px dashed rgba(18, 19, 22, 0.2);
+}
+
+.empty-icon {
+  font-size: 2.4rem;
+  margin-bottom: 4px;
+}
+
+.empty-headline {
+  font-family: var(--font-headline);
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: var(--ink-primary);
+  margin: 0;
+}
+
+.empty-desc {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--ink-secondary);
+  max-width: 420px;
+  line-height: 1.5;
+  margin: 0;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .slipboard-toggle-wrapper {
