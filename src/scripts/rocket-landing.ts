@@ -110,6 +110,13 @@ export class RocketLandingSystem {
       window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
+    // Dismiss early if visitor aggressively scrolls down during landing
+    window.addEventListener('scroll', () => {
+      if (this.isLanding && window.scrollY > 80) {
+        this.completeInstantTouchdown();
+      }
+    }, { passive: true });
+
     // Trigger initial rocket landing sequence on page open
     // Small timeout ensures layout metrics are settled
     setTimeout(() => {
@@ -134,19 +141,42 @@ export class RocketLandingSystem {
     }, 350);
   }
 
-  private completeInstantTouchdown() {
+  public completeInstantTouchdown() {
     this.hasLanded = true;
     this.isLanding = false;
     this.throttle = 0;
+
     if (this.characterFrame) {
+      gsap.killTweensOf(this.characterFrame);
       gsap.set(this.characterFrame, {
         x: '0vw',
         y: '0vh',
         scale: 1.0,
-        rotation: 0
+        rotation: 0,
+        clearProps: 'scaleX,scaleY'
       });
     }
-    this.updateTelemetry(0, 0, 'TOUCHDOWN CONFIRMED');
+
+    const leftCol = document.querySelector('.hero-left-column');
+    const rightCol = document.querySelector('.hero-right-column');
+    const actions = document.querySelector('.hero-landing-actions');
+    if (leftCol) {
+      gsap.killTweensOf(leftCol);
+      gsap.set(leftCol, { x: 0, opacity: 1 });
+    }
+    if (rightCol) {
+      gsap.killTweensOf(rightCol);
+      gsap.set(rightCol, { x: 0, opacity: 1 });
+    }
+    if (actions) {
+      gsap.killTweensOf(actions);
+      gsap.set(actions, { y: 0, opacity: 1 });
+    }
+
+    this.updateTelemetry(0, 0, '🎯 IN POSITION: SCROLL TO EXPLORE');
+    if (this.telemetryBadge) {
+      this.telemetryBadge.classList.remove('is-active');
+    }
     window.dispatchEvent(new CustomEvent('birthday:rocket-landed'));
   }
 
@@ -159,7 +189,7 @@ export class RocketLandingSystem {
 
     this.isLanding = true;
     this.hasLanded = false;
-    this.throttle = 0.55;
+    this.throttle = 0.6;
     this.sparks = [];
     this.smoke = [];
     this.shockwaves = [];
@@ -182,14 +212,36 @@ export class RocketLandingSystem {
     // Start particle render loop
     this.startRenderLoop();
 
-    // Initial character state: high up in the stratosphere with slight rocket attitude tilt
+    // Foreground Landing Dimensions: Aki lands prominently in the FRONT!
+    const isMobile = window.innerWidth < 768;
+    const frontScale = isMobile ? 1.22 : 1.35;
+    const frontY = isMobile ? '1vh' : '2.5vh';
+
+    // Initial character state: stratosphere descent in front with rocket attitude tilt
     gsap.set(this.characterFrame, {
       y: '-115vh',
       x: '0vw',
-      scale: 1.05,
+      scale: frontScale,
       rotation: -3,
       transformOrigin: '50% 14%'
     });
+
+    // Part flank columns slightly so full visual focus is on Aki landing in the front
+    const leftCol = document.querySelector('.hero-left-column');
+    const rightCol = document.querySelector('.hero-right-column');
+    const actions = document.querySelector('.hero-landing-actions');
+    if (leftCol) {
+      gsap.killTweensOf(leftCol);
+      gsap.set(leftCol, { x: -55, opacity: 0.18 });
+    }
+    if (rightCol) {
+      gsap.killTweensOf(rightCol);
+      gsap.set(rightCol, { x: 55, opacity: 0.18 });
+    }
+    if (actions) {
+      gsap.killTweensOf(actions);
+      gsap.set(actions, { y: 24, opacity: 0 });
+    }
 
     const progressTracker = { progress: 0, altitude: 1200, velocity: 85 };
 
@@ -202,11 +254,11 @@ export class RocketLandingSystem {
           ? 'RETRO-PROPULSION ENGAGED' 
           : alt > 30 
             ? 'TERMINAL BRAKING BURN' 
-            : 'FINAL TOUCHDOWN';
+            : 'FOREGROUND TOUCHDOWN';
         this.updateTelemetry(alt, vel, status);
       },
       onComplete: () => {
-        this.handleTouchdown();
+        this.handleTouchdown(frontScale, frontY);
       }
     });
 
@@ -233,7 +285,7 @@ export class RocketLandingSystem {
 
     // --- PHASE 2: Terminal Suicide Burn Deceleration (1.2s - 2.1s) ---
     this.timeline.to(this.characterFrame, {
-      y: '-3.5vh',
+      y: '-2vh',
       rotation: -0.6,
       duration: 0.9,
       ease: 'power2.out'
@@ -251,9 +303,9 @@ export class RocketLandingSystem {
       duration: 0.4
     }, 1.6);
 
-    // --- PHASE 3: Micro-Stabilization Hover into Contact (2.1s - 2.6s) ---
+    // --- PHASE 3: Micro-Stabilization Hover into Contact Up Front (2.1s - 2.6s) ---
     this.timeline.to(this.characterFrame, {
-      y: '0vh',
+      y: frontY,
       rotation: 0,
       duration: 0.5,
       ease: 'power1.out'
@@ -272,9 +324,7 @@ export class RocketLandingSystem {
     }, 2.1);
   }
 
-  private handleTouchdown() {
-    this.isLanding = false;
-    this.hasLanded = true;
+  private handleTouchdown(frontScale: number, frontY: string) {
     this.throttle = 0; // Cut thruster flames immediately!
 
     // Cut thruster continuous audio
@@ -292,26 +342,26 @@ export class RocketLandingSystem {
     this.shockwaves.push({
       x: centerX,
       y: groundY,
-      rx: 30,
-      ry: 10,
-      maxRx: window.innerWidth * 0.38,
-      alpha: 0.85,
-      color: 'rgba(255, 190, 60, '
+      rx: 35,
+      ry: 12,
+      maxRx: window.innerWidth * 0.42,
+      alpha: 0.9,
+      color: 'rgba(255, 195, 60, '
     });
 
     // Spawn final touchdown dust burst
-    for (let i = 0; i < 35; i++) {
+    for (let i = 0; i < 40; i++) {
       const angle = Math.random() * Math.PI;
-      const speed = 4 + Math.random() * 12;
+      const speed = 4 + Math.random() * 14;
       const isLeft = i % 2 === 0;
       this.smoke.push({
-        x: centerX + (Math.random() - 0.5) * 60,
-        y: groundY - 5 + (Math.random() - 0.5) * 10,
+        x: centerX + (Math.random() - 0.5) * 70,
+        y: groundY - 5 + (Math.random() - 0.5) * 12,
         vx: (isLeft ? -1 : 1) * speed,
-        vy: -Math.sin(angle) * 3 - Math.random() * 2,
-        radius: 18 + Math.random() * 16,
-        maxRadius: 75 + Math.random() * 45,
-        alpha: 0.65,
+        vy: -Math.sin(angle) * 3.5 - Math.random() * 2,
+        radius: 20 + Math.random() * 18,
+        maxRadius: 85 + Math.random() * 50,
+        alpha: 0.7,
         rotation: Math.random() * Math.PI * 2,
         vRot: (Math.random() - 0.5) * 0.04,
         color: 'rgba(240, 236, 226, '
@@ -321,18 +371,18 @@ export class RocketLandingSystem {
     // Viewport camera impulse shake (tactile impact)
     if (this.viewport) {
       gsap.fromTo(this.viewport, 
-        { y: 8 }, 
+        { y: 9 }, 
         { y: 0, duration: 0.4, ease: 'elastic.out(1.2, 0.35)' }
       );
     }
 
-    // Character landing gear compression: squash slightly then spring back
+    // Character landing gear compression in the front: squash slightly then spring back
     if (this.characterFrame) {
       gsap.fromTo(this.characterFrame,
-        { scaleY: 0.93, scaleX: 1.05 },
+        { scaleY: frontScale * 0.92, scaleX: frontScale * 1.05 },
         { 
-          scaleY: 1.0, 
-          scaleX: 1.0, 
+          scaleY: frontScale, 
+          scaleX: frontScale, 
           duration: 0.45, 
           ease: 'back.out(2.2)',
           onComplete: () => {
@@ -343,19 +393,94 @@ export class RocketLandingSystem {
     }
 
     // Telemetry badge confirmation update
-    this.updateTelemetry(0, 0, '🎯 TOUCHDOWN CONFIRMED: AKI HAS LANDED');
+    this.updateTelemetry(0, 0, '🎯 TOUCHDOWN CONFIRMED: AKI HAS ARRIVED IN FRONT!');
     if (this.telemetryBadge) {
       this.telemetryBadge.classList.add('is-landed');
-      // Fade telemetry badge away after 3.8s
-      setTimeout(() => {
-        if (this.telemetryBadge && this.hasLanded) {
-          this.telemetryBadge.classList.remove('is-active');
-        }
-      }, 3800);
     }
 
-    // Dispatch completion event for character-controller to enable scroll scrubbing
-    window.dispatchEvent(new CustomEvent('birthday:rocket-landed'));
+    // Hold in the FRONT for 900ms to let the impact and smoke be admired,
+    // then smoothly move to original position for website scrolling!
+    setTimeout(() => {
+      this.moveToOriginalPosition(frontScale, frontY);
+    }, 950);
+  }
+
+  // Smoothly move Aki from the foreground into the original position used for scrolling
+  private moveToOriginalPosition(fromScale: number, fromY: string) {
+    if (!this.characterFrame) return;
+
+    this.updateTelemetry(0, 0, 'MISSION CONTROL: DOCKING INTO STATION');
+
+    // Camera reframing whoosh sound
+    sfx.playWhoosh();
+
+    const moveTl = gsap.timeline({
+      onComplete: () => {
+        this.isLanding = false;
+        this.hasLanded = true;
+        this.updateTelemetry(0, 0, '🎯 READY: SCROLL TO EXPLORE');
+
+        if (this.telemetryBadge) {
+          setTimeout(() => {
+            if (this.hasLanded) {
+              this.telemetryBadge?.classList.remove('is-active');
+            }
+          }, 3200);
+        }
+
+        // Clean up temporary transform values and activate normal ScrollTrigger timeline!
+        gsap.set(this.characterFrame, {
+          scale: 1.0,
+          x: '0vw',
+          y: '0vh',
+          rotation: 0,
+          clearProps: 'scaleX,scaleY'
+        });
+
+        window.dispatchEvent(new CustomEvent('birthday:rocket-landed'));
+      }
+    });
+
+    // 1. Aki steps back from front (scale 1.35 ➔ 1.0, y: 2.5vh ➔ 0vh)
+    moveTl.to(this.characterFrame, {
+      scale: 1.0,
+      y: '0vh',
+      x: '0vw',
+      duration: 1.25,
+      ease: 'power2.inOut'
+    }, 0);
+
+    // 2. Dossier and Newspaper flank panels glide in around him into place
+    const leftCol = document.querySelector('.hero-left-column');
+    const rightCol = document.querySelector('.hero-right-column');
+    const actions = document.querySelector('.hero-landing-actions');
+
+    if (leftCol) {
+      moveTl.to(leftCol, {
+        x: 0,
+        opacity: 1,
+        duration: 1.0,
+        ease: 'back.out(1.2)'
+      }, 0.25);
+    }
+
+    if (rightCol) {
+      moveTl.to(rightCol, {
+        x: 0,
+        opacity: 1,
+        duration: 1.0,
+        ease: 'back.out(1.2)'
+      }, 0.25);
+    }
+
+    if (actions) {
+      moveTl.to(actions, {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        ease: 'power2.out'
+      }, 0.5);
+    }
   }
 
   private updateTelemetry(altitude: number, velocity: number, status: string) {
