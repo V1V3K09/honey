@@ -129,6 +129,15 @@
   letter-spacing: 0.03em;
 }
 
+.hero-dossier-subquote {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+  margin-bottom: 12px;
+  letter-spacing: 0.01em;
+}
+
 .hero-body-flank-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -148,37 +157,41 @@
 }
 
 .hero-dossier-card {
-  padding: 22px;
+  padding: 24px 22px;
 }
 
 .anatomical-pointers-list {
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 10px;
   margin: 12px 0;
 }
 
 .anatomical-pointer-item {
   background-color: var(--bg-paper-alt);
   border: var(--border-ink-thin);
-  border-radius: var(--radius-sm);
-  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
   display: flex;
   flex-direction: column;
   gap: 3px;
   box-shadow: var(--shadow-hard-sm);
   position: relative;
-  transition: transform 140ms ease, box-shadow 140ms ease;
+  transition-property: transform, box-shadow;
+  transition-duration: 140ms;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
 }
 
-.anatomical-pointer-item:hover {
-  transform: translateX(4px);
-  box-shadow: var(--shadow-hard-md);
+@media (hover: hover) {
+  .anatomical-pointer-item:hover {
+    transform: translateX(4px);
+    box-shadow: var(--shadow-hard-md);
+  }
 }
 
 .pointer-badge {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 700;
   color: var(--accent-vermilion);
   display: flex;
@@ -187,16 +200,16 @@
 }
 
 .pointer-desc {
-  font-size: 0.82rem;
-  line-height: 1.45;
-  color: var(--ink-primary);
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--ink-secondary);
 }
 
 .hero-stats-row {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
 .stat-pill {
@@ -206,7 +219,7 @@
   background: #FFFFFF;
   border: var(--border-ink-thin);
   padding: 4px 10px;
-  border-radius: var(--radius-cut);
+  border-radius: var(--radius-sm);
 }
 
 .hero-center-column {
@@ -228,7 +241,19 @@
   align-items: center;
   gap: 6px;
   z-index: 20;
-  animation: bouncePrompt 2s infinite ease-in-out;
+  animation: bouncePrompt 2.5s infinite ease-in-out;
+}
+
+.scroll-prompt-text {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ink-secondary);
+  background: var(--bg-paper-alt);
+  border: var(--border-ink-thin);
+  padding: 6px 16px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-hard-sm);
 }
 
 @keyframes bouncePrompt {

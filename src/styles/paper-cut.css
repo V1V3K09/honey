@@ -1,16 +1,17 @@
-/* Paper-Cut Ransom Note & Collage Styles */
+/* Paper-Cut Ransom Note & Tactile Collage Styles */
 
 .paper-headline {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 10px 14px;
+  gap: 8px 12px;
   margin: 0 auto;
-  line-height: 1.1;
+  line-height: 1.15;
   text-transform: uppercase;
   font-family: var(--font-display);
   font-weight: 800;
+  letter-spacing: -0.025em;
 }
 
 .cut-chunk {
@@ -20,53 +21,57 @@
   box-shadow: var(--shadow-hard-md);
   border-radius: var(--radius-cut);
   transform: rotate(var(--rot, 0deg));
-  transition: transform 180ms ease, box-shadow 180ms ease;
   user-select: none;
+  transition-property: transform, box-shadow;
+  transition-duration: 160ms;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
 }
 
-.cut-chunk:hover {
-  transform: scale(1.04) rotate(0deg);
-  box-shadow: var(--shadow-hard-lg);
+@media (hover: hover) {
+  .cut-chunk:hover {
+    transform: scale(1.03) rotate(0deg);
+    box-shadow: var(--shadow-hard-lg);
+  }
 }
 
 /* Palette Variations */
 .cut-yellow {
   background-color: var(--accent-yellow);
   color: var(--ink-primary);
-  --rot: -2deg;
+  --rot: -1.8deg;
 }
 
 .cut-pink {
   background-color: var(--accent-pink);
   color: var(--ink-inverted);
-  --rot: 2.5deg;
+  --rot: 2deg;
 }
 
 .cut-vermilion {
   background-color: var(--accent-vermilion);
   color: var(--ink-inverted);
-  --rot: -3deg;
+  --rot: -2.5deg;
 }
 
 .cut-mint {
   background-color: var(--accent-mint);
   color: var(--ink-primary);
-  --rot: 1.8deg;
+  --rot: 1.5deg;
 }
 
 .cut-white {
   background-color: #FFFFFF;
   color: var(--ink-primary);
-  --rot: -1.2deg;
+  --rot: -1deg;
 }
 
 .cut-violet {
   background-color: var(--accent-violet);
   color: var(--ink-inverted);
-  --rot: 2deg;
+  --rot: 1.8deg;
 }
 
-/* Masking Tape Stickers */
+/* Tactile Masking Tape Badges (Restrained & Editorial) */
 .tape-strip {
   display: inline-flex;
   align-items: center;
@@ -74,15 +79,15 @@
   background-color: var(--tape-color);
   color: var(--ink-primary);
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
-  padding: 4px 14px;
-  border-left: 2px dashed rgba(18, 19, 22, 0.4);
-  border-right: 2px dashed rgba(18, 19, 22, 0.4);
-  box-shadow: 2px 2px 0 rgba(18, 19, 22, 0.15);
-  transform: rotate(var(--tape-rot, -1.5deg));
-  letter-spacing: 0.05em;
+  padding: 4px 12px;
+  border-left: 2px dashed rgba(18, 19, 22, 0.35);
+  border-right: 2px dashed rgba(18, 19, 22, 0.35);
+  box-shadow: 1.5px 1.5px 0 rgba(18, 19, 22, 0.12);
+  transform: rotate(var(--tape-rot, -1deg));
+  letter-spacing: 0.04em;
 }
 
 .tape-strip.tape-pink {
@@ -93,50 +98,31 @@
   background-color: #fef08a;
 }
 
-/* Scattered Sticker Annotations */
-.sticker-badge {
-  position: absolute;
-  z-index: 10;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 700;
-  padding: 8px 12px;
-  border-radius: var(--radius-sm);
-  border: var(--border-ink);
-  box-shadow: var(--shadow-hard-sm);
-  background-color: #FFFFFF;
-  pointer-events: auto;
-  user-select: none;
-  animation: floatSlight 4s ease-in-out infinite alternate;
-}
-
-@keyframes floatSlight {
-  0% { transform: translateY(0px) rotate(var(--rot, 0deg)); }
-  100% { transform: translateY(-6px) rotate(calc(var(--rot, 0deg) + 1.5deg)); }
-}
-
-/* Paper Card Container (Concentric radii) */
+/* Tactile Paper Card Container (Emil Kowalski Glass + Better-UI Elevation) */
 .paper-card {
-  background-color: #FFFFFF;
+  background-color: var(--glass-paper);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
   border: var(--border-ink);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-hard-lg);
+  box-shadow: var(--shadow-elevation);
   padding: 24px;
   position: relative;
+  box-sizing: border-box;
 }
 
 .paper-card::before {
-  /* Corner tape ornament */
+  /* Corner tape accent */
   content: "";
   position: absolute;
-  top: -10px;
+  top: -8px;
   left: 24px;
-  width: 70px;
-  height: 22px;
+  width: 60px;
+  height: 18px;
   background-color: var(--tape-color);
-  border-left: 1px dashed rgba(18, 19, 22, 0.3);
-  border-right: 1px dashed rgba(18, 19, 22, 0.3);
-  transform: rotate(-3deg);
-  opacity: 0.9;
+  border-left: 1px dashed rgba(18, 19, 22, 0.25);
+  border-right: 1px dashed rgba(18, 19, 22, 0.25);
+  transform: rotate(-2deg);
+  opacity: 0.85;
   pointer-events: none;
 }

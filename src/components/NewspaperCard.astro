@@ -5,66 +5,60 @@
 <div class="newspaper-card-container interactive-content">
   <!-- DYNAMIC BIRTHDAY BANNER -->
   <div class="dynamic-birthday-pill paper-card">
-    <div class="tape-strip tape-pink" style="margin-bottom: 6px;">
-      LIVE CALENDAR TELEMETRY
-    </div>
     <h3 id="hero-dynamic-bday-headline" class="dynamic-headline-compact">
       <span class="cut-chunk cut-yellow">IT'S 28TH OCT</span>
       <span class="cut-chunk cut-pink">TODAY IS MY BIRTHDAY!</span>
     </h3>
     <p id="hero-dynamic-bday-subtext" class="dynamic-subtext-compact">
-      ALL HOMAGE, SWEETS & GOOD VIBES ARE NOW MANDATORY FOR SAINT AKI.
+      Cake, blessings, and warm wishes are strictly mandatory for Aki today.
     </p>
     <div class="date-chip">
       <span class="chip-dot"></span>
-      <span id="hero-live-date-label">OCTOBER 28 • ASCENSION DAY</span>
+      <span id="hero-live-date-label">OCTOBER 28 • THE BIG DAY</span>
     </div>
   </div>
 
   <!-- AUTHENTIC NEWSPAPER CUTOUT -->
   <article class="hero-newspaper-clipping">
-    <div class="tape-strip tape-yellow newspaper-tape-tl">SPECIAL REPORT</div>
-    <div class="tape-strip tape-pink newspaper-tape-tr">VOL. XXVIII</div>
-
     <div class="newspaper-masthead">
       <div class="newspaper-meta-bar">
-        <span>THE DAILY RADHE</span>
-        <span>OCTOBER 28 JUBILEE</span>
-        <span>PRICE: 1 CAKE SLICE</span>
+        <span>THE AKI CHRONICLE</span>
+        <span>OCTOBER 28 SPECIAL EDITION</span>
+        <span>PRICE: 1 WARM HUG</span>
       </div>
       <h2 class="newspaper-title">THE AKI CHRONICLE</h2>
       <p class="newspaper-tagline">
-        "SERENITY, RADHE RADHE DEVOTION & ZERO COMMON SENSE"
+        "DEVOTION, GOOD VIBES, GENTLE WISDOM & ZERO DRAMA"
       </p>
     </div>
 
     <h4 class="newspaper-headline">
-      SAINT AKI ACHIEVES SUPREME NIRVANA; REMAINS DEDICATED TO RADHE RADHE & SWEET TREATS
+      LOCAL LEGEND AKI TURNS A YEAR WISER; REMAINS DEDICATED TO RADHE RADHE & SWEET TREATS
     </h4>
 
     <div class="newspaper-columns">
       <div class="newspaper-col">
         <p class="story-lead">
-          <span class="drop-cap">I</span>N AN UNPRECEDENTED occurrence, local legend <strong>Aki</strong> has officially turned one year older while attaining a level of inner tranquility never before documented in human history.
+          <span class="drop-cap">I</span>N CELEBRATION of another wonderful year, family and close friends gathered today in honor of <strong>Aki</strong>, who has officially completed another solar orbit while remaining the calmest, kindest soul in any room.
         </p>
         <p>
-          Adorned in his signature <em>Radhe Radhe</em> headwrap, matching scarf, and bare feet, Aki was spotted in deep contemplation, palms gently folded in eternal blessing.
+          Adorned in his signature <em>Radhe Radhe</em> headwrap, matching scarf, and an easygoing smile, Aki was spotted enjoying his special day with deep gratitude and zero stress.
         </p>
       </div>
       <div class="newspaper-col">
         <p>
-          "He brings peace to any hurricane," confirmed close friends. "You can come to Aki with total panic, and his serene smile makes everything feel completely manageable."
+          "You can bring any chaotic emergency to Aki, and his gentle laugh instantly puts everything in perspective," his friends confirmed. "He is pure gold."
         </p>
         <blockquote class="newspaper-pullquote">
-          "INNER PEACE IS SACRED, BUT DID SOMEONE BRING THE CAKE?"
-          <cite>— Saint Aki</cite>
+          "KEEP YOUR HEART PURE, SMILE THROUGH THE CHAOS, AND NEVER SAY NO TO BIRTHDAY CAKE."
+          <cite>— Aki</cite>
         </blockquote>
       </div>
     </div>
 
     <div class="newspaper-stamp-bar">
-      <span>OFFICIAL FRIENDSHIP ARCHIVE</span>
-      <span class="official-seal">CERTIFIED LEGEND ★★★★★</span>
+      <span>COMPILED WITH LOVE BY FRIENDS</span>
+      <span class="official-seal">CERTIFIED BEST FRIEND ★★★★★</span>
     </div>
   </article>
 </div>
@@ -78,10 +72,9 @@
     width: 100%;
   }
 
-  /* Dynamic Birthday Pill */
+  /* Dynamic Birthday Pill (Emil Kowalski Glass + Better-UI elevation) */
   .dynamic-birthday-pill {
-    padding: 16px 20px;
-    background-color: #FFFFFF;
+    padding: 20px 22px;
   }
 
   .dynamic-headline-compact {
@@ -92,17 +85,18 @@
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     text-transform: uppercase;
+    letter-spacing: -0.02em;
   }
 
   .dynamic-subtext-compact {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--ink-muted);
-    margin-bottom: 10px;
-    line-height: 1.4;
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--ink-secondary);
+    margin-bottom: 12px;
+    line-height: 1.45;
   }
 
   .date-chip {
@@ -112,9 +106,9 @@
     background-color: var(--bg-paper-alt);
     border: var(--border-ink-thin);
     border-radius: 999px;
-    padding: 3px 10px;
+    padding: 4px 12px;
     font-family: var(--font-mono);
-    font-size: 0.68rem;
+    font-size: 0.7rem;
     font-weight: 700;
   }
 
@@ -131,12 +125,13 @@
     50% { opacity: 0.4; transform: scale(1.3); }
   }
 
-  /* Newspaper Clipping */
+  /* Authentic Newspaper Clipping */
   .hero-newspaper-clipping {
     background-color: #F8F5EC;
-    border: 2px solid #23252A;
-    box-shadow: var(--shadow-hard-md);
-    padding: 20px 18px;
+    border: var(--border-ink);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-elevation);
+    padding: 22px 20px;
     position: relative;
     background-image: 
       radial-gradient(#23252a 0.5px, transparent 0.5px),
@@ -145,24 +140,10 @@
     background-position: 0 0, 8px 8px;
   }
 
-  .newspaper-tape-tl {
-    position: absolute;
-    top: -10px;
-    left: 16px;
-    transform: rotate(-3deg);
-  }
-
-  .newspaper-tape-tr {
-    position: absolute;
-    top: -10px;
-    right: 16px;
-    transform: rotate(2deg);
-  }
-
   .newspaper-masthead {
     border-bottom: 2px double #23252A;
     padding-bottom: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     text-align: center;
   }
 
@@ -170,49 +151,51 @@
     display: flex;
     justify-content: space-between;
     font-family: var(--font-mono);
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     font-weight: 700;
-    color: var(--ink-muted);
-    border-bottom: 1px solid #C4BEB2;
-    padding-bottom: 3px;
-    margin-bottom: 4px;
-    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid #121316;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+    color: var(--ink-secondary);
   }
 
   .newspaper-title {
     font-family: var(--font-display);
     font-size: 1.8rem;
     font-weight: 800;
+    letter-spacing: -0.03em;
     color: #121316;
-    line-height: 1;
-    margin: 2px 0;
+    margin: 4px 0 2px;
     text-transform: uppercase;
   }
 
   .newspaper-tagline {
     font-family: var(--font-mono);
-    font-size: 0.62rem;
-    font-style: italic;
+    font-size: 0.68rem;
+    font-weight: 700;
     color: var(--ink-muted);
+    letter-spacing: 0.02em;
   }
 
   .newspaper-headline {
     font-family: var(--font-display);
-    font-size: 0.95rem;
+    font-size: 0.96rem;
     font-weight: 800;
-    line-height: 1.3;
+    line-height: 1.35;
     text-transform: uppercase;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     border-bottom: 1px solid #D2CDC2;
     padding-bottom: 6px;
+    letter-spacing: -0.015em;
   }
 
   .newspaper-columns {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    font-size: 0.78rem;
-    line-height: 1.5;
+    gap: 14px;
+    font-size: 0.8rem;
+    line-height: 1.55;
     color: #1A1A1A;
     text-align: justify;
   }
@@ -223,18 +206,18 @@
     font-size: 2.2rem;
     line-height: 0.8;
     padding-top: 2px;
-    padding-right: 5px;
+    padding-right: 6px;
     font-weight: 800;
     color: var(--accent-vermilion);
   }
 
   .newspaper-pullquote {
-    border-left: 2px solid var(--accent-vermilion);
+    border-left: 2.5px solid var(--accent-vermilion);
     padding-left: 8px;
     margin: 8px 0;
     font-family: var(--font-display);
     font-weight: 800;
-    font-size: 0.72rem;
+    font-size: 0.74rem;
     line-height: 1.35;
     color: var(--ink-primary);
   }
@@ -242,22 +225,22 @@
   .newspaper-pullquote cite {
     display: block;
     font-family: var(--font-mono);
-    font-size: 0.62rem;
+    font-size: 0.64rem;
     font-weight: 700;
     font-style: normal;
     color: var(--accent-vermilion);
-    margin-top: 3px;
+    margin-top: 4px;
   }
 
   .newspaper-stamp-bar {
-    margin-top: 10px;
-    padding-top: 6px;
+    margin-top: 14px;
+    padding-top: 8px;
     border-top: 1px dashed #B8B0A2;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-family: var(--font-mono);
-    font-size: 0.65rem;
+    font-size: 0.68rem;
     font-weight: 700;
     color: var(--ink-muted);
   }
@@ -265,7 +248,7 @@
   .official-seal {
     background-color: var(--accent-mint);
     color: #121316;
-    padding: 2px 6px;
+    padding: 3px 8px;
     border-radius: var(--radius-cut);
     border: 1px solid #121316;
   }
@@ -304,26 +287,26 @@
           <span class="cut-chunk cut-yellow">IT'S 28TH OCT</span>
           <span class="cut-chunk cut-pink">TODAY IS MY BIRTHDAY!</span>
         `;
-        subtext.textContent = 'ALL HOMAGE, BLESSINGS & CAKE SLICES MUST BE SUBMITTED IMMEDIATELY.';
+        subtext.textContent = 'Cake, blessings, and warm wishes are strictly mandatory for Aki today.';
       } else if (diffDays === 1) {
         headline.innerHTML = `
           <span class="cut-chunk cut-yellow">YESTERDAY WAS</span>
           <span class="cut-chunk cut-pink">MY BIRTHDAY!</span>
         `;
-        subtext.textContent = 'ON 28TH OF OCT I OFFICIALLY LEVELED UP. TRIBUTES STILL GRACIOUSLY ACCEPTED.';
+        subtext.textContent = 'On 28th of Oct, Aki officially leveled up. Tributes and warm hugs still welcome!';
       } else if (diffDays > 1 && diffDays <= 7) {
         headline.innerHTML = `
           <span class="cut-chunk cut-yellow">ON 28TH OF OCT</span>
           <span class="cut-chunk cut-pink">IT WAS MY BIRTHDAY</span>
           <span class="cut-chunk cut-mint">(${diffDays} DAYS AGO)</span>
         `;
-        subtext.textContent = 'THE BIRTHDAY ERA IS STILL ONGOING. THE RADHE RADHE ENERGY REMAINS PEAK.';
+        subtext.textContent = 'The birthday celebration continues! Radiating pure Radhe Radhe energy.';
       } else if (diffDays > 7 && diffDays <= 365) {
         headline.innerHTML = `
           <span class="cut-chunk cut-yellow">ON 28TH OF OCT</span>
           <span class="cut-chunk cut-pink">IT WAS MY BIRTHDAY</span>
         `;
-        subtext.textContent = `CELEBRATING ${diffDays} DAYS OF SAINT AKI'S RADIANT ASCENSION.`;
+        subtext.textContent = `Celebrating ${diffDays} days of Aki's new year of wisdom, kindness, and smiles.`;
       } else {
         const daysUntil = -diffDays;
         headline.innerHTML = `
@@ -331,7 +314,7 @@
           <span class="cut-chunk cut-pink">28TH OCT</span>
           <span class="cut-chunk cut-mint">(${daysUntil} DAYS TO GO)</span>
         `;
-        subtext.textContent = "PREPARATIONS FOR SAINT AKI'S ASCENSION ARE CURRENTLY UNDERWAY.";
+        subtext.textContent = 'Counting down the days to celebrate our legendary friend Aki!';
       }
     }
   }

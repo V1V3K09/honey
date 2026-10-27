@@ -1,5 +1,5 @@
 ---
-// index.astro — BIRTHDAY.EXE: Scroll-Driven Birthday Website Using Full-Body Character Image
+// index.astro — BIRTHDAY.EXE: Scroll-Driven Birthday Website for Aki
 import BaseLayout from '../layouts/BaseLayout.astro';
 import LoadingScreen from '../components/LoadingScreen.astro';
 import CharacterStage from '../components/CharacterStage.astro';
@@ -10,7 +10,7 @@ import FooterExperience from '../components/FooterExperience.astro';
 ---
 
 <BaseLayout>
-  <!-- Designed Loading Screen -->
+  <!-- Tactile Loading Screen -->
   <LoadingScreen />
 
   <!-- Persistent 2D Transparent Character Stage -->
@@ -24,72 +24,67 @@ import FooterExperience from '../components/FooterExperience.astro';
       <section id="stage-hero" class="experience-stage">
         <!-- Top Full-Width Headline -->
         <div class="hero-top-banner interactive-content">
-          <div class="tape-strip tape-yellow" style="margin-bottom: 8px;">TOP SECRET DISPATCH #028</div>
-          <h1 class="paper-headline" style="font-size: clamp(2rem, 4.5vw, 4rem);">
-            <span class="cut-chunk cut-yellow">THE SPECIMEN</span>
-            <span class="cut-chunk cut-pink">HAS ARRIVED</span>
+          <h1 class="paper-headline" style="font-size: clamp(2.2rem, 5vw, 4.4rem);">
+            <span class="cut-chunk cut-yellow">HAPPY BIRTHDAY,</span>
+            <span class="cut-chunk cut-pink">AKI!</span>
           </h1>
           <p class="hero-subheading">
-            100% ORGANIC • 0% COMMON SENSE • HAPPY BIRTHDAY, YOU ABSOLUTE MENACE.
+            OCTOBER 28 SPECIAL • CELEBRATING THE PURE-HEARTED MASTER OF GOOD VIBES.
           </p>
         </div>
 
         <!-- 3-Column Flank Grid: Left Notes | Center Aki Character | Right Newspaper -->
         <div class="hero-body-flank-grid">
           
-          <!-- LEFT COLUMN: Anatomical Notes Placed Around Aki's Body -->
+          <!-- LEFT COLUMN: Personal & Goofy Notes Around Aki's Body -->
           <div class="hero-left-column interactive-content">
             <div class="paper-card hero-dossier-card">
-              <div class="tape-strip tape-pink" style="margin-bottom: 8px;">
-                ANATOMICAL NOTES
-              </div>
-
-              <h2 class="paper-headline" style="font-size: 1.4rem; justify-content: flex-start; margin-bottom: 6px;">
-                <span class="cut-chunk cut-yellow">SPECIMEN:</span>
-                <span class="cut-chunk cut-mint">SAINT AKI</span>
+              <h2 class="paper-headline" style="font-size: 1.35rem; justify-content: flex-start; margin-bottom: 6px;">
+                <span class="cut-chunk cut-yellow">MEET</span>
+                <span class="cut-chunk cut-mint">OUR BOY AKI</span>
               </h2>
 
-              <p style="font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; color: var(--ink-muted); margin-bottom: 10px;">
-                "UNSHAKEABLE INNER PEACE & UNPRECEDENTED CHARISMA"
+              <p class="hero-dossier-subquote">
+                "BRINGING CALMNESS, LAUGHTER & DEVOTION TO EVERY ROOM"
               </p>
 
-              <!-- Anatomical Pointers wrapping around the character -->
+              <!-- Personal Pointers wrapping around the character -->
               <div class="anatomical-pointers-list">
                 <div class="anatomical-pointer-item">
-                  <span class="pointer-badge">🧠 CRANIAL SECTOR • "राधे राधे"</span>
+                  <span class="pointer-badge">🙏 "राधे राधे" HEADWRAP & SCARF</span>
                   <p class="pointer-desc">
-                    Signature headwrap locked at 100% devotional frequency. Dissipates bad vibes instantly.
+                    His iconic look. Radiates serene peace, positive energy, and an unshakeable sense of calm in any storm.
                   </p>
                 </div>
 
                 <div class="anatomical-pointer-item">
-                  <span class="pointer-badge">🫀 THORACIC CORE • SCARF & CHEST</span>
+                  <span class="pointer-badge">❤️ GOLDEN HEART & EASY LAUGHTER</span>
                   <p class="pointer-desc">
-                    Pure 24-karat gold heart. Empathy telemetry exceeds municipal safety guidelines.
+                    Always ready to listen, laugh at anything, and make whatever stressful situation feel completely fine.
                   </p>
                 </div>
 
                 <div class="anatomical-pointer-item">
-                  <span class="pointer-badge">⚡ KNEE JOINTS • TROUSERS</span>
+                  <span class="pointer-badge">🧘 COOL, CALM & STEADY</span>
                   <p class="pointer-desc">
-                    Fully articulated for cake combat in Section D. Zero knee creaks detected.
+                    Zero panic, zero drama. Just quiet confidence, genuine kindness, and steady devotion.
                   </p>
                 </div>
 
                 <div class="anatomical-pointer-item">
-                  <span class="pointer-badge">🦶 BARE FEET • GROUND ZERO</span>
+                  <span class="pointer-badge">🦶 EFFORTLESSLY BAREFOOT</span>
                   <p class="pointer-desc">
-                    100% shoe-free contact with the cosmos. The ultimate punchline awaiting at the footer.
+                    Completely grounded and 100% unbothered by dress codes. Stay tuned for the footer punchline!
                   </p>
                 </div>
               </div>
 
-              <!-- Vibe Stats -->
+              <!-- Genuine Vibe Badges -->
               <div class="hero-stats-row">
-                <span class="stat-pill" style="background-color: var(--accent-yellow);">AURA: MAX</span>
-                <span class="stat-pill" style="background-color: var(--accent-mint);">LOYALTY: 100%</span>
-                <span class="stat-pill" style="background-color: var(--accent-pink); color: #FFF;">AGE: +1</span>
-                <span class="stat-pill">COMMON SENSE: 0%</span>
+                <span class="stat-pill" style="background-color: var(--accent-yellow);">VIBES: IMMACULATE</span>
+                <span class="stat-pill" style="background-color: var(--accent-mint);">FRIENDSHIP: FOREVER</span>
+                <span class="stat-pill" style="background-color: var(--accent-pink); color: #FFF;">SWEET TOOTH: MAX</span>
+                <span class="stat-pill">ENERGY: RADHE RADHE</span>
               </div>
             </div>
           </div>
@@ -108,9 +103,8 @@ import FooterExperience from '../components/FooterExperience.astro';
 
         <!-- Subtle Scroll Indicator -->
         <div class="scroll-prompt-landing interactive-content">
-          <span class="tape-strip tape-pink">DIRECTIVE</span>
-          <p style="font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700;">
-            SCROLL TO INVESTIGATE THE SPECIMEN'S ANATOMY ↓
+          <p class="scroll-prompt-text">
+            SCROLL TO EXPLORE AKI'S BIRTHDAY JOURNEY ↓
           </p>
         </div>
       </section>
@@ -118,14 +112,13 @@ import FooterExperience from '../components/FooterExperience.astro';
       <!-- SECTION B: Face Approach Spacer -->
       <section id="stage-approach" class="experience-stage">
         <div class="approach-card paper-card interactive-content">
-          <div class="tape-strip tape-pink" style="margin-bottom: 8px;">OPTICAL ZOOM IN PROGRESS</div>
-          <h2 class="paper-headline" style="font-size: 1.6rem; justify-content: flex-start; margin-bottom: 12px;">
-            <span class="cut-chunk cut-yellow">FACIAL</span>
-            <span class="cut-chunk cut-vermilion">RECONNAISSANCE</span>
+          <h2 class="paper-headline" style="font-size: 1.5rem; justify-content: flex-start; margin-bottom: 12px;">
+            <span class="cut-chunk cut-yellow">THE FACE</span>
+            <span class="cut-chunk cut-vermilion">OF TRANQUILITY</span>
           </h2>
-          <p style="font-size: 0.95rem; line-height: 1.6; color: var(--ink-muted);">
-            Locking camera coordinates onto the headwrap and facial features. 
-            Prepare for an unprecedented close encounter with genuine birthday charisma.
+          <p style="font-size: 0.95rem; line-height: 1.6; color: var(--ink-secondary);">
+            Taking a closer look at the friend who survived another entire year of our chaotic shenanigans. 
+            Keep scrolling to open your personal card for Aki!
           </p>
         </div>
       </section>

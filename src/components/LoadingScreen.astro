@@ -1,19 +1,18 @@
 ---
-// LoadingScreen.astro — Tactile paper-cut loader that disappears when 3D scene is ready
+// LoadingScreen.astro — Tactile paper-cut loader that disappears when scene is ready
 ---
 
 <div id="loading-screen" class="loading-overlay">
   <div class="loading-paper-box">
-    <div class="tape-strip tape-yellow" style="margin-bottom: 14px;">SYSTEM INITIALIZING</div>
     <h2 class="loading-title">
-      <span class="cut-chunk cut-yellow">BOOTING</span>
-      <span class="cut-chunk cut-pink">BIRTHDAY.EXE</span>
+      <span class="cut-chunk cut-yellow">PREPARING</span>
+      <span class="cut-chunk cut-pink">AKI'S SPECIAL DAY</span>
     </h2>
-    <p class="loading-status" id="loading-status-text">CALIBRATING 3D SPECIMEN...</p>
+    <p class="loading-status" id="loading-status-text">UNFOLDING THE BIRTHDAY PAPERS...</p>
     <div class="loading-bar-container">
       <div class="loading-bar-fill" id="loading-bar-fill"></div>
     </div>
-    <p class="loading-hint">PRO TIP: DON'T BLINK.</p>
+    <p class="loading-hint">RADHE RADHE ✨</p>
   </div>
 </div>
 
@@ -27,7 +26,7 @@
     align-items: center;
     justify-content: center;
     padding: 24px;
-    transition: opacity 400ms ease, visibility 400ms ease;
+    transition: opacity 350ms ease, visibility 350ms ease;
   }
 
   .loading-overlay.is-loaded {
@@ -37,10 +36,12 @@
   }
 
   .loading-paper-box {
-    background-color: #FFFFFF;
+    background-color: var(--glass-paper);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border: var(--border-ink);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-hard-lg);
+    box-shadow: var(--shadow-elevation-lg);
     padding: 36px 32px;
     text-align: center;
     max-width: 440px;
@@ -52,53 +53,75 @@
     justify-content: center;
     gap: 8px;
     margin-bottom: 16px;
-    font-size: 1.5rem;
+    font-size: 1.45rem;
+    letter-spacing: -0.02em;
   }
 
   .loading-status {
     font-family: var(--font-mono);
     font-size: 0.82rem;
     font-weight: 700;
-    color: var(--ink-muted);
+    letter-spacing: 0.05em;
+    color: var(--ink-secondary);
     margin-bottom: 16px;
   }
 
   .loading-bar-container {
     width: 100%;
-    height: 18px;
-    border: var(--border-ink);
-    background-color: var(--bg-paper-alt);
+    height: 12px;
+    background-color: #ECE5D8;
+    border: var(--border-ink-thin);
     border-radius: 999px;
     overflow: hidden;
     margin-bottom: 14px;
   }
 
   .loading-bar-fill {
-    width: 25%;
+    width: 20%;
     height: 100%;
-    background-color: var(--accent-vermilion);
+    background: linear-gradient(90deg, var(--accent-yellow), var(--accent-mint));
     border-radius: 999px;
-    transition: width 300ms ease;
+    transition: width 400ms ease;
   }
 
   .loading-hint {
     font-family: var(--font-mono);
-    font-size: 0.72rem;
-    color: var(--ink-muted);
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--accent-vermilion);
+    letter-spacing: 0.05em;
   }
 </style>
 
 <script>
-  window.addEventListener('birthday:scene-ready', () => {
-    const loader = document.getElementById('loading-screen');
+  function setupLoading() {
+    const screen = document.getElementById('loading-screen');
     const fill = document.getElementById('loading-bar-fill');
     const status = document.getElementById('loading-status-text');
 
-    if (fill) fill.style.width = '100%';
-    if (status) status.textContent = 'THE SPECIMEN HAS ARRIVED!';
+    if (!screen) return;
 
+    const onReady = () => {
+      if (fill) fill.style.width = '100%';
+      if (status) status.textContent = 'READY!';
+      setTimeout(() => {
+        screen.classList.add('is-loaded');
+      }, 300);
+    };
+
+    window.addEventListener('birthday:scene-ready', onReady, { once: true });
+
+    // Fallback timer in case event is missed
     setTimeout(() => {
-      if (loader) loader.classList.add('is-loaded');
-    }, 350);
-  });
+      if (!screen.classList.contains('is-loaded')) {
+        onReady();
+      }
+    }, 1800);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupLoading);
+  } else {
+    setupLoading();
+  }
 </script>

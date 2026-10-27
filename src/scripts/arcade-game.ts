@@ -437,7 +437,7 @@ export class AkiArcadeGame {
 
     const tauntEl = this.container.querySelector('.game-taunt') as HTMLElement;
     if (tauntEl) {
-      tauntEl.textContent = '🚨 BOSS BATTLE: THE GIANT CAKE HAS APPEARED! MASH TO ATTACK! 🚨';
+      tauntEl.textContent = '🎂 THE GIANT BIRTHDAY CAKE HAS ARRIVED! TAP TO CATCH! 🎂';
       tauntEl.style.color = '#FF4B00';
     }
   }

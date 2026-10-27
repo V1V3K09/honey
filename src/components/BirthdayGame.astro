@@ -1,5 +1,5 @@
 ---
-// BirthdayGame.astro — "SAINT AKI'S BIRTHDAY CATCHER" Interactive Arcade Mini-Game
+// BirthdayGame.astro — Interactive Arcade Mini-Game for Aki's Birthday Feast
 ---
 
 <div 
@@ -9,15 +9,9 @@
   role="region"
   aria-label="Aki's Birthday Feast Arcade Game"
 >
-  <!-- Game Header -->
-  <div class="cake-boss-header">
-    <div class="tape-strip tape-pink">ARCADE MISSION</div>
-    <div class="boss-level-badge">OCT 28 BIRTHDAY SPECIAL</div>
-  </div>
-
   <h3 class="boss-title">
-    <span class="cut-chunk cut-yellow">CATCH:</span>
-    <span class="cut-chunk cut-pink">AKI'S BIRTHDAY FEAST</span>
+    <span class="cut-chunk cut-yellow">CATCH</span>
+    <span class="cut-chunk cut-pink">AKI'S BIRTHDAY TREATS</span>
   </h3>
 
   <!-- Arcade HUD Bar -->
@@ -40,7 +34,7 @@
   </div>
 
   <!-- Progress Bar toward Victory -->
-  <div class="arcade-progress-bar" title="Target: 300 points to conquer the feast!">
+  <div class="arcade-progress-bar" title="Target: 300 points to complete the feast!">
     <div class="arcade-progress-fill" style="width: 0%;"></div>
   </div>
 
@@ -50,11 +44,11 @@
 
     <!-- Start Screen Overlay -->
     <div class="game-start-overlay">
-      <div class="tape-strip tape-yellow" style="margin-bottom: 10px;">SAINT AKI'S CATCHER</div>
       <div class="game-intro-icon">🎂 🪔 🍬</div>
+      <h4 class="game-intro-title">AKI'S BIRTHDAY FEAST</h4>
       <p class="game-intro-desc">
-        Catch birthday cakes (+20), Radhe Radhe blessings (+50) & gifts (+70)!<br />
-        <strong>DODGE</strong> lower back pain, bills & 6 AM alarms!
+        Catch birthday cake slices (+20), Radhe Radhe blessings (+50) & gift boxes (+70)!<br />
+        Dodge falling Monday alarms, bills & back aches!
       </p>
       <button class="btn-action btn-start-game" type="button">
         START FEAST ▶
@@ -63,10 +57,9 @@
 
     <!-- Game Over Overlay -->
     <div class="game-over-overlay" style="display: none;">
-      <div class="tape-strip tape-pink" style="margin-bottom: 10px;">ALL CANDLES BLOWN OUT</div>
-      <div class="game-intro-icon">⚡💀⚡</div>
-      <h4 class="game-over-title">ADULTHOOD HAS WON...</h4>
-      <p class="game-intro-desc">Aki got hit by too many adult responsibilities!</p>
+      <div class="game-intro-icon">🕯️💔</div>
+      <h4 class="game-over-title">ALMOST HAD IT!</h4>
+      <p class="game-intro-desc">Those Monday alarms got in the way! Give it another shot for Aki.</p>
       <button class="btn-action game-restart-btn" type="button">
         TRY AGAIN ↺
       </button>
@@ -74,13 +67,12 @@
 
     <!-- Victory Overlay -->
     <div class="game-victory-overlay" role="dialog" aria-modal="true" aria-label="Arcade Feast Conquered Victory">
-      <div class="tape-strip tape-yellow" style="margin-bottom: 12px;">ROYAL CONQUEST CONFIRMED</div>
       <div class="victory-trophy" aria-hidden="true">🏆</div>
       <h3 class="victory-title">
-        <span class="cut-chunk cut-mint">FEAST CONQUERED!</span>
+        <span class="cut-chunk cut-mint">FEAST COMPLETE!</span>
       </h3>
       <p class="victory-perk">
-        <strong>SAINT AKI IS SATIATED:</strong> You collected the sacred birthday feast & unlocked +9999 Aura!
+        You collected all the birthday sweets for Aki! Wishing him infinite happiness and blessings!
       </p>
       <button class="btn-action game-restart-btn" type="button">
         PLAY AGAIN ↺
@@ -90,12 +82,12 @@
 
   <!-- Dynamic Taunt / Tip Bubble -->
   <div class="game-taunt" aria-live="polite">
-    "CATCH THE CAKES & BLESSINGS! DODGE ADULT TAXES & BACK PAIN!"
+    "SLIDE THE PLATE TO CATCH CAKES & SWEET BLESSINGS!"
   </div>
 
   <!-- Controls Hints -->
   <div class="game-controls-hint">
-    <span>🖱️ MOUSE / DRAG TO STEER</span>
+    <span>🖱️ MOUSE / DRAG TO MOVE</span>
     <span>⌨️ [A][D] OR ARROWS TO SLIDE</span>
   </div>
 </div>
@@ -104,20 +96,23 @@
   .arcade-game-card {
     position: relative;
     user-select: none;
-  }
-
-  .boss-level-badge {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--accent-vermilion);
+    background-color: var(--glass-paper);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: var(--border-ink);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-elevation);
+    padding: 24px;
+    outline: none;
   }
 
   .boss-title {
     display: flex;
+    justify-content: flex-start;
     gap: 8px;
-    margin: 8px 0 12px;
+    margin: 0 0 14px;
     font-size: 1.25rem;
+    letter-spacing: -0.02em;
   }
 
   /* Arcade HUD */
@@ -125,11 +120,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #fbf8f1;
+    background: #FAF7F0;
     border: var(--border-ink-thin);
-    border-radius: var(--radius-sm);
-    padding: 8px 14px;
-    margin-bottom: 8px;
+    border-radius: var(--radius-md);
+    padding: 8px 16px;
+    margin-bottom: 10px;
   }
 
   .hud-item {
@@ -142,8 +137,8 @@
   .hud-label {
     font-family: var(--font-mono);
     font-size: 0.65rem;
-    font-weight: 800;
-    letter-spacing: 0.05em;
+    font-weight: 700;
+    letter-spacing: 0.06em;
     color: var(--ink-muted);
   }
 
@@ -156,20 +151,20 @@
   }
 
   .arcade-score-val {
-    font-size: 1.15rem;
+    font-size: 1.2rem;
     color: var(--accent-vermilion);
   }
 
   .hud-score-target {
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     color: var(--ink-muted);
   }
 
   .arcade-combo-val {
     font-family: var(--font-mono);
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 800;
-    color: var(--accent-purple);
+    color: var(--accent-violet);
   }
 
   .arcade-lives-val {
@@ -185,7 +180,7 @@
     border: var(--border-ink-thin);
     border-radius: 999px;
     overflow: hidden;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
 
   .arcade-progress-fill {
@@ -222,33 +217,42 @@
   .game-over-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(251, 248, 241, 0.94);
+    background: rgba(251, 248, 241, 0.95);
+    backdrop-filter: blur(8px);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 24px;
     text-align: center;
     z-index: 35;
   }
 
   .game-intro-icon {
     font-size: 2.2rem;
-    margin: 6px 0;
+    margin-bottom: 8px;
+  }
+
+  .game-intro-title {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
   }
 
   .game-intro-desc {
     font-family: var(--font-body);
-    font-size: 0.88rem;
-    line-height: 1.45;
+    font-size: 0.9rem;
+    line-height: 1.5;
     color: var(--ink-secondary);
     max-width: 320px;
-    margin-bottom: 16px;
+    margin-bottom: 18px;
   }
 
   .game-over-title {
     font-family: var(--font-display);
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     font-weight: 800;
     color: var(--accent-vermilion);
     margin: 4px 0 8px;
@@ -271,10 +275,11 @@
 
   .victory-perk {
     font-family: var(--font-body);
-    font-size: 0.92rem;
-    line-height: 1.5;
+    font-size: 0.95rem;
+    line-height: 1.55;
     margin-bottom: 18px;
-    max-width: 320px;
+    max-width: 340px;
+    color: var(--ink-primary);
   }
 </style>
 

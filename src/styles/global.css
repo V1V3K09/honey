@@ -1,29 +1,40 @@
 /* BIRTHDAY.EXE — Global Design Tokens & Foundation */
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@400;500;700&family=Syne:wght@700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap');
 
 :root {
-  /* Paper & Ink Foundations */
+  /* Paper & Tactile Foundations */
   --bg-paper: #FBF8F1;
   --bg-paper-alt: #F4EFE6;
   --bg-cardboard: #EDE4D3;
   --ink-primary: #121316;
-  --ink-muted: #4B4E54;
+  --ink-secondary: #32353B;
+  --ink-muted: #575A62;
   --ink-inverted: #FFFFFF;
 
-  /* Tactile Tape & Accents */
+  /* Emil Kowalski Glass & Apple Material Tokens */
+  --glass-paper: rgba(255, 255, 255, 0.92);
+  --glass-cardboard: rgba(244, 239, 230, 0.94);
+  --glass-blur: 16px;
+  --glass-border: rgba(18, 19, 22, 0.14);
+  --inner-glow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+
+  /* Tactile Accents */
   --tape-color: #E8D9BD;
   --accent-vermilion: #FF4B00;
   --accent-yellow: #FFE600;
   --accent-pink: #FF2E7E;
-  --accent-mint: #00E599;
+  --accent-mint: #00D68F;
   --accent-violet: #7038FF;
 
-  /* Elevation & Border Craft (Better-UI Standards) */
-  --border-ink: 2.5px solid var(--ink-primary);
+  /* Better-UI & Emil Kowalski Layered Shadows (Elevation + Tactile Depth) */
+  --border-ink: 2px solid var(--ink-primary);
   --border-ink-thin: 1.5px solid var(--ink-primary);
+  --shadow-ambient: 0 1px 3px rgba(18, 19, 22, 0.06), 0 8px 24px -4px rgba(18, 19, 22, 0.08);
   --shadow-hard-sm: 2px 2px 0px var(--ink-primary);
   --shadow-hard-md: 4px 4px 0px var(--ink-primary);
-  --shadow-hard-lg: 7px 7px 0px var(--ink-primary);
+  --shadow-hard-lg: 6px 6px 0px var(--ink-primary);
+  --shadow-elevation: 0 12px 32px -4px rgba(18, 19, 22, 0.12), 4px 4px 0px var(--ink-primary);
+  --shadow-elevation-lg: 0 20px 44px -8px rgba(18, 19, 22, 0.16), 6px 6px 0px var(--ink-primary);
   --shadow-hard-press: 1px 1px 0px var(--ink-primary);
 
   /* Typography Scales */
@@ -31,24 +42,26 @@
   --font-body: "Space Grotesk", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: "JetBrains Mono", "Space Mono", monospace;
 
-  /* Concentric Radius Scaling */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 14px;
-  --radius-cut: 2px;
+  /* Concentric Radius Scaling (Outer = Inner + Padding) */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-cut: 3px;
 }
 
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {
   font-family: var(--font-body);
   background-color: var(--bg-paper);
   color: var(--ink-primary);
-  scroll-behavior: auto; /* Let GSAP handle smooth scrubbing */
+  scroll-behavior: auto;
   overflow-x: hidden;
 }
 
@@ -57,27 +70,56 @@ body {
   position: relative;
   overflow-x: hidden;
   background-color: var(--bg-paper);
-  /* Subtle physical paper grain texture pattern */
   background-image: 
     radial-gradient(#121316 0.75px, transparent 0.75px),
     radial-gradient(#e6d7b8 0.75px, var(--bg-paper) 0.75px);
   background-size: 32px 32px;
   background-position: 0 0, 16px 16px;
-  background-color: var(--bg-paper);
+  color: var(--ink-primary);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Accessibility Focus States */
+/* Themed Browser Surfaces */
+::selection {
+  background-color: var(--accent-yellow);
+  color: var(--ink-primary);
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-paper);
+  border-left: 1px solid rgba(18, 19, 22, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D9CEB8;
+  border-radius: 999px;
+  border: 2px solid var(--bg-paper);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C4B59B;
+}
+
+/* Refined Focus States */
 :focus-visible {
-  outline: 3px solid var(--accent-vermilion);
+  outline: 2px solid var(--accent-vermilion);
   outline-offset: 3px;
+  border-radius: var(--radius-sm);
 }
 
-/* Base button styling with Better-UI press physics */
+/* Button & Action Styling with Better-UI Press Physics (Scale 0.96) */
 button, .btn-action {
   font-family: var(--font-body);
   font-weight: 700;
-  font-size: 0.95rem;
-  letter-spacing: 0.02em;
+  font-size: 0.92rem;
+  letter-spacing: -0.01em;
   padding: 10px 20px;
   border-radius: var(--radius-md);
   border: var(--border-ink);
@@ -91,16 +133,20 @@ button, .btn-action {
   gap: 8px;
   text-decoration: none;
   user-select: none;
-  transition: transform 120ms cubic-bezier(0.2, 0, 0, 1), box-shadow 120ms cubic-bezier(0.2, 0, 0, 1);
+  transition-property: transform, box-shadow, background-color;
+  transition-duration: 140ms;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
 }
 
-button:hover, .btn-action:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: var(--shadow-hard-lg);
+@media (hover: hover) {
+  button:hover, .btn-action:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hard-lg);
+  }
 }
 
 button:active, .btn-action:active {
-  transform: scale(0.96) translate(3px, 3px);
+  transform: scale(0.96) translateY(1px);
   box-shadow: var(--shadow-hard-press);
 }
 

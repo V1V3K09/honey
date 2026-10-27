@@ -73,12 +73,12 @@ export function initCharacterScroll() {
                   stage: stageIndex,
                   progress: self.progress,
                   stageName: [
-                    'Full-Body Landing',
-                    'Descent to Face',
-                    'Face & Birthday Card',
-                    'Torso Journey',
-                    'Knees & Cake Boss Fight',
-                    'Approach to Feet',
+                    'Aki Landing',
+                    'Face Zoom',
+                    'Birthday Note',
+                    'Good Energy',
+                    'Birthday Feast Catcher',
+                    'Feet Approach',
                     'The Footer (Literally Feet)'
                   ][stageIndex] || ''
                 }
