@@ -26,6 +26,21 @@
     padding: 4px 10px;
   }
 
+  .rocket-telemetry-badge {
+    top: 58px;
+    width: 90%;
+    max-width: 340px;
+    padding: 8px 14px;
+  }
+
+  .telemetry-status-text {
+    font-size: 0.72rem;
+  }
+
+  .telemetry-readouts {
+    font-size: 0.65rem;
+  }
+
   /* Hero Flank Grid on Mobile/Tablet */
   .hero-body-flank-grid {
     grid-template-columns: 1fr;

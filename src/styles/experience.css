@@ -233,9 +233,142 @@
   justify-content: flex-end;
 }
 
+/* Rocket Landing Telemetry Overlay */
+.rocket-telemetry-badge {
+  position: fixed;
+  top: 72px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 20px;
+  background-color: var(--bg-paper-alt);
+  border: var(--border-ink);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-hard-md);
+  font-family: var(--font-mono);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 280ms ease, transform 280ms cubic-bezier(0.2, 0, 0, 1), background-color 280ms ease;
+}
+
+.rocket-telemetry-badge.is-active {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+.rocket-telemetry-badge.is-landed {
+  background-color: var(--accent-mint);
+  border-color: var(--ink-primary);
+  box-shadow: 4px 4px 0 var(--ink-primary);
+  animation: telemetryPulse 1.2s infinite alternate ease-in-out;
+}
+
+@keyframes telemetryPulse {
+  0% { transform: translateX(-50%) scale(1); }
+  100% { transform: translateX(-50%) scale(1.02); }
+}
+
+.telemetry-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.telemetry-radar-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: var(--accent-vermilion);
+  animation: radarBlink 0.6s infinite ease-in-out;
+}
+
+.rocket-telemetry-badge.is-landed .telemetry-radar-dot {
+  background-color: #0b8043;
+  animation: none;
+}
+
+@keyframes radarBlink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.65); }
+}
+
+.telemetry-status-text {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink-primary);
+}
+
+.telemetry-readouts {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  color: var(--ink-secondary);
+  font-weight: 600;
+}
+
+.telemetry-divider {
+  opacity: 0.4;
+}
+
+/* Landing Actions & Replay Rocket Button */
+.hero-landing-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin: 24px auto 8px;
+  z-index: 20;
+}
+
+.btn-replay-rocket {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--accent-yellow);
+  border: var(--border-ink);
+  border-radius: 999px;
+  padding: 8px 20px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ink-primary);
+  cursor: pointer;
+  box-shadow: var(--shadow-hard-sm);
+  transition: transform 120ms ease, box-shadow 120ms ease, background-color 140ms ease;
+  user-select: none;
+}
+
+.btn-replay-rocket:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hard-md);
+  background-color: #FFE766;
+}
+
+.btn-replay-rocket:active {
+  transform: translateY(1px);
+  box-shadow: 1px 1px 0 var(--ink-primary);
+}
+
+.btn-replay-rocket .rocket-icon {
+  display: inline-block;
+  font-size: 0.95rem;
+  transition: transform 180ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.btn-replay-rocket:hover .rocket-icon {
+  transform: translateY(-3px) rotate(-15deg);
+}
+
 .scroll-prompt-landing {
   text-align: center;
-  margin: 24px auto 8px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;

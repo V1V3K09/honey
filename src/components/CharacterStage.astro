@@ -3,6 +3,9 @@
 ---
 
 <div id="character-stage-viewport" class="character-viewport" aria-hidden="true">
+  <!-- Dynamic Rocket Thruster Canvas: Plumes, Sparks, Mach Diamonds, Ground Smoke & Shockwaves -->
+  <canvas id="rocket-thruster-canvas" class="thruster-canvas"></canvas>
+
   <div id="character-frame" class="character-frame">
     <img 
       id="character-img"
@@ -21,12 +24,22 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 5;
+    z-index: 15;
     pointer-events: none;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .thruster-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 10;
   }
 
   .character-frame {
@@ -40,6 +53,7 @@
     transform-origin: 50% 14%;
     will-change: transform;
     filter: drop-shadow(0 14px 28px rgba(18, 19, 22, 0.22));
+    z-index: 5;
   }
 
   .character-img {
@@ -60,10 +74,16 @@
 
 <script>
   import { initCharacterScroll } from '../scripts/character-controller';
+  import { rocketLanding } from '../scripts/rocket-landing';
+
+  const setupStage = () => {
+    initCharacterScroll();
+    rocketLanding.init();
+  };
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCharacterScroll);
+    document.addEventListener('DOMContentLoaded', setupStage);
   } else {
-    initCharacterScroll();
+    setupStage();
   }
 </script>

@@ -101,11 +101,31 @@ import FooterExperience from '../components/FooterExperience.astro';
 
         </div>
 
-        <!-- Subtle Scroll Indicator -->
-        <div class="scroll-prompt-landing interactive-content">
-          <p class="scroll-prompt-text">
-            SCROLL TO EXPLORE AKI'S BIRTHDAY JOURNEY ↓
-          </p>
+        <!-- Rocket Touchdown Telemetry HUD (Active during rocket descent) -->
+        <div id="rocket-telemetry-badge" class="rocket-telemetry-badge paper-card" role="status" aria-live="polite">
+          <div class="telemetry-header">
+            <span class="telemetry-radar-dot"></span>
+            <span id="telemetry-status-text" class="telemetry-status-text">MISSION CONTROL: RETRO-PROPULSION ACTIVE</span>
+          </div>
+          <div class="telemetry-readouts">
+            <span id="telemetry-alt" class="telemetry-metric">ALTITUDE: 1,200M</span>
+            <span class="telemetry-divider">|</span>
+            <span id="telemetry-vel" class="telemetry-metric">VELOCITY: MACH 1.8</span>
+          </div>
+        </div>
+
+        <!-- Landing Actions: Replay Rocket & Scroll Indicator -->
+        <div class="hero-landing-actions interactive-content">
+          <button id="btn-replay-rocket" class="btn-replay-rocket" type="button" aria-label="Replay Rocket Landing">
+            <span class="rocket-icon">🚀</span>
+            <span>REPLAY ROCKET LANDING</span>
+          </button>
+          
+          <div class="scroll-prompt-landing">
+            <p class="scroll-prompt-text">
+              SCROLL TO EXPLORE AKI'S BIRTHDAY JOURNEY ↓
+            </p>
+          </div>
         </div>
       </section>
 
