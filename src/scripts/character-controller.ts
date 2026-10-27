@@ -38,7 +38,6 @@ export function initCharacterScroll() {
 
   // Build scrubbed timeline
   let timeline: gsap.core.Timeline | null = null;
-  let isLandingActive = true;
 
   const buildTimeline = () => {
     if (timeline) {
@@ -46,21 +45,13 @@ export function initCharacterScroll() {
     }
     milestones = getMilestones();
 
-    // Set initial frame state (keep x/scale/origin, preserve landing y if in progress)
-    if (!isLandingActive) {
-      gsap.set(frame, {
-        scale: milestones[0].scale,
-        x: milestones[0].x,
-        y: milestones[0].y,
-        transformOrigin: '50% 14%'
-      });
-    } else {
-      gsap.set(frame, {
-        scale: milestones[0].scale,
-        x: milestones[0].x,
-        transformOrigin: '50% 14%'
-      });
-    }
+    // Set initial frame state
+    gsap.set(frame, {
+      scale: milestones[0].scale,
+      x: milestones[0].x,
+      y: milestones[0].y,
+      transformOrigin: '50% 14%'
+    });
 
     timeline = gsap.timeline({
       scrollTrigger: {
@@ -69,7 +60,6 @@ export function initCharacterScroll() {
         end: 'bottom bottom',
         scrub: isReducedMotion ? 0.1 : 0.6,
         onUpdate: (self) => {
-          if (isLandingActive) return;
           const stageIndex = Math.min(
             milestones.length - 1,
             Math.floor(self.progress * (milestones.length - 0.1))
@@ -99,7 +89,7 @@ export function initCharacterScroll() {
       }
     });
 
-    // Sequence through the 6 transitions
+    // Sequence through the 6 camera milestones
     for (let i = 1; i < milestones.length; i++) {
       timeline.to(frame, {
         scale: milestones[i].scale,
@@ -109,32 +99,17 @@ export function initCharacterScroll() {
         duration: 1
       });
     }
-
-    if (isLandingActive && timeline.scrollTrigger) {
-      timeline.scrollTrigger.disable(false);
-    }
   };
 
   buildTimeline();
 
-  // Listen to rocket landing events
-  window.addEventListener('birthday:rocket-landing-start', () => {
-    isLandingActive = true;
-    if (timeline && timeline.scrollTrigger) {
-      timeline.scrollTrigger.disable(false);
-    }
+  // ScrollTrigger refresh on window resize or when scenes settle
+  window.addEventListener('resize', () => {
+    buildTimeline();
+    ScrollTrigger.refresh();
   });
 
   window.addEventListener('birthday:rocket-landed', () => {
-    isLandingActive = false;
-    if (timeline && timeline.scrollTrigger) {
-      timeline.scrollTrigger.enable();
-      ScrollTrigger.refresh();
-    }
-  });
-
-  window.addEventListener('resize', () => {
-    buildTimeline();
     ScrollTrigger.refresh();
   });
 

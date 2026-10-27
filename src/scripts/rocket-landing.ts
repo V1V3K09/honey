@@ -39,6 +39,7 @@ interface Shockwave {
 export class RocketLandingSystem {
   private canvas: HTMLCanvasElement | null = null;
   private ctx: CanvasRenderingContext2D | null = null;
+  private landingWrapper: HTMLElement | null = null;
   private characterFrame: HTMLElement | null = null;
   private characterImg: HTMLImageElement | null = null;
   private viewport: HTMLElement | null = null;
@@ -72,6 +73,7 @@ export class RocketLandingSystem {
 
   public init() {
     this.canvas = document.getElementById('rocket-thruster-canvas') as HTMLCanvasElement;
+    this.landingWrapper = document.getElementById('rocket-landing-wrapper');
     this.characterFrame = document.getElementById('character-frame');
     this.characterImg = document.getElementById('character-img') as HTMLImageElement;
     this.viewport = document.getElementById('character-stage-viewport');
@@ -146,15 +148,9 @@ export class RocketLandingSystem {
     this.isLanding = false;
     this.throttle = 0;
 
-    if (this.characterFrame) {
-      gsap.killTweensOf(this.characterFrame);
-      gsap.set(this.characterFrame, {
-        x: '0vw',
-        y: '0vh',
-        scale: 1.0,
-        rotation: 0,
-        clearProps: 'scaleX,scaleY'
-      });
+    if (this.landingWrapper) {
+      gsap.killTweensOf(this.landingWrapper);
+      gsap.set(this.landingWrapper, { clearProps: 'all' });
     }
 
     const leftCol = document.querySelector('.hero-left-column');
@@ -181,7 +177,7 @@ export class RocketLandingSystem {
   }
 
   public startLandingSequence() {
-    if (!this.characterFrame || !this.characterImg) return;
+    if (!this.landingWrapper || !this.characterImg) return;
 
     if (this.timeline) {
       this.timeline.kill();
@@ -194,7 +190,7 @@ export class RocketLandingSystem {
     this.smoke = [];
     this.shockwaves = [];
 
-    // Notify window that landing is active (disables conflicting scroll scrub)
+    // Notify window that landing is active
     window.dispatchEvent(new CustomEvent('birthday:rocket-landing-start'));
 
     // Start audio synthesis
@@ -217,13 +213,13 @@ export class RocketLandingSystem {
     const frontScale = isMobile ? 1.22 : 1.35;
     const frontY = isMobile ? '1vh' : '2.5vh';
 
-    // Initial character state: stratosphere descent in front with rocket attitude tilt
-    gsap.set(this.characterFrame, {
+    // Initial carrier state: stratosphere descent in front with rocket attitude tilt
+    gsap.set(this.landingWrapper, {
       y: '-115vh',
       x: '0vw',
       scale: frontScale,
       rotation: -3,
-      transformOrigin: '50% 14%'
+      transformOrigin: '50% 50%'
     });
 
     // Part flank columns slightly so full visual focus is on Aki landing in the front
@@ -263,7 +259,7 @@ export class RocketLandingSystem {
     });
 
     // --- PHASE 1: Atmospheric Entry & High-Speed Descent (0.0s - 1.2s) ---
-    this.timeline.to(this.characterFrame, {
+    this.timeline.to(this.landingWrapper, {
       y: '-32vh',
       rotation: 2.2,
       duration: 1.2,
@@ -284,7 +280,7 @@ export class RocketLandingSystem {
     }, 0.7); // Thruster ramps to 100% full throttle for suicide burn
 
     // --- PHASE 2: Terminal Suicide Burn Deceleration (1.2s - 2.1s) ---
-    this.timeline.to(this.characterFrame, {
+    this.timeline.to(this.landingWrapper, {
       y: '-2vh',
       rotation: -0.6,
       duration: 0.9,
@@ -304,7 +300,7 @@ export class RocketLandingSystem {
     }, 1.6);
 
     // --- PHASE 3: Micro-Stabilization Hover into Contact Up Front (2.1s - 2.6s) ---
-    this.timeline.to(this.characterFrame, {
+    this.timeline.to(this.landingWrapper, {
       y: frontY,
       rotation: 0,
       duration: 0.5,
@@ -376,9 +372,9 @@ export class RocketLandingSystem {
       );
     }
 
-    // Character landing gear compression in the front: squash slightly then spring back
-    if (this.characterFrame) {
-      gsap.fromTo(this.characterFrame,
+    // Landing gear compression in the front: squash slightly then spring back
+    if (this.landingWrapper) {
+      gsap.fromTo(this.landingWrapper,
         { scaleY: frontScale * 0.92, scaleX: frontScale * 1.05 },
         { 
           scaleY: frontScale, 
@@ -386,7 +382,7 @@ export class RocketLandingSystem {
           duration: 0.45, 
           ease: 'back.out(2.2)',
           onComplete: () => {
-            gsap.set(this.characterFrame, { clearProps: 'scaleX,scaleY' });
+            gsap.set(this.landingWrapper, { clearProps: 'scaleX,scaleY' });
           }
         }
       );
@@ -407,7 +403,7 @@ export class RocketLandingSystem {
 
   // Smoothly move Aki from the foreground into the original position used for scrolling
   private moveToOriginalPosition(fromScale: number, fromY: string) {
-    if (!this.characterFrame) return;
+    if (!this.landingWrapper) return;
 
     this.updateTelemetry(0, 0, 'MISSION CONTROL: DOCKING INTO STATION');
 
@@ -428,21 +424,15 @@ export class RocketLandingSystem {
           }, 3200);
         }
 
-        // Clean up temporary transform values and activate normal ScrollTrigger timeline!
-        gsap.set(this.characterFrame, {
-          scale: 1.0,
-          x: '0vw',
-          y: '0vh',
-          rotation: 0,
-          clearProps: 'scaleX,scaleY'
-        });
+        // Clean up carrier transform values so character-frame takes 100% of the screen
+        gsap.set(this.landingWrapper, { clearProps: 'all' });
 
         window.dispatchEvent(new CustomEvent('birthday:rocket-landed'));
       }
     });
 
-    // 1. Aki steps back from front (scale 1.35 ➔ 1.0, y: 2.5vh ➔ 0vh)
-    moveTl.to(this.characterFrame, {
+    // 1. Carrier steps back from front (scale 1.35 ➔ 1.0, y: 2.5vh ➔ 0vh)
+    moveTl.to(this.landingWrapper, {
       scale: 1.0,
       y: '0vh',
       x: '0vw',
