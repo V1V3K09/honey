@@ -8,6 +8,7 @@ import BirthdayCard from '../components/BirthdayCard.astro';
 import BirthdayGame from '../components/BirthdayGame.astro';
 import FooterExperience from '../components/FooterExperience.astro';
 import SlipBoard from '../components/SlipBoard.astro';
+import KarkeSection from '../components/KarkeSection.astro';
 ---
 
 <BaseLayout>
@@ -148,12 +149,17 @@ import SlipBoard from '../components/SlipBoard.astro';
           </h2>
           <p style="font-size: 0.95rem; line-height: 1.6; color: var(--ink-secondary);">
             Taking a closer look at the friend who survived another entire year of our chaotic shenanigans. 
-            Keep scrolling to open your personal card for Aki!
+            Calm and serene on the outside... but what acoustic anomaly protocol runs inside his brain?
           </p>
         </div>
       </section>
 
-      <!-- SECTION C: Face Composition & Interactive Birthday Card (Split Screen: Face on LEFT, Card on RIGHT) -->
+      <!-- SECTION C: The Cinematic KARKE.AI Reveal Section -->
+      <section id="stage-karke" class="experience-stage stage-karke-section">
+        <KarkeSection />
+      </section>
+
+      <!-- SECTION D: Face Composition & Interactive Birthday Card (Split Screen: Face on LEFT, Card on RIGHT) -->
       <section id="stage-card" class="experience-stage">
         <div class="card-column-left" aria-hidden="true">
           <!-- Aki's Face frames on the left side here -->

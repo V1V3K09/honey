@@ -184,6 +184,13 @@ export class IoUringBatcher {
   }
 
   /**
+   * Returns any un-flushed coalesced like delta for a specific slipId
+   */
+  public getPendingLikeDelta(slipId: string): number {
+    return this.likeDeltas.get(slipId) || 0;
+  }
+
+  /**
    * Drain the SQ Ring Buffer into a single Convex batchSync transaction
    */
   public async flushQueue(): Promise<boolean> {

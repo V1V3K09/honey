@@ -84,10 +84,9 @@ export const batchSync = mutation({
       if (delta === 0) continue;
 
       let doc = null;
-      try {
-        doc = await ctx.db.get(slipId as any);
-      } catch {
-        doc = null;
+      const normalizedId = ctx.db.normalizeId("slips", slipId);
+      if (normalizedId) {
+        doc = await ctx.db.get(normalizedId);
       }
 
       if (!doc) {

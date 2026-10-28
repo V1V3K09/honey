@@ -223,6 +223,7 @@ import '../styles/slipboard.css';
 
   interface Slip {
     id: string;
+    clientSubmissionId?: string;
     author: string;
     tag: string;
     message: string;
@@ -265,6 +266,7 @@ import '../styles/slipboard.css';
     private batcher!: IoUringBatcher;
     private convex: ConvexClient | null = null;
     private myCreatedIds: Set<string> = new Set();
+    private pendingLocalSlips: Map<string, Slip> = new Map();
 
     private selectedColor: SlipColor = 'yellow';
     private selectedStamp: string = '🎂';
@@ -350,30 +352,89 @@ import '../styles/slipboard.css';
       }
     }
 
+    private isSlipLiked(slip: Slip): boolean {
+      if (this.likedSlipIds.has(slip.id)) return true;
+      if (slip.clientSubmissionId && this.likedSlipIds.has(slip.clientSubmissionId)) return true;
+      return false;
+    }
+
+    private deduplicateSlips(slips: Slip[]): Slip[] {
+      const seenIds = new Set<string>();
+      const seenClientIds = new Set<string>();
+      const seenSignatures = new Set<string>();
+      const result: Slip[] = [];
+
+      for (const s of slips) {
+        if (!s) continue;
+        const idMatches = s.id && (seenIds.has(s.id) || seenClientIds.has(s.id));
+        const clientMatches = s.clientSubmissionId && (seenClientIds.has(s.clientSubmissionId) || seenIds.has(s.clientSubmissionId));
+
+        // Content signature for custom notes to clean up any legacy duplicates from older cache
+        const signature = s.isCustom ? `${s.author}:::${s.message}` : null;
+        const signatureMatches = signature && seenSignatures.has(signature);
+
+        if (idMatches || clientMatches || signatureMatches) {
+          continue;
+        }
+
+        if (s.id) seenIds.add(s.id);
+        if (s.clientSubmissionId) seenClientIds.add(s.clientSubmissionId);
+        if (signature) seenSignatures.add(signature);
+        result.push(s);
+      }
+      return result;
+    }
+
     private handleRemoteSlipsUpdate(remoteDocs: SlipDoc[]) {
       if (!Array.isArray(remoteDocs)) return;
 
       const remoteSlips: Slip[] = remoteDocs.map(doc => {
         const isMine = this.myCreatedIds.has(doc.clientSubmissionId) || this.myCreatedIds.has(doc._id);
+        if (isMine) {
+          this.myCreatedIds.add(doc._id);
+          this.myCreatedIds.add(doc.clientSubmissionId);
+        }
+
+        // Propagate liked status between clientSubmissionId and doc._id
+        if (this.likedSlipIds.has(doc.clientSubmissionId)) {
+          this.likedSlipIds.add(doc._id);
+        } else if (this.likedSlipIds.has(doc._id)) {
+          this.likedSlipIds.add(doc.clientSubmissionId);
+        }
+
+        // If this doc was pending locally, it is now confirmed on server
+        if (this.pendingLocalSlips.has(doc.clientSubmissionId)) {
+          this.pendingLocalSlips.delete(doc.clientSubmissionId);
+        }
+
+        // Account for any un-flushed local like delta so count doesn't flicker
+        const pendingDelta = this.batcher ? (
+          this.batcher.getPendingLikeDelta(doc._id) || 
+          this.batcher.getPendingLikeDelta(doc.clientSubmissionId)
+        ) : 0;
+
         return {
           id: doc._id,
+          clientSubmissionId: doc.clientSubmissionId,
           author: doc.author,
           tag: doc.tag,
           message: doc.message,
           color: doc.color,
           stamp: doc.stamp,
           timestamp: this.formatRelativeTime(doc.createdAt),
-          likes: doc.likes,
+          likes: Math.max(0, doc.likes + pendingDelta),
           rotation: doc.rotation,
           isCustom: isMine
         };
       });
 
-      // Keep any optimistic items created locally that have not yet been reflected in the remote list
-      const serverClientIds = new Set(remoteDocs.map(d => d.clientSubmissionId));
-      const pendingOptimistic = this.slips.filter(s => s.isCustom && !serverClientIds.has(s.id));
+      this.saveMyCreatedIds();
+      this.saveLikes();
 
-      this.slips = [...pendingOptimistic, ...remoteSlips];
+      // Only combine truly unconfirmed local pending slips with confirmed remote slips
+      const pendingSlipsList = Array.from(this.pendingLocalSlips.values());
+      this.slips = this.deduplicateSlips([...pendingSlipsList, ...remoteSlips]);
+
       this.saveCachedSlips();
       this.renderSlips();
       this.updateCountBadge();
@@ -384,7 +445,7 @@ import '../styles/slipboard.css';
         const stored = localStorage.getItem('aki_birthday_slips');
         if (stored) {
           const userSlips: Slip[] = JSON.parse(stored);
-          this.slips = userSlips;
+          this.slips = this.deduplicateSlips(Array.isArray(userSlips) ? userSlips : []);
         } else {
           this.slips = [];
         }
@@ -588,6 +649,7 @@ import '../styles/slipboard.css';
 
       const newSlip: Slip = {
         id: clientSubmissionId,
+        clientSubmissionId,
         author,
         tag,
         message,
@@ -600,11 +662,14 @@ import '../styles/slipboard.css';
       };
 
       // Automatically mark as liked by author
-      this.likedSlipIds.add(newSlip.id);
+      this.likedSlipIds.add(clientSubmissionId);
       this.saveLikes();
 
+      // Track as pending until confirmed by server
+      this.pendingLocalSlips.set(clientSubmissionId, newSlip);
+
       // 1. Instant Optimistic UI (Zero perceived latency)
-      this.slips.unshift(newSlip);
+      this.slips = this.deduplicateSlips([newSlip, ...this.slips]);
       this.saveCachedSlips();
 
       // Close composer box smoothly
@@ -689,7 +754,7 @@ import '../styles/slipboard.css';
       }
 
       this.slips.forEach(slip => {
-        const isLiked = this.likedSlipIds.has(slip.id);
+        const isLiked = this.isSlipLiked(slip);
         const slipEl = document.createElement('article');
         slipEl.className = `paper-slip slip-${slip.color}`;
         slipEl.style.transform = `rotate(${slip.rotation}deg)`;
@@ -734,17 +799,23 @@ import '../styles/slipboard.css';
     }
 
     private handleLikeToggle(slip: Slip, btn: HTMLButtonElement) {
-      const hasLiked = this.likedSlipIds.has(slip.id);
+      const hasLiked = this.isSlipLiked(slip);
       let delta = 0;
 
       if (hasLiked) {
         this.likedSlipIds.delete(slip.id);
+        if (slip.clientSubmissionId) {
+          this.likedSlipIds.delete(slip.clientSubmissionId);
+        }
         slip.likes = Math.max(0, slip.likes - 1);
         delta = -1;
         btn.classList.remove('is-liked');
         btn.innerHTML = `<span class="like-icon">${HEART_OUTLINE_SVG}</span><span class="like-count">${slip.likes}</span>`;
       } else {
         this.likedSlipIds.add(slip.id);
+        if (slip.clientSubmissionId) {
+          this.likedSlipIds.add(slip.clientSubmissionId);
+        }
         slip.likes += 1;
         delta = 1;
         btn.classList.add('is-liked');

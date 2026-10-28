@@ -204,7 +204,32 @@
     margin: 0 auto;
   }
 
-  /* 6. SECTION C: Face & Birthday Card */
+  /* 5b. SECTION C: The Cinematic KARKE.AI Reveal Section */
+  #stage-karke {
+    min-height: 110svh;
+    min-height: 110dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding: calc(60px + env(safe-area-inset-top)) 14px 40px;
+    gap: 16px;
+  }
+
+  .karke-column-left {
+    display: none; /* Aki's face is framed above in the viewport */
+  }
+
+  .karke-column-right {
+    max-width: 480px;
+    width: 100%;
+  }
+
+  .karke-frame-container {
+    height: 440px;
+  }
+
+  /* 6. SECTION D: Face & Birthday Card */
   #stage-card {
     min-height: 110svh;
     min-height: 110dvh;

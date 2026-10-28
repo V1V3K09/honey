@@ -20,32 +20,28 @@ export function initCharacterScroll() {
       // 0. Full-body landing: entire body visible from headwrap to bare feet
       { scale: 0.85, x: '0vw', y: '0vh' },
       // 1. Approach face: smooth zoom towards headwrap & eyes
-      { scale: 2.0, x: '0vw', y: '2vh' },
-      // 2. Face & Birthday Card: face framed in upper half, card below
+      { scale: 1.8, x: '0vw', y: '2vh' },
+      // 2. KARKE.AI Protocol: face framed in upper half, terminal below
+      { scale: 2.2, x: '0vw', y: '-6vh' },
+      // 3. Face & Birthday Card: face framed in upper half, card below
       { scale: 2.5, x: '0vw', y: '-8vh' },
-      // 3. Torso descent: camera travels down past chest and scarf
-      { scale: 2.2, x: '0vw', y: '-48vh' },
       // 4. Knees & Mini-Game: knees framed above the brain defense card
       { scale: 2.2, x: '0vw', y: '-95vh' },
-      // 5. Approach feet: moving downwards towards lower legs and ankles
-      { scale: 2.4, x: '0vw', y: '-135vh' },
-      // 6. Feet & Footer punchline: bare feet framed cleanly above footer card
+      // 5. Feet & Footer punchline: bare feet framed cleanly above footer card
       { scale: 2.6, x: '0vw', y: '-154vh' }
     ] : [
       // Desktop Milestones: Horizontal split screen framing
       // 0. Full-body landing: entire body visible from head to bare feet
       { scale: 1.0, x: '0vw', y: '0vh' },
       // 1. Approach face: zooming towards headwrap
-      { scale: 2.0, x: '-10vw', y: '3vh' },
-      // 2. Face & Birthday Card: face framed on LEFT opposite card on right
+      { scale: 2.2, x: '-8vw', y: '4vh' },
+      // 2. KARKE.AI Protocol: face framed on LEFT opposite KARKE.AI terminal on right
+      { scale: 3.2, x: '-25vw', y: '6vh' },
+      // 3. Face & Birthday Card: face framed on LEFT opposite card on right
       { scale: 3.2, x: '-24vw', y: '6vh' },
-      // 3. Torso descent: camera travels down past chest and scarf
-      { scale: 2.5, x: '0vw', y: '-36vh' },
       // 4. Knees & Mini-Game: knees framed on RIGHT opposite game on left
       { scale: 2.3, x: '24vw', y: '-72vh' },
-      // 5. Approach feet: moving downwards towards lower legs and ankles
-      { scale: 2.5, x: '20vw', y: '-96vh' },
-      // 6. Feet & Footer punchline: feet framed on the RIGHT, feet section on the LEFT
+      // 5. Feet & Footer punchline: feet framed on the RIGHT, feet section on the LEFT
       { scale: 2.7, x: '24vw', y: '-122vh' }
     ];
   };
@@ -90,11 +86,10 @@ export function initCharacterScroll() {
                   progress: self.progress,
                   stageName: [
                     'Aki Landing',
-                    'Face Zoom',
+                    'Face Approach',
+                    'KARKE.AI Protocol',
                     'Birthday Note',
-                    'Good Energy',
                     'Protect The Brain',
-                    'Community Wish Wall',
                     'The Footer (Literally Feet)'
                   ][stageIndex] || ''
                 }

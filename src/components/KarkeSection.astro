@@ -1,0 +1,282 @@
+---
+// KarkeSection.astro — The Cinematic KARKE.AI Reveal Section
+import '../styles/karke.css';
+---
+
+<div class="karke-split-layout">
+  <!-- LEFT COLUMN: Cranial HUD Reticle over Aki's enlarged head -->
+  <div class="karke-column-left" aria-hidden="true">
+    <div class="cranial-hud-reticle">
+      <div class="reticle-corner corner-tl"></div>
+      <div class="reticle-corner corner-tr"></div>
+      <div class="reticle-corner corner-bl"></div>
+      <div class="reticle-corner corner-br"></div>
+
+      <div class="reticle-header">
+        <span class="reticle-dot"></span>
+        <span class="reticle-title">CRANIAL BUS LOCK</span>
+      </div>
+
+      <p class="reticle-desc">
+        Acoustic anomaly detection protocol engaged. Probing subconscious speech patterns...
+      </p>
+
+      <div class="reticle-coords">
+        <span>LAT: 28.61° N</span>
+        <span>FREQ: 432 HZ</span>
+        <span>MATCH: 99.8%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN: KARKE.AI Cyber-Tactile Terminal Chassis -->
+  <div class="karke-column-right interactive-content">
+    <article class="karke-terminal-card" role="region" aria-label="KARKE.AI Acoustic Anomaly Detection Protocol">
+      
+      <!-- Terminal Masthead -->
+      <header class="terminal-masthead">
+        <div class="masthead-left">
+          <div class="terminal-signal-dot" aria-hidden="true"></div>
+          <div class="terminal-title-group">
+            <span class="terminal-badge">TOP SECRET // CRANIAL SUBROUTINE</span>
+            <h3 class="terminal-title">KARKE.AI</h3>
+          </div>
+        </div>
+
+        <div class="masthead-right">
+          <a 
+            href="https://karke-ai.vercel.app/" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="btn-open-karke-external"
+            title="Open original KARKE.AI app in standalone tab"
+          >
+            <span>STANDALONE APP</span>
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+          </a>
+        </div>
+      </header>
+
+      <!-- Technical Telemetry / Waveform Subbar -->
+      <div class="terminal-telemetry-bar">
+        <div class="telemetry-info">
+          <span class="telemetry-item"><span class="telemetry-key">PROTOCOL:</span> ACOUSTIC</span>
+          <span class="telemetry-divider">|</span>
+          <span class="telemetry-item"><span class="telemetry-key">SIGNATURE:</span> "KARKE"</span>
+          <span class="telemetry-divider">|</span>
+          <span id="karke-telemetry-status" class="telemetry-status">ARMED // STANDBY</span>
+        </div>
+
+        <!-- Oscilloscope Waveform Canvas -->
+        <div class="terminal-oscilloscope" title="Live acoustic monitor waveform">
+          <canvas id="karke-waveform-canvas" width="160" height="24" aria-label="Oscilloscope Waveform"></canvas>
+        </div>
+      </div>
+
+      <!-- Terminal Boot Log -->
+      <div id="karke-boot-log" class="terminal-boot-log" aria-live="polite">
+        <p class="boot-line">> CONNECTING CRANIAL PROBE... <span class="boot-ok">OK</span></p>
+        <p class="boot-line">> INITIALIZING ACOUSTIC PROTOCOL... <span class="boot-ok">ONLINE</span></p>
+      </div>
+
+      <!-- Embedded Original KARKE.AI Application Frame -->
+      <div class="karke-frame-container">
+        <iframe 
+          id="karke-app-iframe"
+          src="https://karke-ai.vercel.app/"
+          allow="microphone; autoplay"
+          class="karke-app-iframe"
+          title="KARKE.AI Acoustic Anomaly Detection Protocol"
+        ></iframe>
+
+        <!-- Subtle CRT Scanlines -->
+        <div class="terminal-scanlines" aria-hidden="true"></div>
+
+        <!-- Fallback Panel in case iframe cannot load or is offline -->
+        <div id="karke-iframe-fallback" class="karke-fallback-panel" style="display: none;">
+          <div class="fallback-badge">OFFLINE / PROTECTED MODE</div>
+          <h4>KARKE.AI DETECTOR</h4>
+          <p>
+            Acoustic anomaly detector protocol initialized. Launch the original standalone experience below:
+          </p>
+          <a 
+            href="https://karke-ai.vercel.app/" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="btn-fallback-launch"
+          >
+            INITIALIZE STANDALONE KARKE.AI ▶
+          </a>
+        </div>
+      </div>
+
+      <!-- Terminal Footer Bar with Simulated Anomaly Trigger -->
+      <footer class="terminal-footer-bar">
+        <div class="footer-hint">
+          <span class="hint-label">TRIGGER ANOMALY:</span>
+          <span class="hint-text">Say "karke" into microphone or test simulated payload</span>
+        </div>
+
+        <button id="btn-simulate-karke" class="btn-simulate-karke" type="button" aria-label="Test Simulated karke Detection">
+          <span>⚡ TEST DETECTION PAYLOAD</span>
+        </button>
+      </footer>
+    </article>
+  </div>
+</div>
+
+<!-- Full-Screen "MARATHI HAI KYA ?" Alert Overlay -->
+<div id="karke-marathi-alert" class="karke-alert-overlay" style="display: none;" role="alert" aria-live="assertive">
+  <div class="karke-alert-box">
+    <div class="karke-alert-title">ACOUSTIC ANOMALY DETECTED</div>
+    <div class="karke-alert-text">MARATHI HAI KYA ?</div>
+    <div class="karke-alert-sub">PHRASE MATCH: "KARKE" // CONFIDENCE: 100.0%</div>
+  </div>
+</div>
+
+<script>
+  function initKarkeSection() {
+    const iframe = document.getElementById('karke-app-iframe') as HTMLIFrameElement | null;
+    const fallbackPanel = document.getElementById('karke-iframe-fallback');
+    const simulateBtn = document.getElementById('btn-simulate-karke');
+    const alertOverlay = document.getElementById('karke-marathi-alert');
+    const statusLabel = document.getElementById('karke-telemetry-status');
+    const canvas = document.getElementById('karke-waveform-canvas') as HTMLCanvasElement | null;
+
+    // Move alert overlay to document.body so it attaches to the true root viewport
+    if (alertOverlay && alertOverlay.parentElement !== document.body) {
+      document.body.appendChild(alertOverlay);
+    }
+
+    let alertTimeout: ReturnType<typeof setTimeout> | null = null;
+    const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // 1. Fallback: Only display if iframe explicitly encounters an error
+    if (iframe) {
+      iframe.addEventListener('load', () => {
+        if (fallbackPanel) fallbackPanel.style.display = 'none';
+      });
+      iframe.addEventListener('error', () => {
+        if (fallbackPanel) fallbackPanel.style.display = 'flex';
+      });
+    }
+
+    // 2. Simulated "KARKE" Anomaly Trigger (Accessible to all visitors)
+    const alertSounds = [
+      '/audio/karke/alert_1.mp3',
+      '/audio/karke/alert_2.mp3'
+    ];
+
+    const triggerMarathiAlert = () => {
+      // Play audio
+      try {
+        const soundUrl = alertSounds[Math.floor(Math.random() * alertSounds.length)];
+        const audio = new Audio(soundUrl);
+        audio.volume = 0.85;
+        audio.play().catch(e => console.warn('Could not play alert audio:', e));
+      } catch (e) {
+        console.warn('Audio play error:', e);
+      }
+
+      // Update telemetry readout
+      if (statusLabel) {
+        statusLabel.textContent = 'ALERT: "KARKE" DETECTED!';
+        statusLabel.style.color = '#ff0000';
+        statusLabel.style.background = 'rgba(255, 0, 0, 0.2)';
+        statusLabel.style.borderColor = '#ff0000';
+      }
+
+      // Flash full screen alert
+      if (alertOverlay) {
+        alertOverlay.style.display = 'flex';
+        alertOverlay.setAttribute('aria-hidden', 'false');
+      }
+
+      if (alertTimeout) clearTimeout(alertTimeout);
+      alertTimeout = setTimeout(() => {
+        if (alertOverlay) {
+          alertOverlay.style.display = 'none';
+          alertOverlay.setAttribute('aria-hidden', 'true');
+        }
+        if (statusLabel) {
+          statusLabel.textContent = 'ARMED // STANDBY';
+          statusLabel.style.color = '#008f5d';
+          statusLabel.style.background = 'rgba(0, 229, 153, 0.15)';
+          statusLabel.style.borderColor = '#008f5d';
+        }
+      }, 3000);
+    };
+
+    simulateBtn?.addEventListener('click', triggerMarathiAlert);
+
+    // 3. Retro-Futuristic Oscilloscope Waveform Animation
+    if (canvas && !isReducedMotion) {
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        let phase = 0;
+        let animId: number;
+
+        const drawWaveform = () => {
+          const w = canvas.width;
+          const h = canvas.height;
+          ctx.clearRect(0, 0, w, h);
+
+          // Dark grid lines
+          ctx.strokeStyle = 'rgba(0, 229, 153, 0.15)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(0, h / 2);
+          ctx.lineTo(w, h / 2);
+          ctx.stroke();
+
+          // Green oscilloscope wave
+          ctx.strokeStyle = '#00e599';
+          ctx.lineWidth = 1.5;
+          ctx.shadowColor = '#00e599';
+          ctx.shadowBlur = 4;
+          ctx.beginPath();
+
+          for (let x = 0; x < w; x++) {
+            const freq1 = Math.sin((x * 0.08) + phase) * 6;
+            const freq2 = Math.sin((x * 0.18) + (phase * 1.5)) * 3;
+            const jitter = (Math.random() - 0.5) * 1.2;
+            const y = (h / 2) + freq1 + freq2 + jitter;
+
+            if (x === 0) {
+              ctx.moveTo(x, y);
+            } else {
+              ctx.lineTo(x, y);
+            }
+          }
+
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+          phase += 0.08;
+
+          animId = requestAnimationFrame(drawWaveform);
+        };
+
+        drawWaveform();
+
+        // Pause animation when tab hidden to save CPU
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) {
+            cancelAnimationFrame(animId);
+          } else {
+            drawWaveform();
+          }
+        });
+      }
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initKarkeSection);
+  } else {
+    initKarkeSection();
+  }
+</script>

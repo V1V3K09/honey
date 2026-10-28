@@ -1,0 +1,603 @@
+/* ==========================================================================
+   karke.css — Cinematic KARKE.AI Reveal Section & Neural Cranial Terminal
+   ========================================================================== */
+
+/* 1. Stage Section Layout (Desktop: Face on Left, Terminal on Right) */
+#stage-karke {
+  min-height: 120vh;
+  min-height: 120svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 85px 5vw 50px;
+  position: relative;
+  box-sizing: border-box;
+  z-index: 25;
+}
+
+.karke-split-layout {
+  display: grid;
+  grid-template-columns: 0.82fr 1.18fr;
+  align-items: center;
+  gap: 36px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Left Column: Spatial framing for Aki's enlarged head + Cranial HUD Reticle */
+.karke-column-left {
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  pointer-events: none;
+}
+
+/* Cranial Targeting Reticle (Locks onto zoomed head) */
+.cranial-hud-reticle {
+  position: relative;
+  width: 320px;
+  max-width: 90%;
+  padding: 18px 20px;
+  border-radius: var(--radius-sm);
+  background: rgba(18, 19, 22, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(0, 229, 153, 0.5);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45), inset 0 0 16px rgba(0, 229, 153, 0.12);
+  animation: reticlePulse 3s infinite ease-in-out;
+  pointer-events: auto;
+}
+
+@keyframes reticlePulse {
+  0%, 100% { border-color: rgba(0, 229, 153, 0.45); box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45); }
+  50% { border-color: rgba(0, 229, 153, 0.85); box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), 0 0 20px rgba(0, 229, 153, 0.3); }
+}
+
+.reticle-corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: #00e599;
+}
+
+.corner-tl { top: -2px; left: -2px; border-top: 3px solid #00e599; border-left: 3px solid #00e599; }
+.corner-tr { top: -2px; right: -2px; border-top: 3px solid #00e599; border-right: 3px solid #00e599; }
+.corner-bl { bottom: -2px; left: -2px; border-bottom: 3px solid #00e599; border-left: 3px solid #00e599; }
+.corner-br { bottom: -2px; right: -2px; border-bottom: 3px solid #00e599; border-right: 3px solid #00e599; }
+
+.reticle-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.reticle-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: #00e599;
+  box-shadow: 0 0 10px #00e599;
+  animation: reticleDotBlink 1s infinite alternate;
+}
+
+@keyframes reticleDotBlink {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
+}
+
+.reticle-title {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #00e599;
+  text-transform: uppercase;
+}
+
+.reticle-desc {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: #FFFFFF;
+  line-height: 1.45;
+  margin: 0 0 10px 0;
+}
+
+.reticle-coords {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.7);
+  border-top: 1px dashed rgba(0, 229, 153, 0.35);
+  padding-top: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Right Column: KARKE.AI Terminal Chassis */
+.karke-column-right {
+  max-width: 720px;
+  width: 100%;
+  position: relative;
+  z-index: 30;
+}
+
+/* Main Terminal Chassis (Utilitarian Web Brutalism + Cyber-Tactile Casing) */
+.karke-terminal-card {
+  background-color: #FFFFFF;
+  border: 3.5px solid #000000;
+  border-radius: var(--radius-md);
+  box-shadow: 12px 12px 0px #000000;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 220ms ease;
+}
+
+.karke-terminal-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 14px 14px 0px #000000;
+}
+
+/* Masthead Header */
+.terminal-masthead {
+  background-color: #000000;
+  color: #FFFFFF;
+  padding: 16px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3.5px solid #000000;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.masthead-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.terminal-signal-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #00e599;
+  box-shadow: 0 0 10px #00e599;
+  animation: signalPulse 1.6s infinite ease-in-out;
+}
+
+@keyframes signalPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.85); opacity: 0.5; }
+}
+
+.terminal-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.terminal-badge {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 800;
+  color: #00e599;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.terminal-title {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1.85rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: #FFFFFF;
+  margin: 0;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.masthead-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-open-karke-external {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background-color: var(--accent-yellow);
+  color: #000000;
+  border: 2px solid #000000;
+  border-radius: var(--radius-sm);
+  padding: 6px 14px;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 3px 3px 0px #000000;
+  transition: transform 120ms ease, box-shadow 120ms ease, background-color 140ms ease;
+}
+
+.btn-open-karke-external:hover {
+  transform: translateY(-2px);
+  box-shadow: 5px 5px 0px #000000;
+  background-color: #ffe600;
+}
+
+.btn-open-karke-external:active {
+  transform: scale(0.96) translateY(1px);
+  box-shadow: 1px 1px 0px #000000;
+}
+
+/* Technical Telemetry Subbar with Waveform */
+.terminal-telemetry-bar {
+  background-color: #f4f4f4;
+  border-bottom: 2px solid #000000;
+  padding: 8px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.telemetry-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #222222;
+  flex-wrap: wrap;
+}
+
+.telemetry-key {
+  color: #666666;
+}
+
+.telemetry-divider {
+  color: #cccccc;
+}
+
+.telemetry-status {
+  color: #008f5d;
+  font-weight: 900;
+  background: rgba(0, 229, 153, 0.15);
+  border: 1px solid #008f5d;
+  padding: 2px 7px;
+  border-radius: 3px;
+  transition: color 200ms ease, background-color 200ms ease;
+}
+
+/* Oscilloscope Canvas */
+.terminal-oscilloscope {
+  display: flex;
+  align-items: center;
+  background: #000000;
+  border: 1.5px solid #000000;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+#karke-waveform-canvas {
+  display: block;
+}
+
+/* Terminal Boot Log */
+.terminal-boot-log {
+  background-color: #121316;
+  color: #00e599;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.76rem;
+  line-height: 1.45;
+  padding: 8px 18px;
+  border-bottom: 2px solid #000000;
+  max-height: 44px;
+  overflow: hidden;
+}
+
+.boot-line {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.boot-ok {
+  color: #ffff00;
+  font-weight: 900;
+}
+
+/* Embedded Iframe Container */
+.karke-frame-container {
+  position: relative;
+  width: 100%;
+  height: 490px;
+  background-color: #e0e0e0;
+  overflow: hidden;
+}
+
+.karke-app-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  background-color: #e0e0e0;
+}
+
+/* Subtle Retro CRT Scanlines Overlay */
+.terminal-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.035) 0px,
+    rgba(0, 0, 0, 0.035) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  opacity: 0.6;
+}
+
+/* Fallback Panel */
+.karke-fallback-panel {
+  position: absolute;
+  inset: 0;
+  background-color: #ffffff;
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+  z-index: 5;
+}
+
+.fallback-badge {
+  background-color: #ffff00;
+  border: 2px solid #000000;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 800;
+  padding: 4px 10px;
+}
+
+.karke-fallback-panel h4 {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1.8rem;
+  font-weight: 900;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.karke-fallback-panel p {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: #333333;
+  max-width: 440px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.btn-fallback-launch {
+  display: inline-block;
+  background-color: #000000;
+  color: #ffffff;
+  border: 2px solid #000000;
+  box-shadow: 6px 6px 0px #ffff00;
+  padding: 14px 28px;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 120ms ease;
+  margin-top: 8px;
+}
+
+.btn-fallback-launch:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0px #ffff00;
+}
+
+/* Terminal Footer Bar */
+.terminal-footer-bar {
+  background-color: #ffffff;
+  border-top: 3px solid #000000;
+  padding: 12px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.footer-hint {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hint-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #777777;
+  letter-spacing: 0.05em;
+}
+
+.hint-text {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #000000;
+}
+
+.btn-simulate-karke {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ff0000;
+  color: #ffffff;
+  border: 2px solid #000000;
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  box-shadow: 3px 3px 0px #000000;
+  transition: transform 120ms ease, box-shadow 120ms ease, background-color 140ms ease;
+  user-select: none;
+}
+
+.btn-simulate-karke:hover {
+  transform: translateY(-2px);
+  box-shadow: 5px 5px 0px #000000;
+  background-color: #e60000;
+}
+
+.btn-simulate-karke:active {
+  transform: scale(0.96) translateY(1px);
+  box-shadow: 1px 1px 0px #000000;
+}
+
+/* Full-Screen "MARATHI HAI KYA ?" Alert Overlay */
+.karke-alert-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.88);
+  padding: 24px;
+  animation: alertOverlayFlash 220ms ease forwards;
+}
+
+@keyframes alertOverlayFlash {
+  0% { opacity: 0; background: rgba(255, 0, 0, 0.6); }
+  50% { opacity: 1; background: rgba(255, 0, 0, 0.95); }
+  100% { opacity: 1; background: rgba(0, 0, 0, 0.92); }
+}
+
+.karke-alert-box {
+  background: #000000;
+  color: #ffffff;
+  border: 8px solid #ffffff;
+  box-shadow: 16px 16px 0px #ff0000;
+  padding: 44px 32px;
+  text-align: center;
+  width: 90%;
+  max-width: 780px;
+  animation: alertBoxPop 340ms cubic-bezier(0.18, 0.89, 0.32, 1.35) forwards;
+}
+
+@keyframes alertBoxPop {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.karke-alert-title {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #ffff00;
+  margin-bottom: 12px;
+}
+
+.karke-alert-text {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: clamp(2.2rem, 6vw, 5rem);
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+
+.karke-alert-sub {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #ff0000;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints for KARKE.AI Section
+   ========================================================================== */
+@media (max-width: 980px) {
+  .karke-split-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .karke-column-left {
+    min-height: auto;
+    align-items: center;
+  }
+
+  .cranial-hud-reticle {
+    margin-right: 0;
+    width: 100%;
+    max-width: 440px;
+  }
+}
+
+@media (max-width: 768px) {
+  #stage-karke {
+    min-height: 110svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding: calc(60px + env(safe-area-inset-top)) 14px 40px;
+    gap: 16px;
+  }
+
+  .karke-column-left {
+    display: none; /* Aki's face is framed above in the fixed viewport */
+  }
+
+  .karke-column-right {
+    max-width: 480px;
+    width: 100%;
+  }
+
+  .karke-frame-container {
+    height: 440px;
+  }
+
+  .terminal-title {
+    font-size: 1.4rem;
+  }
+
+  .terminal-masthead {
+    padding: 12px 16px;
+  }
+
+  .terminal-footer-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-simulate-karke {
+    width: 100%;
+    justify-content: center;
+  }
+}

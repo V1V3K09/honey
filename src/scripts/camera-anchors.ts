@@ -97,7 +97,18 @@ export function createCameraWaypoints(anchors: AnchorPoints, isMobile: boolean =
       fov: isMobile ? 45 : 38
     },
 
-    // 2: Stage C — Face Composition (Model on RIGHT, Card on LEFT on desktop)
+    // 2: Stage C — KARKE.AI Acoustic Protocol (Model on LEFT, KARKE.AI on RIGHT)
+    {
+      position: new THREE.Vector3(
+        head.x + faceXOffset,
+        head.y + 0.03,
+        head.z + h * 0.44 * distanceMultiplier
+      ),
+      target: new THREE.Vector3(head.x + (isMobile ? 0 : 0.08), head.y, head.z),
+      fov: isMobile ? 44 : 36
+    },
+
+    // 3: Stage D — Face Composition & Birthday Card (Model on LEFT, Card on RIGHT)
     {
       position: new THREE.Vector3(
         head.x + faceXOffset,
@@ -108,18 +119,7 @@ export function createCameraWaypoints(anchors: AnchorPoints, isMobile: boolean =
       fov: isMobile ? 44 : 36
     },
 
-    // 3: Stage D — Continuous descent through torso
-    {
-      position: new THREE.Vector3(
-        torso.x + (faceXOffset * 0.5),
-        torso.y + 0.05,
-        torso.z + h * 0.7 * distanceMultiplier
-      ),
-      target: new THREE.Vector3(torso.x, torso.y, torso.z),
-      fov: isMobile ? 46 : 40
-    },
-
-    // 4: Stage E — Knee Composition (Model on LEFT, Mini-Game on RIGHT on desktop)
+    // 4: Stage E — Knee Composition & 3D Mini-Game (Model on RIGHT, Mini-Game on LEFT on desktop)
     {
       position: new THREE.Vector3(
         knees.x + kneeXOffset,
@@ -130,18 +130,7 @@ export function createCameraWaypoints(anchors: AnchorPoints, isMobile: boolean =
       fov: isMobile ? 45 : 38
     },
 
-    // 5: Stage F — Glide towards feet
-    {
-      position: new THREE.Vector3(
-        feet.x + (kneeXOffset * 0.3),
-        feet.y + h * 0.15,
-        feet.z + h * 0.55 * distanceMultiplier
-      ),
-      target: new THREE.Vector3(feet.x, feet.y + 0.05, feet.z),
-      fov: isMobile ? 46 : 40
-    },
-
-    // 6: Stage G — Feet Center-Stage (The Footer Punchline)
+    // 5: Stage F — Feet Center-Stage (The Footer Punchline)
     {
       position: new THREE.Vector3(
         feet.x,

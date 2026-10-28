@@ -16,7 +16,7 @@ export class ScrollTimelineController {
   private camera: THREE.PerspectiveCamera;
   private waypoints: CameraWaypoint[] = [];
   private anchors: AnchorPoints;
-  private milestoneTimes = [0.0, 0.18, 0.35, 0.52, 0.68, 0.85, 1.0];
+  private milestoneTimes = [0.0, 0.20, 0.40, 0.60, 0.80, 1.0];
   private lastStageIndex = 0;
   private isReducedMotion = false;
 
@@ -109,11 +109,10 @@ export class ScrollTimelineController {
           progress,
           stageName: [
             'Full-Body Landing',
-            'Descent to Face',
-            'Face & Birthday Card',
-            'Torso Journey',
-            'Knees & Cake Boss Fight',
-            'Approach to Feet',
+            'Face Approach',
+            'KARKE.AI Protocol',
+            'Birthday Note',
+            'Protect The Brain',
             'The Footer (Literally Feet)'
           ][stageIndex] || ''
         }
