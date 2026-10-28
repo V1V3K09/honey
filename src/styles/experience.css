@@ -398,6 +398,14 @@
   box-shadow: var(--shadow-hard-sm);
 }
 
+.pointer-desktop-text {
+  display: inline;
+}
+
+.pointer-mobile-text {
+  display: none;
+}
+
 @keyframes bouncePrompt {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(8px); }
@@ -760,6 +768,14 @@
   border-radius: var(--radius-sm);
   border: var(--border-ink-thin);
   box-shadow: var(--shadow-hard-sm);
+}
+
+.pointer-desktop-text {
+  display: inline;
+}
+
+.pointer-mobile-text {
+  display: none;
 }
 
 .footer-nav {

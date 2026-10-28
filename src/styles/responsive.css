@@ -290,21 +290,24 @@
 
   /* 8. SECTION E: Feet & Footer Punchline */
   #stage-footer {
-    min-height: 110svh;
-    min-height: 110dvh;
+    min-height: 100svh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     align-items: center;
-    padding: calc(60px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));
-    gap: 16px;
+    padding: calc(50px + env(safe-area-inset-top, 0px)) 14px calc(20px + env(safe-area-inset-bottom, 0px));
+    gap: 10px;
     box-sizing: border-box;
+    position: relative;
   }
 
   .footer-column-left {
-    max-width: 480px;
+    max-width: 440px;
     width: 100%;
     margin-top: 0;
+    position: relative;
+    z-index: 30;
   }
 
   .footer-column-right {
@@ -313,18 +316,67 @@
 
   .footer-punchline-card {
     width: 100%;
-    padding: 18px 16px;
+    padding: 14px 14px;
+    box-sizing: border-box;
+  }
+
+  .footer-punchline-card .paper-headline {
+    font-size: 1.25rem !important;
+    margin-bottom: 8px !important;
+  }
+
+  .footer-punchline-card .footer-desc {
+    font-size: 0.82rem;
+    line-height: 1.45;
+    margin-bottom: 10px;
+  }
+
+  .footer-pointer-arrow {
+    margin: 0 0 10px 0;
+    padding: 6px 10px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    justify-content: center;
+    text-align: center;
+    background: var(--accent-yellow);
+    color: #000000;
+    border: 2px solid #000000;
+    box-shadow: 2px 2px 0px #000000;
+  }
+
+  .pointer-desktop-text {
+    display: none !important;
+  }
+
+  .pointer-mobile-text {
+    display: inline !important;
+  }
+
+  .footer-find-me {
+    margin: 0 0 10px 0;
+    padding: 6px 10px;
+    width: 100%;
+    justify-content: space-between;
+    box-sizing: border-box;
   }
 
   .footer-nav {
     justify-content: center;
     gap: 8px;
+    margin-top: 8px;
   }
 
   .footer-nav .btn-action {
     flex: 1 1 auto;
-    font-size: 0.8rem;
-    padding: 9px 12px;
+    font-size: 0.78rem;
+    padding: 8px 10px;
+    min-height: 40px;
+  }
+
+  .footer-credit {
+    margin-top: 8px;
+    font-size: 0.68rem;
+    line-height: 1.35;
   }
 
   /* Hide decorative floating stickers on small screens to prevent clutter */
