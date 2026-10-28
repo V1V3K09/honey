@@ -95,7 +95,6 @@ export class ScrollTimelineController {
     const currentStage = Math.round(clampedProgress * (times.length - 1));
     if (currentStage !== this.lastStageIndex) {
       this.lastStageIndex = currentStage;
-      sfx.playWhoosh();
       this.notifyStageChange(currentStage, clampedProgress);
     }
   }

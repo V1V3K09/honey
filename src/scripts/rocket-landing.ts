@@ -134,7 +134,6 @@ export class RocketLandingSystem {
 
   public replayLanding() {
     if (this.isLanding) return;
-    sfx.playPop();
 
     // Scroll smoothly to top first
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -173,7 +172,7 @@ export class RocketLandingSystem {
       gsap.set(actions, { y: 0, opacity: 1 });
     }
 
-    this.updateTelemetry(0, 0, '🎯 IN POSITION: SCROLL TO EXPLORE');
+    this.updateTelemetry(0, 0, 'IN POSITION: SCROLL TO EXPLORE');
     if (this.telemetryBadge) {
       this.telemetryBadge.classList.remove('is-active');
     }
@@ -398,7 +397,7 @@ export class RocketLandingSystem {
     }
 
     // Telemetry badge confirmation update
-    this.updateTelemetry(0, 0, '🎯 TOUCHDOWN CONFIRMED: AKI HAS ARRIVED IN FRONT!');
+    this.updateTelemetry(0, 0, 'TOUCHDOWN CONFIRMED: AKI HAS ARRIVED IN FRONT!');
     if (this.telemetryBadge) {
       this.telemetryBadge.classList.add('is-landed');
     }
@@ -421,14 +420,11 @@ export class RocketLandingSystem {
 
     this.updateTelemetry(0, 0, 'MISSION CONTROL: DOCKING INTO STATION');
 
-    // Camera reframing whoosh sound
-    sfx.playWhoosh();
-
     const moveTl = gsap.timeline({
       onComplete: () => {
         this.isLanding = false;
         this.hasLanded = true;
-        this.updateTelemetry(0, 0, '🎯 READY: SCROLL TO EXPLORE');
+        this.updateTelemetry(0, 0, 'READY: SCROLL TO EXPLORE');
 
         if (this.telemetryBadge) {
           setTimeout(() => {

@@ -66,7 +66,6 @@ export function initCharacterScroll() {
           );
           if (stageIndex !== lastStage) {
             lastStage = stageIndex;
-            sfx.playWhoosh();
             window.dispatchEvent(
               new CustomEvent('birthday:stage-change', {
                 detail: {

@@ -52,28 +52,28 @@ import SlipBoard from '../components/SlipBoard.astro';
               <!-- Personal Pointers wrapping around the character -->
               <div class="anatomical-pointers-list">
                 <div class="anatomical-pointer-item">
-                  <span class="pointer-badge">🙏 "राधे राधे" HEADWRAP & SCARF</span>
+                  <span class="pointer-badge">"राधे राधे" HEADWRAP & SCARF</span>
                   <p class="pointer-desc">
                     His iconic look. Radiates serene peace, positive energy, and an unshakeable sense of calm in any storm.
                   </p>
                 </div>
 
                 <div class="anatomical-pointer-item">
-                  <span class="pointer-badge">❤️ GOLDEN HEART & EASY LAUGHTER</span>
+                  <span class="pointer-badge">GOLDEN HEART & EASY LAUGHTER</span>
                   <p class="pointer-desc">
                     Always ready to listen, laugh at anything, and make whatever stressful situation feel completely fine.
                   </p>
                 </div>
 
                 <div class="anatomical-pointer-item">
-                  <span class="pointer-badge">🧘 COOL, CALM & STEADY</span>
+                  <span class="pointer-badge">COOL, CALM & STEADY</span>
                   <p class="pointer-desc">
                     Zero panic, zero drama. Just quiet confidence, genuine kindness, and steady devotion.
                   </p>
                 </div>
 
                 <div class="anatomical-pointer-item">
-                  <span class="pointer-badge">🦶 EFFORTLESSLY BAREFOOT</span>
+                  <span class="pointer-badge">EFFORTLESSLY BAREFOOT</span>
                   <p class="pointer-desc">
                     Completely grounded and 100% unbothered by dress codes. Stay tuned for the footer punchline!
                   </p>
@@ -118,13 +118,12 @@ import SlipBoard from '../components/SlipBoard.astro';
         <!-- Landing Actions: Replay Rocket & Scroll Indicator -->
         <div class="hero-landing-actions interactive-content">
           <button id="btn-replay-rocket" class="btn-replay-rocket" type="button" aria-label="Replay Rocket Landing">
-            <span class="rocket-icon">🚀</span>
             <span>REPLAY ROCKET LANDING</span>
           </button>
           
           <div class="scroll-prompt-landing">
             <p class="scroll-prompt-text">
-              SCROLL TO EXPLORE AKI'S BIRTHDAY JOURNEY ↓
+              SCROLL TO EXPLORE AKI'S BIRTHDAY JOURNEY
             </p>
           </div>
         </div>
@@ -163,7 +162,6 @@ import SlipBoard from '../components/SlipBoard.astro';
           <!-- Paper-cut annotation near character: "THE OWNER OF THIS BRAIN" -->
           <div class="brain-owner-callout paper-card">
             <div class="callout-tag">
-              <span>👈</span>
               <span class="cut-chunk cut-yellow" style="font-size: 0.92rem;">THE OWNER OF THIS BRAIN</span>
             </div>
             <p class="callout-caption">
@@ -173,10 +171,7 @@ import SlipBoard from '../components/SlipBoard.astro';
         </div>
       </section>
 
-      <!-- SECTION E: The Transparent Community Wish Wall & Real-Time Guestbook -->
-      <SlipBoard />
-
-      <!-- SECTION F: Feet & The Literal Footer (Feet Section on LEFT, Bare Feet on RIGHT) -->
+      <!-- SECTION E: Feet & The Literal Footer (Feet Section on LEFT, Bare Feet on RIGHT) -->
       <section id="stage-footer" class="experience-stage">
         <div class="footer-column-left">
           <FooterExperience />
@@ -188,4 +183,7 @@ import SlipBoard from '../components/SlipBoard.astro';
 
     </div>
   </main>
+
+  <!-- Interactive Transparent Sticky Notes Wall Overlay & Real-Time Guestbook -->
+  <SlipBoard />
 </BaseLayout>

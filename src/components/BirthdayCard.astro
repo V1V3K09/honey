@@ -11,12 +11,12 @@
     tabindex="0"
     aria-label="Open Birthday Card for Aki"
   >
-    <div class="wax-seal" aria-hidden="true">🎂</div>
+    <div class="wax-seal" aria-hidden="true">A</div>
     <h3 class="envelope-title">
       <span class="cut-chunk cut-yellow" style="font-size: 1.15rem;">A BIRTHDAY NOTE</span>
       <span class="cut-chunk cut-pink" style="font-size: 1.15rem;">FOR AKI</span>
     </h3>
-    <p class="envelope-hint">CLICK OR PRESS ENTER TO UNSEAL ✉️</p>
+    <p class="envelope-hint">CLICK OR PRESS ENTER TO UNSEAL</p>
   </div>
 
   <!-- Unfolded Letter Modal -->
@@ -51,11 +51,11 @@
 
     <div class="letter-signature">
       <p class="signature-main">HAPPY BIRTHDAY, LEGEND!</p>
-      <p class="signature-handwritten">— With all our love & Radhe Radhe always ❤️</p>
+      <p class="signature-handwritten">— With all our love & Radhe Radhe always</p>
     </div>
 
     <button id="btn-close-letter" class="btn-action btn-close-letter" type="button">
-      CLOSE NOTE & CONTINUE JOURNEY ✕
+      CLOSE NOTE & CONTINUE JOURNEY
     </button>
   </div>
 </div>
@@ -261,7 +261,6 @@
     const openCard = () => {
       trigger.style.display = 'none';
       modal.classList.add('is-open');
-      sfx.playPop();
 
       // Celebratory confetti flutter on card open
       confetti({
@@ -276,7 +275,6 @@
     const closeCard = () => {
       modal.classList.remove('is-open');
       trigger.style.display = 'block';
-      sfx.playPop();
       trigger.focus();
     };
 

@@ -49,8 +49,8 @@ import '../styles/game-styles.css';
 
   <!-- Secondary Metrics Bar -->
   <div class="brain-metrics-subbar">
-    <span id="hud-blocked-display">🛡️ 0 BLOCKED</span>
-    <span id="hud-samosas-display">🥟 0 SAMOSAS</span>
+    <span id="hud-blocked-display">0 BLOCKED</span>
+    <span id="hud-samosas-display">0 SAMOSAS</span>
     <span id="hud-rank-preview">RANK: INTERN</span>
   </div>
 
@@ -60,7 +60,7 @@ import '../styles/game-styles.css';
 
     <!-- START SCREEN OVERLAY -->
     <div id="overlay-start" class="brain-overlay">
-      <div class="overlay-icon">🧠 🛡️</div>
+      <div class="overlay-badge">DEFENSE ARENA</div>
       <h4 class="overlay-title">PROTECT HIS LAST BRAIN CELL</h4>
       <p class="overlay-desc">
         Survive <strong>45 seconds</strong> of adult life! Move your shield to intercept alarm clocks, exams, and responsibilities. Collect golden samosas!
@@ -72,7 +72,7 @@ import '../styles/game-styles.css';
 
     <!-- PAUSED OVERLAY -->
     <div id="overlay-paused" class="brain-overlay" style="display: none;">
-      <div class="overlay-icon">⏸️</div>
+      <div class="overlay-badge">PAUSED</div>
       <h4 class="overlay-title">BRAIN CELL PAUSED</h4>
       <p class="overlay-desc">
         Taking a quick breather from adult responsibilities.
@@ -84,7 +84,7 @@ import '../styles/game-styles.css';
 
     <!-- DEFEAT OVERLAY -->
     <div id="overlay-defeat" class="brain-overlay" style="display: none;">
-      <div class="overlay-icon">💀</div>
+      <div class="overlay-badge" style="background-color: var(--accent-vermilion); color: #fff;">GAME OVER</div>
       <h4 class="overlay-title" style="color: var(--accent-vermilion);">
         THE LAST BRAIN CELL HAS LEFT THE CHAT
       </h4>
@@ -109,7 +109,7 @@ import '../styles/game-styles.css';
 
     <!-- VICTORY OVERLAY -->
     <div id="overlay-victory" class="brain-overlay" style="display: none;">
-      <div class="overlay-icon">🏆</div>
+      <div class="overlay-badge" style="background-color: var(--accent-mint); color: var(--ink-primary);">VICTORY</div>
       <h4 class="overlay-title" style="color: var(--accent-mint);">
         THE LAST BRAIN CELL SURVIVED!
       </h4>
@@ -141,7 +141,7 @@ import '../styles/game-styles.css';
       </div>
 
       <button id="btn-unlock-card" class="btn-action btn-unlock-card" type="button">
-        UNLOCK YOUR BIRTHDAY CARD ✉️
+        UNLOCK YOUR BIRTHDAY CARD
       </button>
       <button id="btn-replay-game" class="btn-action" type="button" style="font-size: 0.85rem; padding: 6px 14px;">
         PLAY AGAIN ↺
@@ -156,8 +156,8 @@ import '../styles/game-styles.css';
 
   <!-- Controls Hint -->
   <div class="brain-controls-hint">
-    <span>🖱️ MOUSE / TOUCH DRAG TO MOVE SHIELD</span>
-    <span>⌨️ [A][D] / ARROWS • [ESC] PAUSE</span>
+    <span>MOUSE / TOUCH DRAG TO MOVE SHIELD</span>
+    <span>[A][D] / ARROWS • [ESC] PAUSE</span>
   </div>
 </div>
 
@@ -236,8 +236,8 @@ import '../styles/game-styles.css';
       },
 
       onStatsUpdate: (stats: GameStats) => {
-        if (blockedDisplay) blockedDisplay.textContent = `🛡️ ${stats.threatsBlocked} BLOCKED`;
-        if (samosasDisplay) samosasDisplay.textContent = `🥟 ${stats.samosasCollected} SAMOSAS`;
+        if (blockedDisplay) blockedDisplay.textContent = `${stats.threatsBlocked} BLOCKED`;
+        if (samosasDisplay) samosasDisplay.textContent = `${stats.samosasCollected} SAMOSAS`;
         if (rankPreview) rankPreview.textContent = `RANK: ${stats.rank.split(' ')[0]}`;
       },
 
@@ -277,7 +277,7 @@ import '../styles/game-styles.css';
         if (vScore) vScore.textContent = `${stats.score} PTS`;
         if (vBlocked) vBlocked.textContent = stats.threatsBlocked.toString();
         if (vSamosas) vSamosas.textContent = stats.samosasCollected.toString();
-        if (vRank) vRank.textContent = `RANK: ${stats.rank} 🏆`;
+        if (vRank) vRank.textContent = `RANK: ${stats.rank}`;
       },
 
       onDefeat: (stats: GameStats) => {
@@ -300,7 +300,6 @@ import '../styles/game-styles.css';
 
     // Bind Button Actions
     const handleStart = () => {
-      sfx.playPop();
       logic.start();
     };
 

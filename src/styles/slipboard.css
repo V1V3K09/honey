@@ -1,19 +1,113 @@
 /* ==========================================================================
-   slipboard.css — Transparent Community Wish Wall & Emil Kowalski Sticky Note UI
+   slipboard.css — Transparent Community Sticky Notes Overlay & Emil Kowalski Sticky Note UI
    ========================================================================== */
 
-/* 1. Stage Section: Transparent Notes Wall */
-#stage-wall {
-  min-height: 120vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 90px 5vw 60px;
-  position: relative;
-  z-index: 25;
+/* 1. Bottom-Right Toggle Pill (Always available on the bottom-right corner) */
+.slipboard-toggle-wrapper {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 85;
 }
 
-.wall-layout-container {
+.btn-slipboard-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #FEF08A 0%, #FDE047 100%);
+  border: var(--border-ink);
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--ink-primary);
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--ink-primary);
+  transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 160ms cubic-bezier(0.16, 1, 0.3, 1), background 160ms ease;
+  user-select: none;
+  outline: none;
+}
+
+.btn-slipboard-toggle:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 6px 6px 0 var(--ink-primary);
+}
+
+.btn-slipboard-toggle:active {
+  transform: scale(0.96) translateY(1px);
+  box-shadow: 2px 2px 0 var(--ink-primary);
+}
+
+.btn-slipboard-toggle.is-active {
+  background: var(--ink-primary);
+  color: #FFFFFF;
+  box-shadow: 4px 4px 0 var(--accent-pink);
+}
+
+.toggle-status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: var(--accent-mint);
+  box-shadow: 0 0 8px var(--accent-mint);
+  display: inline-block;
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+.btn-slipboard-toggle.is-active .toggle-status-dot {
+  background-color: var(--accent-yellow);
+  box-shadow: 0 0 8px var(--accent-yellow);
+}
+
+.slip-count-pill {
+  background-color: var(--ink-primary);
+  color: #FFFFFF;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.btn-slipboard-toggle.is-active .slip-count-pill {
+  background-color: #FFFFFF;
+  color: var(--ink-primary);
+}
+
+/* 2. Full-Screen Transparent Notes Overlay (Website & Character Visible Behind) */
+.transparent-notes-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 75;
+  background: rgba(251, 248, 241, 0.68);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 75px 5vw 60px;
+  box-sizing: border-box;
+}
+
+.transparent-notes-overlay.is-open {
+  animation: overlayFadeIn 280ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0px);
+  }
+}
+
+.overlay-inner-container {
   width: 100%;
   max-width: 1380px;
   margin: 0 auto;
@@ -22,15 +116,15 @@
   gap: 28px;
 }
 
-/* Wall Header */
+/* Transparent Overlay Header Card */
 .wall-header-card {
-  background: rgba(254, 252, 247, 0.78);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(254, 252, 247, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: var(--border-ink);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-hard-md);
-  padding: 24px 28px;
+  box-shadow: 0 16px 32px -8px rgba(18, 19, 22, 0.12), 4px 4px 0 var(--ink-primary);
+  padding: 22px 28px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -47,9 +141,9 @@
 .wall-headline {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   font-family: var(--font-headline);
-  font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+  font-size: clamp(1.35rem, 2.5vw, 1.8rem);
   font-weight: 900;
   color: var(--ink-primary);
   margin: 0;
@@ -74,7 +168,7 @@
 .slip-count-badge {
   background-color: var(--ink-primary);
   color: #FFFFFF;
-  padding: 5px 12px;
+  padding: 6px 14px;
   border-radius: 999px;
   font-family: var(--font-mono);
   font-size: 0.74rem;
@@ -90,7 +184,7 @@
   background-color: #FFFFFF;
   border: var(--border-ink-thin);
   border-radius: 999px;
-  padding: 5px 12px;
+  padding: 6px 13px;
   font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 700;
@@ -106,7 +200,7 @@
   background-color: var(--accent-mint);
   box-shadow: 0 0 8px var(--accent-mint);
   display: inline-block;
-  animation: pulseSyncDot 2s infinite ease-in-out;
+  animation: pulseDot 2s infinite ease-in-out;
 }
 
 .sync-status-dot.is-local {
@@ -117,15 +211,44 @@
 .sync-status-dot.is-syncing {
   background-color: var(--accent-vermilion);
   box-shadow: 0 0 8px var(--accent-vermilion);
-  animation: pulseSyncDot 0.6s infinite ease-in-out;
+  animation: pulseDot 0.6s infinite ease-in-out;
 }
 
-@keyframes pulseSyncDot {
+@keyframes pulseDot {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.35; transform: scale(0.8); }
+  50% { opacity: 0.35; transform: scale(0.85); }
 }
 
-/* 2. Main Wall Split Screen (Notes Grid on LEFT & CENTER | Physical Sticky Trigger on RIGHT) */
+.btn-overlay-close {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--bg-paper-alt);
+  border: var(--border-ink-thin);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--ink-primary);
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--ink-primary);
+  transition: transform 120ms ease, background-color 140ms ease, color 140ms ease;
+  user-select: none;
+}
+
+.btn-overlay-close:hover {
+  background-color: var(--accent-vermilion);
+  color: #FFFFFF;
+  transform: translateY(-1px);
+}
+
+.btn-overlay-close:active {
+  transform: scale(0.96) translateY(1px);
+}
+
+/* 3. Split Screen Layout (Notes Grid on LEFT & CENTER | Physical Sticky on RIGHT) */
 .wall-split-layout {
   display: grid;
   grid-template-columns: 1fr 340px;
@@ -141,12 +264,12 @@
 
 .wall-slips-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 22px;
   position: relative;
 }
 
-/* Individual Paper Sticky Note (Emil Kowalski Apple aesthetic + Paper tactile styling) */
+/* Individual Paper Sticky Note (Tactile + Emil Kowalski Spring Motion) */
 .paper-slip {
   position: relative;
   background-color: #FEF9C3;
@@ -201,7 +324,7 @@
   font-weight: 800;
   background-color: var(--accent-vermilion);
   color: #FFFFFF;
-  padding: 2px 6px;
+  padding: 2px 7px;
   border-radius: 999px;
   letter-spacing: 0.04em;
   box-shadow: 1px 1px 0 var(--ink-primary);
@@ -245,7 +368,7 @@
 .slip-stamp-icon {
   font-size: 1.35rem;
   line-height: 1;
-  filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.15));
+  filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.12));
 }
 
 .slip-body {
@@ -278,7 +401,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.65);
   border: var(--border-ink-thin);
   border-radius: 999px;
   padding: 3px 9px;
@@ -306,8 +429,14 @@
   color: var(--accent-vermilion);
 }
 
-.btn-slip-like.is-liked span:first-child {
-  display: inline-block;
+.like-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.btn-slip-like.is-liked .like-icon {
   animation: heartPop 320ms cubic-bezier(0.18, 0.89, 0.32, 1.4);
 }
 
@@ -320,7 +449,7 @@
 /* Empty State Card */
 .empty-slips-card {
   grid-column: 1 / -1;
-  background: rgba(254, 252, 247, 0.82);
+  background: rgba(254, 252, 247, 0.85);
   backdrop-filter: blur(14px);
   border: 2px dashed rgba(18, 19, 22, 0.3);
   border-radius: var(--radius-lg);
@@ -350,7 +479,7 @@
   line-height: 1.5;
 }
 
-/* 3. Right Column: Physical Sticky Note Trigger */
+/* 4. Right Column: Physical Tactile Sticky Note Trigger */
 .wall-sticky-trigger-column {
   position: sticky;
   top: 100px;
@@ -376,7 +505,7 @@
 }
 
 .sticky-note-physical-card:active {
-  transform: scale(0.97) translateY(1px);
+  transform: scale(0.96) translateY(1px);
   box-shadow: 3px 3px 0 var(--ink-primary);
 }
 
@@ -421,16 +550,12 @@
   gap: 12px;
 }
 
-.sticky-card-stamp {
-  font-size: 2.2rem;
+.sticky-pen-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-primary);
   line-height: 1;
-  animation: stampWiggle 2.6s infinite ease-in-out;
-}
-
-@keyframes stampWiggle {
-  0%, 80%, 100% { transform: rotate(0deg); }
-  85% { transform: rotate(-12deg); }
-  90% { transform: rotate(10deg); }
 }
 
 .sticky-card-title {
@@ -466,7 +591,7 @@
   margin-top: 4px;
 }
 
-/* 4. Emil Kowalski Glassmorphic Composer Modal */
+/* 5. Emil Kowalski Glassmorphic Composer Modal */
 .note-composer-modal-backdrop {
   position: fixed;
   inset: 0;
@@ -489,7 +614,7 @@
 .note-composer-dialog {
   width: 100%;
   max-width: 540px;
-  background: rgba(254, 252, 247, 0.94);
+  background: rgba(254, 252, 247, 0.95);
   backdrop-filter: blur(28px) saturate(180%);
   -webkit-backdrop-filter: blur(28px) saturate(180%);
   border: var(--border-ink);
@@ -526,10 +651,6 @@
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-.composer-icon {
-  font-size: 1.4rem;
 }
 
 .composer-headline {
@@ -603,6 +724,7 @@
   outline: none;
   box-shadow: inset 1px 1px 2px rgba(0,0,0,0.06);
   transition: border-color 140ms ease, box-shadow 140ms ease;
+  box-sizing: border-box;
 }
 
 .form-input:focus {
@@ -624,6 +746,7 @@
   resize: vertical;
   box-shadow: inset 1px 1px 2px rgba(0,0,0,0.06);
   transition: border-color 140ms ease, box-shadow 140ms ease;
+  box-sizing: border-box;
 }
 
 .form-textarea:focus {
@@ -728,65 +851,13 @@
 }
 
 .btn-paste-on-wall:active {
-  transform: scale(0.97) translateY(1px);
+  transform: scale(0.96) translateY(1px);
   box-shadow: 2px 2px 0 var(--ink-primary);
 }
 
-/* 5. Floating Sticky Dock Pill (Right Viewport Edge) */
-.floating-sticky-dock {
-  position: fixed;
-  right: 20px;
-  bottom: 24px;
-  z-index: 85;
-}
-
-.btn-floating-sticky {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  background: linear-gradient(135deg, #FEF08A 0%, #FDE047 100%);
-  border: var(--border-ink);
-  border-radius: 999px;
-  padding: 10px 20px;
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  font-weight: 800;
-  color: var(--ink-primary);
-  cursor: pointer;
-  box-shadow: 4px 4px 0 var(--ink-primary);
-  transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 160ms cubic-bezier(0.16, 1, 0.3, 1);
-  user-select: none;
-}
-
-.btn-floating-sticky:hover {
-  transform: translateY(-3px) scale(1.04);
-  box-shadow: 6px 6px 0 var(--ink-primary);
-}
-
-.btn-floating-sticky:active {
-  transform: scale(0.97) translateY(1px);
-  box-shadow: 2px 2px 0 var(--ink-primary);
-}
-
-.dock-pin {
-  font-size: 1rem;
-  animation: dockPinWiggle 3s infinite ease-in-out;
-}
-
-@keyframes dockPinWiggle {
-  0%, 80%, 100% { transform: rotate(0deg); }
-  85% { transform: rotate(-14deg); }
-  90% { transform: rotate(12deg); }
-}
-
-.dock-count {
-  background-color: var(--ink-primary);
-  color: #FFFFFF;
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 800;
+/* Body lock when overlay or composer is open */
+body.slipboard-locked {
+  overflow: hidden !important;
 }
 
 /* Responsive Breakpoints */
@@ -808,7 +879,7 @@
 }
 
 @media (max-width: 600px) {
-  #stage-wall {
+  .transparent-notes-overlay {
     padding: 60px 16px 40px;
   }
 
@@ -816,7 +887,7 @@
     grid-template-columns: 1fr;
   }
 
-  .floating-sticky-dock {
+  .slipboard-toggle-wrapper {
     right: 14px;
     bottom: 16px;
   }

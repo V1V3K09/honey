@@ -35,7 +35,6 @@ const {
     <!-- Persistent HUD Header -->
     <header class="hud-header">
       <div class="hud-logo">
-        <span aria-hidden="true">🎂</span>
         <span>BIRTHDAY.EXE</span>
       </div>
 
@@ -44,7 +43,6 @@ const {
           STAGE: FULL BODY
         </div>
         <button id="btn-toggle-sound" class="btn-action btn-mute" type="button" aria-label="Toggle Sound Effects">
-          <span id="sound-icon" aria-hidden="true">🔊</span>
           <span id="sound-label">SFX: ON</span>
         </button>
       </div>
@@ -57,19 +55,15 @@ const {
 
       // Sound Toggle Setup
       const soundBtn = document.getElementById('btn-toggle-sound');
-      const soundIcon = document.getElementById('sound-icon');
       const soundLabel = document.getElementById('sound-label');
 
-      if (soundBtn && soundIcon && soundLabel) {
+      if (soundBtn && soundLabel) {
         soundBtn.addEventListener('click', () => {
           const isMuted = sfx.toggleMute();
           if (isMuted) {
-            soundIcon.textContent = '🔇';
             soundLabel.textContent = 'SFX: OFF';
           } else {
-            soundIcon.textContent = '🔊';
             soundLabel.textContent = 'SFX: ON';
-            sfx.playPop();
           }
         });
       }

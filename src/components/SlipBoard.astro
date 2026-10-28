@@ -1,32 +1,61 @@
 ---
-// SlipBoard.astro — Transparent Community Wish Wall & Emil Kowalski Sticky Note UI
+// SlipBoard.astro — Transparent Community Sticky Notes Overlay & Emil Kowalski Sticky Note UI
 import '../styles/slipboard.css';
 ---
 
-<!-- 1. The Transparent Community Wish Wall (Directly on the screen, not in a drawer) -->
-<section id="stage-wall" class="experience-stage stage-notes-wall interactive-content" aria-label="Aki's Community Wish Wall">
-  <div class="wall-layout-container">
+<!-- 1. Bottom-Right Toggle Button (Fixed Pill) -->
+<aside class="slipboard-toggle-wrapper interactive-content" aria-label="Community Sticky Notes Wall">
+  <button 
+    id="btn-toggle-slipboard" 
+    class="btn-slipboard-toggle" 
+    type="button" 
+    aria-expanded="false" 
+    aria-controls="transparent-notes-overlay"
+    aria-label="Toggle Sticky Notes Wall"
+  >
+    <span class="toggle-status-dot" aria-hidden="true"></span>
+    <span class="toggle-label-text">STICKY NOTES WALL</span>
+    <span id="dock-count-badge" class="slip-count-pill">0 SLIPS</span>
+  </button>
+</aside>
+
+<!-- 2. The Transparent Screen Notes Overlay (Covers viewport, website & character remain visible behind) -->
+<div 
+  id="transparent-notes-overlay" 
+  class="transparent-notes-overlay interactive-content" 
+  role="dialog" 
+  aria-modal="true" 
+  aria-label="Aki's Community Sticky Notes Wall"
+  style="display: none;"
+>
+  <div class="overlay-inner-container">
     
-    <!-- Wall Header Card -->
+    <!-- Transparent Overlay Header Card -->
     <header class="wall-header-card">
       <div class="wall-title-group">
         <h2 class="wall-headline">
-          <span aria-hidden="true">📌</span>
           <span class="cut-chunk cut-yellow">AKI'S WISH WALL</span>
           <span class="cut-chunk cut-pink">PINNED LIVE</span>
         </h2>
         <p class="wall-subtitle">
-          Every note, goofy roast, and heartfelt wish left by friends around the globe. Live & reactive!
+          Community sticky notes, heartfelt wishes, and friendly roasts left for Aki.
         </p>
       </div>
 
       <div class="wall-status-group">
         <span id="wall-slip-count-badge" class="slip-count-badge">0 SLIPS PINNED</span>
-        <!-- Live Sync & io_uring Batching Telemetry Indicator -->
+        
+        <!-- Live Convex & io_uring Batching Telemetry Indicator -->
         <div id="slipboard-sync-badge" class="slipboard-sync-badge" title="io_uring asynchronous batch ring buffer active">
           <span id="sync-status-dot" class="sync-status-dot is-local"></span>
           <span id="sync-status-label" class="sync-status-label">INITIALIZING...</span>
         </div>
+
+        <!-- Overlay Close Button -->
+        <button id="btn-close-overlay" class="btn-overlay-close" type="button" aria-label="Close Sticky Notes Wall">
+          <span class="close-icon" aria-hidden="true">✕</span>
+          <span class="close-label">CLOSE</span>
+        </button>
       </div>
     </header>
 
@@ -55,16 +84,23 @@ import '../styles/slipboard.css';
           <div class="sticky-dog-ear" aria-hidden="true"></div>
 
           <div class="sticky-card-content">
-            <span class="sticky-card-stamp" aria-hidden="true">✍️</span>
+            <div class="sticky-pen-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20h9"/>
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+              </svg>
+            </div>
+            
             <h3 class="sticky-card-title">
               <span class="cut-chunk cut-yellow" style="font-size: 1.05rem; padding: 2px 6px;">PIN YOUR</span>
-              <span class="cut-chunk cut-pink" style="font-size: 1.05rem; padding: 2px 6px;">OWN NOTE!</span>
+              <span class="cut-chunk cut-pink" style="font-size: 1.05rem; padding: 2px 6px;">OWN NOTE</span>
             </h3>
+            
             <p class="sticky-card-desc">
               Have a birthday wish, funny memory, or friendly roast for Aki? Click here to write and paste it on the transparent wall!
             </p>
+            
             <div class="sticky-card-btn-fake">
-              <span>📌</span>
               <span>+ WRITE & PASTE NOTE</span>
             </div>
           </div>
@@ -73,22 +109,7 @@ import '../styles/slipboard.css';
 
     </div>
   </div>
-</section>
-
-<!-- 2. Floating Quick Sticky Dock Pill (Always visible on right edge for fast access) -->
-<aside class="floating-sticky-dock interactive-content" aria-label="Quick Pin Note">
-  <button 
-    id="btn-quick-stick" 
-    class="btn-floating-sticky" 
-    type="button" 
-    aria-label="Open Note Composer"
-    title="Click to write and paste a note on Aki's wall"
-  >
-    <span class="dock-pin" aria-hidden="true">📌</span>
-    <span class="dock-label">STICK A NOTE</span>
-    <span id="dock-count-badge" class="dock-count">0</span>
-  </button>
-</aside>
+</div>
 
 <!-- 3. Emil Kowalski Glassmorphic Sticky Note Composer Modal -->
 <div 
@@ -102,7 +123,6 @@ import '../styles/slipboard.css';
   <div class="note-composer-dialog">
     <div class="composer-dialog-header">
       <div class="composer-header-title-row">
-        <span class="composer-icon" aria-hidden="true">✍️</span>
         <h3 id="composer-modal-title" class="composer-headline">
           <span class="cut-chunk cut-yellow" style="font-size: 1.15rem; padding: 2px 8px;">STICK A NOTE</span>
           <span class="cut-chunk cut-pink" style="font-size: 1.15rem; padding: 2px 8px;">FOR AKI</span>
@@ -172,7 +192,6 @@ import '../styles/slipboard.css';
             <button type="button" class="stamp-option" data-stamp="🥟" aria-label="Samosa">🥟</button>
             <button type="button" class="stamp-option" data-stamp="🪷" aria-label="Radhe Radhe">🪷</button>
             <button type="button" class="stamp-option" data-stamp="🧠" aria-label="Brain">🧠</button>
-            <button type="button" class="stamp-option" data-stamp="✨" aria-label="Vibes">✨</button>
           </div>
         </div>
       </div>
@@ -180,7 +199,6 @@ import '../styles/slipboard.css';
       <div class="composer-bottom-bar">
         <span id="char-counter" class="char-counter">0 / 280 CHARACTERS</span>
         <button id="btn-submit-slip" class="btn-paste-on-wall" type="submit">
-          <span aria-hidden="true">📌</span>
           <span>PASTE IT ON THE WALL</span>
         </button>
       </div>
@@ -190,7 +208,6 @@ import '../styles/slipboard.css';
 
 <script>
   import confetti from 'canvas-confetti';
-  import { sfx } from '../scripts/audio-fx';
   import { ConvexClient } from 'convex/browser';
   import { api } from '../../convex/_generated/api';
   import type { Doc } from '../../convex/_generated/dataModel';
@@ -211,12 +228,21 @@ import '../styles/slipboard.css';
     isCustom?: boolean;
   }
 
+  const HEART_OUTLINE_SVG = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+  const HEART_FILLED_SVG = `<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+
   class SlipBoardManager {
+    // Overlay & Toggle Elements
+    private overlay: HTMLElement | null = null;
+    private toggleBtn: HTMLElement | null = null;
+    private closeOverlayBtn: HTMLElement | null = null;
+    private isOverlayOpen: boolean = false;
+
+    // Badges & Containers
     private wallCountBadge: HTMLElement | null = null;
     private dockCountBadge: HTMLElement | null = null;
     private container: HTMLElement | null = null;
     private rightTrigger: HTMLElement | null = null;
-    private quickDockBtn: HTMLElement | null = null;
     
     // Modal & Form Elements
     private modal: HTMLElement | null = null;
@@ -243,11 +269,15 @@ import '../styles/slipboard.css';
     constructor() {}
 
     public init() {
+      // Query overlay and buttons
+      this.overlay = document.getElementById('transparent-notes-overlay');
+      this.toggleBtn = document.getElementById('btn-toggle-slipboard');
+      this.closeOverlayBtn = document.getElementById('btn-close-overlay');
+
       this.wallCountBadge = document.getElementById('wall-slip-count-badge');
       this.dockCountBadge = document.getElementById('dock-count-badge');
       this.container = document.getElementById('slips-masonry-container');
       this.rightTrigger = document.getElementById('sticky-note-trigger');
-      this.quickDockBtn = document.getElementById('btn-quick-stick');
 
       this.modal = document.getElementById('note-composer-modal');
       this.closeBtn = document.getElementById('btn-close-composer');
@@ -373,6 +403,8 @@ import '../styles/slipboard.css';
         const stored = localStorage.getItem('aki_my_created_ids');
         if (stored) {
           this.myCreatedIds = new Set(JSON.parse(stored));
+        } else {
+          this.myCreatedIds = new Set();
         }
       } catch {
         this.myCreatedIds = new Set();
@@ -404,7 +436,21 @@ import '../styles/slipboard.css';
     }
 
     private bindEvents() {
-      // 1. Right-side Sticky Note triggers the Composer Box
+      // 1. Bottom-Right Toggle Button to Open/Close the Transparent Overlay
+      this.toggleBtn?.addEventListener('click', () => {
+        if (this.isOverlayOpen) {
+          this.closeOverlay();
+        } else {
+          this.openOverlay();
+        }
+      });
+
+      // 2. Close Overlay Button
+      this.closeOverlayBtn?.addEventListener('click', () => {
+        this.closeOverlay();
+      });
+
+      // 3. Right-side Sticky Note triggers the Composer Box
       this.rightTrigger?.addEventListener('click', () => {
         this.openComposer();
       });
@@ -415,47 +461,44 @@ import '../styles/slipboard.css';
         }
       });
 
-      // 2. Floating Quick Sticky Dock triggers the Composer Box
-      this.quickDockBtn?.addEventListener('click', () => {
-        this.openComposer();
-      });
-
-      // 3. Close Composer
+      // 4. Close Composer
       this.closeBtn?.addEventListener('click', () => this.closeComposer());
 
-      // Close on backdrop click outside dialog
+      // Close composer on backdrop click outside dialog
       this.modal?.addEventListener('click', (e) => {
         if (e.target === this.modal) {
           this.closeComposer();
         }
       });
 
-      // Close on Escape key
+      // Close on Escape key (first closes composer if open, else closes overlay)
       window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && this.isComposerOpen) {
-          this.closeComposer();
+        if (e.key === 'Escape') {
+          if (this.isComposerOpen) {
+            this.closeComposer();
+          } else if (this.isOverlayOpen) {
+            this.closeOverlay();
+          }
         }
       });
 
-      // Color picker selection
+      // Color picker selection (silent, no annoying pop sfx)
       const colorBtns = document.querySelectorAll('.color-option');
       colorBtns.forEach(btn => {
         btn.addEventListener('click', () => {
           colorBtns.forEach(b => b.classList.remove('is-selected'));
           btn.classList.add('is-selected');
           this.selectedColor = (btn.getAttribute('data-color') as SlipColor) || 'yellow';
-          sfx.playPop();
         });
       });
 
-      // Stamp picker selection
+      // Stamp picker selection (silent, no annoying pop sfx)
       const stampBtns = document.querySelectorAll('.stamp-option');
       stampBtns.forEach(btn => {
         btn.addEventListener('click', () => {
           stampBtns.forEach(b => b.classList.remove('is-selected'));
           btn.classList.add('is-selected');
           this.selectedStamp = btn.getAttribute('data-stamp') || '🎂';
-          sfx.playPop();
         });
       });
 
@@ -474,13 +517,37 @@ import '../styles/slipboard.css';
       });
     }
 
+    public openOverlay() {
+      this.isOverlayOpen = true;
+      if (this.overlay) {
+        this.overlay.style.display = 'block';
+        this.overlay.classList.add('is-open');
+      }
+      if (this.toggleBtn) {
+        this.toggleBtn.classList.add('is-active');
+        this.toggleBtn.setAttribute('aria-expanded', 'true');
+      }
+      document.body.classList.add('slipboard-locked');
+    }
+
+    public closeOverlay() {
+      this.isOverlayOpen = false;
+      if (this.overlay) {
+        this.overlay.classList.remove('is-open');
+        this.overlay.style.display = 'none';
+      }
+      if (this.toggleBtn) {
+        this.toggleBtn.classList.remove('is-active');
+        this.toggleBtn.setAttribute('aria-expanded', 'false');
+      }
+      document.body.classList.remove('slipboard-locked');
+    }
+
     public openComposer() {
       this.isComposerOpen = true;
       if (this.modal) {
         this.modal.style.display = 'flex';
       }
-      document.body.classList.add('slipboard-locked');
-      sfx.playPop();
 
       // Focus author input with a tiny delay for smooth spring
       setTimeout(() => {
@@ -494,8 +561,6 @@ import '../styles/slipboard.css';
       if (this.modal) {
         this.modal.style.display = 'none';
       }
-      document.body.classList.remove('slipboard-locked');
-      sfx.playPop();
     }
 
     private handleFormSubmit() {
@@ -532,16 +597,12 @@ import '../styles/slipboard.css';
       this.likedSlipIds.add(newSlip.id);
       this.saveLikes();
 
-      // 1. Instant Optimistic UI (Zero perceived latency for visitor!)
+      // 1. Instant Optimistic UI (Zero perceived latency)
       this.slips.unshift(newSlip);
       this.saveCachedSlips();
 
       // Close composer box smoothly
       this.closeComposer();
-
-      // Play victory audio + paper affix thump
-      sfx.playVictory();
-      sfx.playTouchdown();
 
       // Confetti burst across the screen
       confetti({
@@ -561,6 +622,11 @@ import '../styles/slipboard.css';
       this.renderSlips();
       this.updateCountBadge();
 
+      // Ensure overlay is open and visible
+      if (!this.isOverlayOpen) {
+        this.openOverlay();
+      }
+
       // 2. Enqueue into io_uring ring buffer for coalesced batching
       this.batcher.enqueueSlip({
         author: newSlip.author,
@@ -572,20 +638,21 @@ import '../styles/slipboard.css';
         clientSubmissionId,
       });
 
-      // Smooth scroll down to slips wall so the visitor sees their note pasted!
-      setTimeout(() => {
-        const wall = document.getElementById('stage-wall');
-        wall?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
+      // Scroll inside overlay so user sees their new note
+      const overlayScroll = document.getElementById('transparent-notes-overlay');
+      if (overlayScroll) {
+        overlayScroll.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
 
     private updateCountBadge() {
       const total = this.slips.length;
+      const label = total === 1 ? '1 SLIP' : `${total} SLIPS`;
       if (this.wallCountBadge) {
-        this.wallCountBadge.textContent = total === 1 ? '1 SLIP PINNED' : `${total} SLIPS PINNED`;
+        this.wallCountBadge.textContent = `${label} PINNED`;
       }
       if (this.dockCountBadge) {
-        this.dockCountBadge.textContent = `${total}`;
+        this.dockCountBadge.textContent = label;
       }
     }
 
@@ -598,13 +665,11 @@ import '../styles/slipboard.css';
         emptyEl.className = 'empty-slips-card';
         emptyEl.innerHTML = `
           <div class="washi-tape" aria-hidden="true"></div>
-          <span style="font-size: 2.2rem;" aria-hidden="true">📌</span>
           <h4 class="empty-headline">THE WISH WALL IS FRESH & CLEAN</h4>
           <p class="empty-desc">
             No sticky notes have been pasted yet. Click the yellow sticky note on the right to be the very first person to pin a wish or roast for Aki!
           </p>
           <button id="btn-empty-paste" class="btn-paste-on-wall" type="button" style="margin-top: 6px;">
-            <span>✍️</span>
             <span>PASTE THE FIRST NOTE</span>
           </button>
         `;
@@ -628,7 +693,7 @@ import '../styles/slipboard.css';
           <!-- Faux Washi Tape -->
           <div class="washi-tape" aria-hidden="true"></div>
 
-          ${slip.isCustom ? `<span class="just-pinned-badge">YOUR PIN 📌</span>` : ''}
+          ${slip.isCustom ? `<span class="just-pinned-badge">YOUR PIN</span>` : ''}
 
           <!-- Header -->
           <div class="slip-header">
@@ -646,13 +711,13 @@ import '../styles/slipboard.css';
           <div class="slip-footer">
             <span class="slip-timestamp">${slip.timestamp}</span>
             <button class="btn-slip-like ${isLiked ? 'is-liked' : ''}" type="button" data-id="${slip.id}" aria-label="Like this slip">
-              <span>${isLiked ? '❤️' : '🤍'}</span>
+              <span class="like-icon">${isLiked ? HEART_FILLED_SVG : HEART_OUTLINE_SVG}</span>
               <span class="like-count">${slip.likes}</span>
             </button>
           </div>
         `;
 
-        // Like button interaction with spring animation
+        // Like button interaction (silent, no annoying pop)
         const likeBtn = slipEl.querySelector('.btn-slip-like');
         likeBtn?.addEventListener('click', () => {
           this.handleLikeToggle(slip, likeBtn as HTMLButtonElement);
@@ -671,14 +736,13 @@ import '../styles/slipboard.css';
         slip.likes = Math.max(0, slip.likes - 1);
         delta = -1;
         btn.classList.remove('is-liked');
-        btn.innerHTML = `<span>🤍</span><span class="like-count">${slip.likes}</span>`;
+        btn.innerHTML = `<span class="like-icon">${HEART_OUTLINE_SVG}</span><span class="like-count">${slip.likes}</span>`;
       } else {
         this.likedSlipIds.add(slip.id);
         slip.likes += 1;
         delta = 1;
         btn.classList.add('is-liked');
-        btn.innerHTML = `<span>❤️</span><span class="like-count">${slip.likes}</span>`;
-        sfx.playPop();
+        btn.innerHTML = `<span class="like-icon">${HEART_FILLED_SVG}</span><span class="like-count">${slip.likes}</span>`;
       }
 
       this.saveLikes();
@@ -720,8 +784,9 @@ import '../styles/slipboard.css';
     slipManager.init();
   }
 
-  // Global event integration
+  // Global event integration (e.g. from footer or elsewhere)
   window.addEventListener('birthday:open-slipboard', () => {
+    slipManager.openOverlay();
     slipManager.openComposer();
   });
 </script>

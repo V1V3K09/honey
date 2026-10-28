@@ -706,17 +706,7 @@
   display: flex;
 }
 
-/* Stage E — The Transparent Community Wish Wall */
-#stage-wall {
-  min-height: 120vh;
-  position: relative;
-  z-index: 25;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-/* Stage G — The Footer Punchline (Feet Section on the LEFT, Bare Feet on the RIGHT) */
+/* Stage E — The Footer Punchline (Feet Section on the LEFT, Bare Feet on the RIGHT) */
 #stage-footer {
   min-height: 100vh;
   display: grid;
