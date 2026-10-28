@@ -706,11 +706,14 @@
   display: flex;
 }
 
-/* Stage F — Feet Approach */
-#stage-feet-approach {
-  min-height: 90vh;
-  align-items: center;
-  text-align: center;
+/* Stage E — The Transparent Community Wish Wall */
+#stage-wall {
+  min-height: 120vh;
+  position: relative;
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 /* Stage G — The Footer Punchline (Feet Section on the LEFT, Bare Feet on the RIGHT) */

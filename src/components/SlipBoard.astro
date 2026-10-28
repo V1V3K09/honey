@@ -1,167 +1,190 @@
 ---
-// SlipBoard.astro — Interactive Visitor Birthday Slip Board & Note Wall
+// SlipBoard.astro — Transparent Community Wish Wall & Emil Kowalski Sticky Note UI
 import '../styles/slipboard.css';
 ---
 
-<!-- 1. Floating Toggle Button at Bottom -->
-<div class="slipboard-toggle-wrapper interactive-content">
-  <button 
-    id="btn-toggle-slipboard" 
-    class="btn-slipboard-toggle" 
-    type="button" 
-    aria-expanded="false" 
-    aria-controls="slipboard-overlay"
-    aria-label="Toggle Birthday Slip Board"
-  >
-    <span class="toggle-icon" aria-hidden="true">📌</span>
-    <span>BIRTHDAY SLIP BOARD</span>
-    <span id="slipboard-count-badge" class="slip-count-badge">0 SLIPS</span>
-  </button>
-</div>
-
-<!-- 2. Full-Screen Slip Board Drawer Overlay -->
-<div 
-  id="slipboard-overlay" 
-  class="slipboard-overlay" 
-  role="dialog" 
-  aria-modal="true" 
-  aria-labelledby="slipboard-title"
->
-  <div class="slipboard-drawer">
-    <!-- Header -->
-    <header class="slipboard-header">
-      <div class="slipboard-title-group">
-        <h2 id="slipboard-title" class="slipboard-headline">
-          <span>📌</span>
-          <span class="cut-chunk cut-yellow" style="font-size: 1.15rem; padding: 3px 8px;">AKI'S BIRTHDAY</span>
-          <span class="cut-chunk cut-pink" style="font-size: 1.15rem; padding: 3px 8px;">SLIP BOARD</span>
+<!-- 1. The Transparent Community Wish Wall (Directly on the screen, not in a drawer) -->
+<section id="stage-wall" class="experience-stage stage-notes-wall interactive-content" aria-label="Aki's Community Wish Wall">
+  <div class="wall-layout-container">
+    
+    <!-- Wall Header Card -->
+    <header class="wall-header-card">
+      <div class="wall-title-group">
+        <h2 class="wall-headline">
+          <span aria-hidden="true">📌</span>
+          <span class="cut-chunk cut-yellow">AKI'S WISH WALL</span>
+          <span class="cut-chunk cut-pink">PINNED LIVE</span>
         </h2>
-        <p class="slipboard-subtitle">
-          Leave a handwritten note, goofy roast, or sweet wish for Aki. Everyone's pinned notes live here!
+        <p class="wall-subtitle">
+          Every note, goofy roast, and heartfelt wish left by friends around the globe. Live & reactive!
         </p>
       </div>
 
-      <div class="slipboard-header-actions">
+      <div class="wall-status-group">
+        <span id="wall-slip-count-badge" class="slip-count-badge">0 SLIPS PINNED</span>
         <!-- Live Sync & io_uring Batching Telemetry Indicator -->
         <div id="slipboard-sync-badge" class="slipboard-sync-badge" title="io_uring asynchronous batch ring buffer active">
           <span id="sync-status-dot" class="sync-status-dot is-local"></span>
           <span id="sync-status-label" class="sync-status-label">INITIALIZING...</span>
         </div>
-
-        <button id="btn-jump-composer" class="btn-compose-jump" type="button">
-          <span>✍️</span>
-          <span>WRITE A NOTE</span>
-        </button>
-        <button id="btn-close-slipboard" class="btn-slipboard-close" type="button" aria-label="Close Slip Board">
-          ✕
-        </button>
       </div>
     </header>
 
-    <!-- Scrollable Content -->
-    <div class="slipboard-content">
-      <!-- A. Note Composer Card -->
-      <section id="composer-section" class="slip-composer-card">
-        <h3 class="composer-title">
-          <span>✍️</span>
-          <span>PIN YOUR OWN SLIP FOR AKI</span>
-        </h3>
-
-        <form id="slip-composer-form">
-          <div class="composer-grid">
-            <!-- Author Name -->
-            <div class="form-group">
-              <label for="slip-author" class="form-label">YOUR NAME / NICKNAME *</label>
-              <input 
-                type="text" 
-                id="slip-author" 
-                class="form-input" 
-                placeholder="e.g. Rahul, Medicos Gang, Tanya" 
-                maxlength="36" 
-                required 
-              />
-            </div>
-
-            <!-- Author Tag / Relationship -->
-            <div class="form-group">
-              <label for="slip-tag" class="form-label">WHO ARE YOU TO AKI?</label>
-              <input 
-                type="text" 
-                id="slip-tag" 
-                class="form-input" 
-                placeholder="e.g. College Friend, Childhood Crew, Well-Wisher" 
-                maxlength="32" 
-              />
-            </div>
-          </div>
-
-          <!-- Note Message -->
-          <div class="form-group" style="margin-bottom: 16px;">
-            <label for="slip-message" class="form-label">YOUR BIRTHDAY NOTE *</label>
-            <textarea 
-              id="slip-message" 
-              class="form-textarea" 
-              placeholder="Write a sweet message, hilarious memory, or birthday roast for Aki..." 
-              maxlength="280" 
-              required
-            ></textarea>
-          </div>
-
-          <!-- Customization: Slip Color & Stamp -->
-          <div class="composer-grid" style="margin-bottom: 12px;">
-            <!-- Color Selector -->
-            <div class="form-group">
-              <span class="form-label">CHOOSE SLIP COLOR</span>
-              <div id="color-picker-group" class="color-picker-row">
-                <button type="button" class="color-option is-selected" data-color="yellow" style="background-color: #FEF9C3;" aria-label="Yellow Paper"></button>
-                <button type="button" class="color-option" data-color="pink" style="background-color: #FCE7F3;" aria-label="Pink Paper"></button>
-                <button type="button" class="color-option" data-color="mint" style="background-color: #DCFCE7;" aria-label="Mint Paper"></button>
-                <button type="button" class="color-option" data-color="sky" style="background-color: #E0F2FE;" aria-label="Sky Blue Paper"></button>
-                <button type="button" class="color-option" data-color="kraft" style="background-color: #F5ECE1;" aria-label="Kraft Cardboard"></button>
-              </div>
-            </div>
-
-            <!-- Sticker Stamp Selector -->
-            <div class="form-group">
-              <span class="form-label">ATTACH A STICKER STAMP</span>
-              <div id="stamp-picker-group" class="stamp-picker-row">
-                <button type="button" class="stamp-option is-selected" data-stamp="🎂" aria-label="Cake">🎂</button>
-                <button type="button" class="stamp-option" data-stamp="👑" aria-label="Crown">👑</button>
-                <button type="button" class="stamp-option" data-stamp="🚀" aria-label="Rocket">🚀</button>
-                <button type="button" class="stamp-option" data-stamp="🥟" aria-label="Samosa">🥟</button>
-                <button type="button" class="stamp-option" data-stamp="🪷" aria-label="Radhe Radhe">🪷</button>
-                <button type="button" class="stamp-option" data-stamp="🧠" aria-label="Brain">🧠</button>
-                <button type="button" class="stamp-option" data-stamp="✨" aria-label="Vibes">✨</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Bottom Action Bar -->
-          <div class="composer-bottom-bar">
-            <span id="char-counter" class="char-counter">0 / 280 CHARACTERS</span>
-            <button id="btn-submit-slip" class="btn-pin-note" type="submit">
-              <span>📌</span>
-              <span>PIN SLIP TO BOARD</span>
-            </button>
-          </div>
-        </form>
-      </section>
-
-      <!-- B. Pinned Slips Section -->
-      <section class="slips-grid-section">
-        <div class="slips-section-header">
-          <h3 class="slips-section-title">
-            <span>🗂️</span>
-            <span>COMMUNITY SLIPS PINNED FOR AKI</span>
-          </h3>
-          <span id="pinned-summary-text" class="char-counter">SHOWING ALL SLIPS</span>
-        </div>
-
-        <div id="slips-masonry-container" class="slips-masonry-grid" role="list">
+    <!-- Wall Split Layout: Notes Grid on Left & Center | Physical Sticky Trigger on Right -->
+    <div class="wall-split-layout">
+      
+      <!-- LEFT / CENTER: Transparent Screen Surface where Notes are visible directly -->
+      <div class="transparent-wall-surface">
+        <div id="slips-masonry-container" class="wall-slips-grid" role="list">
           <!-- Rendered dynamically by script -->
         </div>
-      </section>
+      </div>
+
+      <!-- RIGHT: Tactile Physical Sticky Note Widget -->
+      <aside class="wall-sticky-trigger-column">
+        <div 
+          id="sticky-note-trigger" 
+          class="sticky-note-physical-card"
+          role="button"
+          tabindex="0"
+          aria-label="Click to write a note and paste it on the wall"
+        >
+          <!-- Paper Washi Tape -->
+          <div class="sticky-washi-tape" aria-hidden="true"></div>
+          <!-- Dog-Ear Fold Corner -->
+          <div class="sticky-dog-ear" aria-hidden="true"></div>
+
+          <div class="sticky-card-content">
+            <span class="sticky-card-stamp" aria-hidden="true">✍️</span>
+            <h3 class="sticky-card-title">
+              <span class="cut-chunk cut-yellow" style="font-size: 1.05rem; padding: 2px 6px;">PIN YOUR</span>
+              <span class="cut-chunk cut-pink" style="font-size: 1.05rem; padding: 2px 6px;">OWN NOTE!</span>
+            </h3>
+            <p class="sticky-card-desc">
+              Have a birthday wish, funny memory, or friendly roast for Aki? Click here to write and paste it on the transparent wall!
+            </p>
+            <div class="sticky-card-btn-fake">
+              <span>📌</span>
+              <span>+ WRITE & PASTE NOTE</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
     </div>
+  </div>
+</section>
+
+<!-- 2. Floating Quick Sticky Dock Pill (Always visible on right edge for fast access) -->
+<aside class="floating-sticky-dock interactive-content" aria-label="Quick Pin Note">
+  <button 
+    id="btn-quick-stick" 
+    class="btn-floating-sticky" 
+    type="button" 
+    aria-label="Open Note Composer"
+    title="Click to write and paste a note on Aki's wall"
+  >
+    <span class="dock-pin" aria-hidden="true">📌</span>
+    <span class="dock-label">STICK A NOTE</span>
+    <span id="dock-count-badge" class="dock-count">0</span>
+  </button>
+</aside>
+
+<!-- 3. Emil Kowalski Glassmorphic Sticky Note Composer Modal -->
+<div 
+  id="note-composer-modal" 
+  class="note-composer-modal-backdrop interactive-content" 
+  role="dialog" 
+  aria-modal="true" 
+  aria-labelledby="composer-modal-title"
+  style="display: none;"
+>
+  <div class="note-composer-dialog">
+    <div class="composer-dialog-header">
+      <div class="composer-header-title-row">
+        <span class="composer-icon" aria-hidden="true">✍️</span>
+        <h3 id="composer-modal-title" class="composer-headline">
+          <span class="cut-chunk cut-yellow" style="font-size: 1.15rem; padding: 2px 8px;">STICK A NOTE</span>
+          <span class="cut-chunk cut-pink" style="font-size: 1.15rem; padding: 2px 8px;">FOR AKI</span>
+        </h3>
+      </div>
+      <button id="btn-close-composer" class="btn-composer-close" type="button" aria-label="Close Composer">
+        ✕
+      </button>
+    </div>
+
+    <form id="slip-composer-form">
+      <div class="composer-grid">
+        <div class="form-group">
+          <label for="slip-author" class="form-label">YOUR NAME / NICKNAME *</label>
+          <input 
+            type="text" 
+            id="slip-author" 
+            class="form-input" 
+            placeholder="e.g. Rahul, Medicos Gang, Tanya" 
+            maxlength="36" 
+            required 
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="slip-tag" class="form-label">WHO ARE YOU TO AKI?</label>
+          <input 
+            type="text" 
+            id="slip-tag" 
+            class="form-input" 
+            placeholder="e.g. College Friend, Childhood Crew" 
+            maxlength="32" 
+          />
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 14px;">
+        <label for="slip-message" class="form-label">YOUR BIRTHDAY NOTE *</label>
+        <textarea 
+          id="slip-message" 
+          class="form-textarea" 
+          placeholder="Write a sweet message, hilarious memory, or birthday roast for Aki..." 
+          maxlength="280" 
+          required
+        ></textarea>
+      </div>
+
+      <!-- Customization: Pastel Paper Color & Stamp Selection -->
+      <div class="composer-grid" style="margin-bottom: 10px;">
+        <div class="form-group">
+          <span class="form-label">PASTEL NOTE COLOR</span>
+          <div id="color-picker-group" class="color-picker-row">
+            <button type="button" class="color-option is-selected" data-color="yellow" style="background-color: #FEF08A;" aria-label="Yellow Paper"></button>
+            <button type="button" class="color-option" data-color="pink" style="background-color: #FCE7F3;" aria-label="Pink Paper"></button>
+            <button type="button" class="color-option" data-color="mint" style="background-color: #DCFCE7;" aria-label="Mint Paper"></button>
+            <button type="button" class="color-option" data-color="sky" style="background-color: #E0F2FE;" aria-label="Sky Blue Paper"></button>
+            <button type="button" class="color-option" data-color="kraft" style="background-color: #F5ECE1;" aria-label="Kraft Cardboard"></button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <span class="form-label">STICKER STAMP</span>
+          <div id="stamp-picker-group" class="stamp-picker-row">
+            <button type="button" class="stamp-option is-selected" data-stamp="🎂" aria-label="Cake">🎂</button>
+            <button type="button" class="stamp-option" data-stamp="👑" aria-label="Crown">👑</button>
+            <button type="button" class="stamp-option" data-stamp="🚀" aria-label="Rocket">🚀</button>
+            <button type="button" class="stamp-option" data-stamp="🥟" aria-label="Samosa">🥟</button>
+            <button type="button" class="stamp-option" data-stamp="🪷" aria-label="Radhe Radhe">🪷</button>
+            <button type="button" class="stamp-option" data-stamp="🧠" aria-label="Brain">🧠</button>
+            <button type="button" class="stamp-option" data-stamp="✨" aria-label="Vibes">✨</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="composer-bottom-bar">
+        <span id="char-counter" class="char-counter">0 / 280 CHARACTERS</span>
+        <button id="btn-submit-slip" class="btn-paste-on-wall" type="submit">
+          <span aria-hidden="true">📌</span>
+          <span>PASTE IT ON THE WALL</span>
+        </button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -171,7 +194,7 @@ import '../styles/slipboard.css';
   import { ConvexClient } from 'convex/browser';
   import { api } from '../../convex/_generated/api';
   import type { Doc } from '../../convex/_generated/dataModel';
-  import { IoUringBatcher, type IoUringStats } from '../scripts/io-uring-buffer';
+  import { IoUringBatcher, type IoUringStats, type SlipColor } from '../scripts/io-uring-buffer';
 
   type SlipDoc = Doc<'slips'>;
 
@@ -180,7 +203,7 @@ import '../styles/slipboard.css';
     author: string;
     tag: string;
     message: string;
-    color: 'yellow' | 'pink' | 'mint' | 'sky' | 'kraft';
+    color: SlipColor;
     stamp: string;
     timestamp: string;
     likes: number;
@@ -189,15 +212,20 @@ import '../styles/slipboard.css';
   }
 
   class SlipBoardManager {
-    private overlay: HTMLElement | null = null;
-    private toggleBtn: HTMLElement | null = null;
-    private closeBtn: HTMLElement | null = null;
-    private jumpComposerBtn: HTMLElement | null = null;
-    private countBadge: HTMLElement | null = null;
+    private wallCountBadge: HTMLElement | null = null;
+    private dockCountBadge: HTMLElement | null = null;
     private container: HTMLElement | null = null;
+    private rightTrigger: HTMLElement | null = null;
+    private quickDockBtn: HTMLElement | null = null;
+    
+    // Modal & Form Elements
+    private modal: HTMLElement | null = null;
+    private closeBtn: HTMLElement | null = null;
     private form: HTMLFormElement | null = null;
     private messageInput: HTMLTextAreaElement | null = null;
     private charCounter: HTMLElement | null = null;
+    
+    // Sync Telemetry
     private syncBadge: HTMLElement | null = null;
     private syncDot: HTMLElement | null = null;
     private syncLabel: HTMLElement | null = null;
@@ -206,26 +234,27 @@ import '../styles/slipboard.css';
     private convex: ConvexClient | null = null;
     private myCreatedIds: Set<string> = new Set();
 
-    private selectedColor: Slip['color'] = 'yellow';
+    private selectedColor: SlipColor = 'yellow';
     private selectedStamp: string = '🎂';
     private slips: Slip[] = [];
     private likedSlipIds: Set<string> = new Set();
-    private isOpen: boolean = false;
+    private isComposerOpen: boolean = false;
 
-    constructor() {
-      // Setup elements in init
-    }
+    constructor() {}
 
     public init() {
-      this.overlay = document.getElementById('slipboard-overlay');
-      this.toggleBtn = document.getElementById('btn-toggle-slipboard');
-      this.closeBtn = document.getElementById('btn-close-slipboard');
-      this.jumpComposerBtn = document.getElementById('btn-jump-composer');
-      this.countBadge = document.getElementById('slipboard-count-badge');
+      this.wallCountBadge = document.getElementById('wall-slip-count-badge');
+      this.dockCountBadge = document.getElementById('dock-count-badge');
       this.container = document.getElementById('slips-masonry-container');
+      this.rightTrigger = document.getElementById('sticky-note-trigger');
+      this.quickDockBtn = document.getElementById('btn-quick-stick');
+
+      this.modal = document.getElementById('note-composer-modal');
+      this.closeBtn = document.getElementById('btn-close-composer');
       this.form = document.getElementById('slip-composer-form') as HTMLFormElement;
       this.messageInput = document.getElementById('slip-message') as HTMLTextAreaElement;
       this.charCounter = document.getElementById('char-counter');
+
       this.syncBadge = document.getElementById('slipboard-sync-badge');
       this.syncDot = document.getElementById('sync-status-dot');
       this.syncLabel = document.getElementById('sync-status-label');
@@ -253,7 +282,7 @@ import '../styles/slipboard.css';
             this.handleRemoteSlipsUpdate(remoteDocs);
           });
         } catch (err) {
-          console.warn('[SlipBoard] Convex initialization skipped, using local ring buffer:', err);
+          console.warn('[SlipBoard] Convex init skipped, running local ring buffer:', err);
           this.batcher = new IoUringBatcher(null);
           this.setSyncStatus('local', 'LOCAL RING BUFFER');
         }
@@ -304,7 +333,7 @@ import '../styles/slipboard.css';
         };
       });
 
-      // Keep any optimistic items created by user that are not yet reflected in the remote list
+      // Keep any optimistic items created locally that have not yet been reflected in the remote list
       const serverClientIds = new Set(remoteDocs.map(d => d.clientSubmissionId));
       const pendingOptimistic = this.slips.filter(s => s.isCustom && !serverClientIds.has(s.id));
 
@@ -375,29 +404,36 @@ import '../styles/slipboard.css';
     }
 
     private bindEvents() {
-      // Toggle Open/Close
-      this.toggleBtn?.addEventListener('click', () => this.toggle());
-      this.closeBtn?.addEventListener('click', () => this.close());
-
-      // Jump to composer
-      this.jumpComposerBtn?.addEventListener('click', () => {
-        const comp = document.getElementById('composer-section');
-        comp?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        const authorField = document.getElementById('slip-author') as HTMLInputElement;
-        setTimeout(() => authorField?.focus(), 300);
+      // 1. Right-side Sticky Note triggers the Composer Box
+      this.rightTrigger?.addEventListener('click', () => {
+        this.openComposer();
+      });
+      this.rightTrigger?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          this.openComposer();
+        }
       });
 
-      // Close on backdrop click outside drawer
-      this.overlay?.addEventListener('click', (e) => {
-        if (e.target === this.overlay) {
-          this.close();
+      // 2. Floating Quick Sticky Dock triggers the Composer Box
+      this.quickDockBtn?.addEventListener('click', () => {
+        this.openComposer();
+      });
+
+      // 3. Close Composer
+      this.closeBtn?.addEventListener('click', () => this.closeComposer());
+
+      // Close on backdrop click outside dialog
+      this.modal?.addEventListener('click', (e) => {
+        if (e.target === this.modal) {
+          this.closeComposer();
         }
       });
 
       // Close on Escape key
       window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && this.isOpen) {
-          this.close();
+        if (e.key === 'Escape' && this.isComposerOpen) {
+          this.closeComposer();
         }
       });
 
@@ -407,7 +443,7 @@ import '../styles/slipboard.css';
         btn.addEventListener('click', () => {
           colorBtns.forEach(b => b.classList.remove('is-selected'));
           btn.classList.add('is-selected');
-          this.selectedColor = (btn.getAttribute('data-color') as Slip['color']) || 'yellow';
+          this.selectedColor = (btn.getAttribute('data-color') as SlipColor) || 'yellow';
           sfx.playPop();
         });
       });
@@ -438,27 +474,27 @@ import '../styles/slipboard.css';
       });
     }
 
-    public toggle() {
-      if (this.isOpen) {
-        this.close();
-      } else {
-        this.open();
+    public openComposer() {
+      this.isComposerOpen = true;
+      if (this.modal) {
+        this.modal.style.display = 'flex';
       }
-    }
-
-    public open() {
-      this.isOpen = true;
-      this.overlay?.classList.add('is-open');
       document.body.classList.add('slipboard-locked');
-      this.toggleBtn?.setAttribute('aria-expanded', 'true');
       sfx.playPop();
+
+      // Focus author input with a tiny delay for smooth spring
+      setTimeout(() => {
+        const authorField = document.getElementById('slip-author') as HTMLInputElement;
+        authorField?.focus();
+      }, 150);
     }
 
-    public close() {
-      this.isOpen = false;
-      this.overlay?.classList.remove('is-open');
+    public closeComposer() {
+      this.isComposerOpen = false;
+      if (this.modal) {
+        this.modal.style.display = 'none';
+      }
       document.body.classList.remove('slipboard-locked');
-      this.toggleBtn?.setAttribute('aria-expanded', 'false');
       sfx.playPop();
     }
 
@@ -496,16 +532,22 @@ import '../styles/slipboard.css';
       this.likedSlipIds.add(newSlip.id);
       this.saveLikes();
 
-      // 1. Instant Optimistic UI (Zero latency for visitor)
+      // 1. Instant Optimistic UI (Zero perceived latency for visitor!)
       this.slips.unshift(newSlip);
       this.saveCachedSlips();
 
-      // Audio & Confetti burst
+      // Close composer box smoothly
+      this.closeComposer();
+
+      // Play victory audio + paper affix thump
       sfx.playVictory();
+      sfx.playTouchdown();
+
+      // Confetti burst across the screen
       confetti({
-        particleCount: 65,
-        spread: 70,
-        origin: { y: 0.65 },
+        particleCount: 75,
+        spread: 80,
+        origin: { y: 0.6, x: 0.7 },
         colors: ['#FFE135', '#FF471A', '#38E1B0', '#FF77AA', '#38B6FF']
       });
 
@@ -515,7 +557,7 @@ import '../styles/slipboard.css';
         this.charCounter.textContent = '0 / 280 CHARACTERS';
       }
 
-      // Re-render
+      // Re-render wall
       this.renderSlips();
       this.updateCountBadge();
 
@@ -530,21 +572,20 @@ import '../styles/slipboard.css';
         clientSubmissionId,
       });
 
-      // Smooth scroll down to slips list
+      // Smooth scroll down to slips wall so the visitor sees their note pasted!
       setTimeout(() => {
-        const firstSlip = document.querySelector('.paper-slip');
-        firstSlip?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const wall = document.getElementById('stage-wall');
+        wall?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 100);
     }
 
     private updateCountBadge() {
       const total = this.slips.length;
-      if (this.countBadge) {
-        this.countBadge.textContent = total === 1 ? '1 SLIP' : `${total} SLIPS`;
+      if (this.wallCountBadge) {
+        this.wallCountBadge.textContent = total === 1 ? '1 SLIP PINNED' : `${total} SLIPS PINNED`;
       }
-      const summary = document.getElementById('pinned-summary-text');
-      if (summary) {
-        summary.textContent = total === 0 ? 'NO SLIPS YET' : `SHOWING ${total} TOTAL ${total === 1 ? 'SLIP' : 'SLIPS'}`;
+      if (this.dockCountBadge) {
+        this.dockCountBadge.textContent = `${total}`;
       }
     }
 
@@ -556,23 +597,20 @@ import '../styles/slipboard.css';
         const emptyEl = document.createElement('div');
         emptyEl.className = 'empty-slips-card';
         emptyEl.innerHTML = `
-          <div class="empty-tape" aria-hidden="true"></div>
-          <span class="empty-icon" aria-hidden="true">📌</span>
-          <h4 class="empty-headline">THE SLIP BOARD IS FRESH & CLEAN</h4>
+          <div class="washi-tape" aria-hidden="true"></div>
+          <span style="font-size: 2.2rem;" aria-hidden="true">📌</span>
+          <h4 class="empty-headline">THE WISH WALL IS FRESH & CLEAN</h4>
           <p class="empty-desc">
-            No notes have been pinned yet. Be the first friend to leave Aki a birthday note, roast, or sweet wish!
+            No sticky notes have been pasted yet. Click the yellow sticky note on the right to be the very first person to pin a wish or roast for Aki!
           </p>
-          <button id="btn-empty-write" class="btn-compose-jump" type="button" style="margin-top: 6px;">
+          <button id="btn-empty-paste" class="btn-paste-on-wall" type="button" style="margin-top: 6px;">
             <span>✍️</span>
-            <span>WRITE THE FIRST NOTE</span>
+            <span>PASTE THE FIRST NOTE</span>
           </button>
         `;
 
-        emptyEl.querySelector('#btn-empty-write')?.addEventListener('click', () => {
-          const comp = document.getElementById('composer-section');
-          comp?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          const authorField = document.getElementById('slip-author') as HTMLInputElement;
-          setTimeout(() => authorField?.focus(), 300);
+        emptyEl.querySelector('#btn-empty-paste')?.addEventListener('click', () => {
+          this.openComposer();
         });
 
         this.container.appendChild(emptyEl);
@@ -614,7 +652,7 @@ import '../styles/slipboard.css';
           </div>
         `;
 
-        // Like button interaction
+        // Like button interaction with spring animation
         const likeBtn = slipEl.querySelector('.btn-slip-like');
         likeBtn?.addEventListener('click', () => {
           this.handleLikeToggle(slip, likeBtn as HTMLButtonElement);
@@ -682,8 +720,8 @@ import '../styles/slipboard.css';
     slipManager.init();
   }
 
-  // Expose toggle to global events if needed
+  // Global event integration
   window.addEventListener('birthday:open-slipboard', () => {
-    slipManager.open();
+    slipManager.openComposer();
   });
 </script>

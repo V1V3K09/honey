@@ -78,7 +78,7 @@ export function initCharacterScroll() {
                     'Birthday Note',
                     'Good Energy',
                     'Protect The Brain',
-                    'Feet Approach',
+                    'Community Wish Wall',
                     'The Footer (Literally Feet)'
                   ][stageIndex] || ''
                 }
