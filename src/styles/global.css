@@ -63,10 +63,26 @@ html {
   color: var(--ink-primary);
   scroll-behavior: auto;
   overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Ensure inputs never trigger iOS zoom by maintaining 16px min font size */
+input, textarea, select {
+  font-size: 16px;
+}
+
+/* Mobile-native touch posture & eliminating tap lag */
+button, a, [role="button"], .btn-action, .tab, .chip, .tappable, .cut-chunk {
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 body {
   min-height: 100vh;
+  min-height: 100dvh;
   position: relative;
   overflow-x: hidden;
   background-color: var(--bg-paper);
@@ -138,7 +154,7 @@ button, .btn-action {
   transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   button:hover, .btn-action:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-hard-lg);

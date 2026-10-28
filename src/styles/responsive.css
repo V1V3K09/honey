@@ -1,138 +1,305 @@
-/* Responsive Adaptations & Accessibility */
+/* Responsive Adaptations & Mobile-Native Architecture */
+
+/* Desktop defaults for mobile-only elements */
+.mobile-hero-switcher {
+  display: none;
+}
 
 @media (max-width: 768px) {
+  /* 1. Viewport & Persistent HUD Header Safe Area Handling */
   .hud-header {
-    top: 10px;
-    left: 10px;
-    right: 10px;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding-top: max(8px, env(safe-area-inset-top));
+    padding-left: max(10px, env(safe-area-inset-left));
+    padding-right: max(10px, env(safe-area-inset-right));
+    padding-bottom: 6px;
   }
 
   .hud-logo {
-    font-size: 0.9rem;
-    padding: 4px 10px;
+    font-size: 0.82rem;
+    padding: 4px 8px;
+    gap: 4px;
+  }
+
+  .hud-right {
+    gap: 6px;
   }
 
   .stage-pill {
-    font-size: 0.65rem;
-    padding: 4px 10px;
+    font-size: 0.62rem;
+    padding: 4px 8px;
+    max-width: 130px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
+  .btn-mute {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+    min-height: 34px;
+  }
+
+  /* 2. Paper Typography on Small Screens */
   .paper-headline {
-    gap: 6px 8px;
+    gap: 4px 6px;
   }
 
   .cut-chunk {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     padding: 4px 10px;
   }
 
+  /* 3. Rocket Landing Telemetry Overlay */
   .rocket-telemetry-badge {
-    top: 58px;
-    width: 90%;
+    top: calc(52px + env(safe-area-inset-top));
+    width: 92%;
     max-width: 340px;
-    padding: 8px 14px;
+    padding: 8px 12px;
   }
 
   .telemetry-status-text {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
   }
 
   .telemetry-readouts {
-    font-size: 0.65rem;
+    font-size: 0.64rem;
   }
 
-  /* Hero Flank Grid on Mobile/Tablet */
-  .hero-body-flank-grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-
-  .hero-left-column, .hero-right-column {
-    max-width: 100%;
-  }
-
-  .hero-center-column {
-    min-height: 380px;
-  }
-
-  /* Single Column Stack on Mobile */
+  /* 4. SECTION A: Mobile-Native Hero Experience */
   #stage-hero {
-    grid-template-columns: 1fr;
-    padding: 60px 16px;
-    gap: 20px;
-  }
-
-  .hero-left-dossier {
-    max-width: 100%;
-  }
-
-  .hero-right-space {
-    min-height: 280px;
-  }
-
-  #stage-card {
-    grid-template-columns: 1fr;
-    padding: 60px 16px;
-    gap: 24px;
-  }
-
-  .card-column-left {
-    min-height: 220px;
-  }
-
-  .card-column-right {
-    max-width: 100%;
-  }
-
-  #stage-game {
-    grid-template-columns: 1fr;
-    padding: 60px 16px;
-    gap: 24px;
-  }
-
-  .game-column-left {
-    max-width: 100%;
-  }
-
-  .game-column-right {
-    min-height: 200px;
+    min-height: 100svh;
+    min-height: 100dvh;
+    padding: calc(56px + env(safe-area-inset-top)) 14px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
   }
 
-  .brain-owner-callout {
-    margin-right: 0;
-    margin-left: 0;
-    margin-top: 20px;
+  .hero-top-banner {
+    margin-bottom: 10px;
+    max-width: 100%;
   }
 
-  /* Single Column Footer on Mobile */
+  .hero-subheading {
+    font-size: 0.74rem;
+    margin-top: 6px;
+    line-height: 1.35;
+  }
+
+  /* Mobile Tactile Segmented Card Switcher */
+  .mobile-hero-switcher {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 4px auto 12px;
+    z-index: 25;
+  }
+
+  .hero-switcher-pill {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 800;
+    padding: 7px 14px;
+    border-radius: 999px;
+    border: var(--border-ink-thin);
+    background-color: var(--bg-paper-alt);
+    color: var(--ink-secondary);
+    cursor: pointer;
+    box-shadow: var(--shadow-hard-sm);
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+  }
+
+  .hero-switcher-pill.is-active {
+    background-color: var(--accent-yellow);
+    color: var(--ink-primary);
+    border-color: var(--ink-primary);
+    box-shadow: var(--shadow-hard-md);
+    transform: translateY(-1px);
+  }
+
+  .hero-switcher-pill:active {
+    transform: scale(0.96) translateY(1px);
+    box-shadow: var(--shadow-hard-press);
+  }
+
+  /* Horizontal Snap Carousel on Mobile (Never compress desktop columns into 2000px vertical stack!) */
+  .hero-body-flank-grid {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    gap: 16px;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 2px 2px 10px;
+    scrollbar-width: none;
+  }
+
+  .hero-body-flank-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hero-left-column, .hero-right-column {
+    flex: 0 0 100%;
+    max-width: 100%;
+    scroll-snap-align: center;
+  }
+
+  .hero-center-column {
+    display: none; /* Persistent character image stands in viewport behind cards */
+  }
+
+  .hero-dossier-card {
+    padding: 18px 16px;
+    max-height: 440px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .hero-newspaper-clipping {
+    max-height: 440px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .hero-landing-actions {
+    margin: 10px auto 0;
+    gap: 8px;
+  }
+
+  .btn-replay-rocket {
+    font-size: 0.72rem;
+    padding: 7px 16px;
+  }
+
+  .scroll-prompt-text {
+    font-size: 0.7rem;
+    padding: 5px 12px;
+  }
+
+  /* 5. SECTION B: Face Approach Spacer */
+  #stage-approach {
+    min-height: 90svh;
+    padding: calc(60px + env(safe-area-inset-top)) 16px 40px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .approach-card {
+    max-width: 100%;
+    padding: 22px 20px;
+    margin: 0 auto;
+  }
+
+  /* 6. SECTION C: Face & Birthday Card */
+  #stage-card {
+    min-height: 110svh;
+    min-height: 110dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding: calc(60px + env(safe-area-inset-top)) 16px 40px;
+    gap: 16px;
+  }
+
+  .card-column-left {
+    display: none; /* Aki's face is framed above in the viewport */
+  }
+
+  .card-column-right {
+    max-width: 460px;
+    width: 100%;
+  }
+
+  .envelope-trigger {
+    padding: 24px 18px;
+  }
+
+  .letter-modal {
+    max-height: 78dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 20px 16px;
+  }
+
+  /* 7. SECTION D: Knees & 3D Brain Game */
+  #stage-game {
+    min-height: 125svh;
+    min-height: 125dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding: calc(64px + env(safe-area-inset-top)) 16px 40px;
+    gap: 16px;
+  }
+
+  .game-column-left {
+    max-width: 480px;
+    width: 100%;
+  }
+
+  .game-column-right {
+    display: none; /* Character knees frame above the card */
+  }
+
+  .game-canvas-wrapper, .brain-canvas-wrapper {
+    height: 240px;
+    touch-action: none;
+  }
+
+  /* 8. SECTION E: Feet & Footer Punchline */
   #stage-footer {
-    grid-template-columns: 1fr;
-    padding: 76px 16px 40px;
-    gap: 20px;
+    min-height: 110svh;
+    min-height: 110dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding: calc(60px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));
+    gap: 16px;
     box-sizing: border-box;
   }
 
   .footer-column-left {
-    max-width: 100%;
+    max-width: 480px;
+    width: 100%;
     margin-top: 0;
   }
 
   .footer-column-right {
-    min-height: 240px;
+    display: none; /* Aki's bare feet frame cleanly above the footer card */
+  }
+
+  .footer-punchline-card {
+    width: 100%;
+    padding: 18px 16px;
   }
 
   .footer-nav {
     justify-content: center;
+    gap: 8px;
   }
 
-  .game-canvas-wrapper {
-    height: 230px;
-  }
-
-  .footer-punchline-card {
-    width: 95%;
-    padding: 20px 16px;
+  .footer-nav .btn-action {
+    flex: 1 1 auto;
+    font-size: 0.8rem;
+    padding: 9px 12px;
   }
 
   /* Hide decorative floating stickers on small screens to prevent clutter */
@@ -143,10 +310,35 @@
   /* Ensure touch targets meet minimum 44px */
   button, .btn-action, .envelope-trigger {
     min-height: 44px;
+    touch-action: manipulation;
   }
 }
 
-/* Reduced Motion Mode */
+/* Very Narrow Phones (< 380px) */
+@media (max-width: 380px) {
+  .hud-logo {
+    font-size: 0.74rem;
+    padding: 3px 6px;
+  }
+
+  .stage-pill {
+    max-width: 105px;
+    font-size: 0.58rem;
+    padding: 3px 6px;
+  }
+
+  .btn-mute {
+    font-size: 0.65rem;
+    padding: 3px 6px;
+  }
+
+  .cut-chunk {
+    font-size: 1rem;
+    padding: 3px 8px;
+  }
+}
+
+/* Reduced Motion Accessibility Mode */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
@@ -162,7 +354,7 @@
     animation: none !important;
   }
 
-  .scroll-prompt {
+  .scroll-prompt-landing {
     animation: none !important;
   }
 }

@@ -25,7 +25,7 @@ import SlipBoard from '../components/SlipBoard.astro';
       <section id="stage-hero" class="experience-stage">
         <!-- Top Full-Width Headline -->
         <div class="hero-top-banner interactive-content">
-          <h1 class="paper-headline" style="font-size: clamp(2.2rem, 5vw, 4.4rem);">
+          <h1 class="paper-headline" style="font-size: clamp(2rem, 5vw, 4.4rem);">
             <span class="cut-chunk cut-yellow">HAPPY BIRTHDAY,</span>
             <span class="cut-chunk cut-pink">AKI!</span>
           </h1>
@@ -34,11 +34,21 @@ import SlipBoard from '../components/SlipBoard.astro';
           </p>
         </div>
 
-        <!-- 3-Column Flank Grid: Left Notes | Center Aki Character | Right Newspaper -->
-        <div class="hero-body-flank-grid">
+        <!-- Mobile Card Switcher (Mobile Native Deck: View Dossier or Newspaper without scrolling miles) -->
+        <div class="mobile-hero-switcher interactive-content" role="tablist" aria-label="Hero cards">
+          <button type="button" id="tab-hero-dossier" class="hero-switcher-pill is-active" role="tab" aria-selected="true" aria-controls="hero-dossier-col">
+            <span>📋 MEET AKI</span>
+          </button>
+          <button type="button" id="tab-hero-newspaper" class="hero-switcher-pill" role="tab" aria-selected="false" aria-controls="hero-newspaper-col">
+            <span>📰 THE CHRONICLE</span>
+          </button>
+        </div>
+
+        <!-- 3-Column Flank Grid on Desktop | Native Swipe Deck on Mobile -->
+        <div id="hero-flank-carousel" class="hero-body-flank-grid">
           
           <!-- LEFT COLUMN: Personal & Goofy Notes Around Aki's Body -->
-          <div class="hero-left-column interactive-content">
+          <div id="hero-dossier-col" class="hero-left-column interactive-content" role="tabpanel" aria-labelledby="tab-hero-dossier">
             <div class="paper-card hero-dossier-card">
               <h2 class="paper-headline" style="font-size: 1.35rem; justify-content: flex-start; margin-bottom: 6px;">
                 <span class="cut-chunk cut-yellow">MEET</span>
@@ -96,7 +106,7 @@ import SlipBoard from '../components/SlipBoard.astro';
           </div>
 
           <!-- RIGHT COLUMN: Newspaper Cutout & Dynamic Birthday Date Banner -->
-          <div class="hero-right-column">
+          <div id="hero-newspaper-col" class="hero-right-column" role="tabpanel" aria-labelledby="tab-hero-newspaper">
             <NewspaperCard />
           </div>
 
@@ -186,4 +196,43 @@ import SlipBoard from '../components/SlipBoard.astro';
 
   <!-- Interactive Transparent Sticky Notes Wall Overlay & Real-Time Guestbook -->
   <SlipBoard />
+
+  <script>
+    // Mobile Hero Carousel Tabs & Touch Swipe Synchronization
+    const tabDossier = document.getElementById('tab-hero-dossier');
+    const tabNewspaper = document.getElementById('tab-hero-newspaper');
+    const carousel = document.getElementById('hero-flank-carousel');
+    const colDossier = document.getElementById('hero-dossier-col');
+    const colNewspaper = document.getElementById('hero-newspaper-col');
+
+    if (tabDossier && tabNewspaper && carousel && colDossier && colNewspaper) {
+      const setActive = (isDossier: boolean) => {
+        tabDossier.classList.toggle('is-active', isDossier);
+        tabDossier.setAttribute('aria-selected', isDossier ? 'true' : 'false');
+        tabNewspaper.classList.toggle('is-active', !isDossier);
+        tabNewspaper.setAttribute('aria-selected', isDossier ? 'false' : 'true');
+      };
+
+      tabDossier.addEventListener('click', () => {
+        setActive(true);
+        colDossier.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+      });
+
+      tabNewspaper.addEventListener('click', () => {
+        setActive(false);
+        colNewspaper.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+      });
+
+      carousel.addEventListener('scroll', () => {
+        if (window.innerWidth >= 768) return;
+        const scrollLeft = carousel.scrollLeft;
+        const width = carousel.offsetWidth;
+        if (scrollLeft > width * 0.4) {
+          setActive(false);
+        } else {
+          setActive(true);
+        }
+      }, { passive: true });
+    }
+  </script>
 </BaseLayout>

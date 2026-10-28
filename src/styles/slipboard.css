@@ -5,9 +5,13 @@
 /* 1. Bottom-Right Toggle Pill (Always available on the bottom-right corner) */
 .slipboard-toggle-wrapper {
   position: fixed;
-  right: 24px;
-  bottom: 24px;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
   z-index: 85;
+}
+
+body.slipboard-locked .slipboard-toggle-wrapper {
+  display: none !important;
 }
 
 .btn-slipboard-toggle {
@@ -27,12 +31,15 @@
   box-shadow: 4px 4px 0 var(--ink-primary);
   transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 160ms cubic-bezier(0.16, 1, 0.3, 1), background 160ms ease;
   user-select: none;
+  touch-action: manipulation;
   outline: none;
 }
 
-.btn-slipboard-toggle:hover {
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 6px 6px 0 var(--ink-primary);
+@media (hover: hover) and (pointer: fine) {
+  .btn-slipboard-toggle:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 6px 6px 0 var(--ink-primary);
+  }
 }
 
 .btn-slipboard-toggle:active {
@@ -81,12 +88,13 @@
   position: fixed;
   inset: 0;
   z-index: 75;
-  background: rgba(251, 248, 241, 0.68);
+  background: rgba(251, 248, 241, 0.72);
   backdrop-filter: blur(14px) saturate(140%);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
   overflow-y: auto;
+  overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
-  padding: 75px 5vw 60px;
+  padding: max(20px, calc(14px + env(safe-area-inset-top))) max(16px, env(safe-area-inset-right)) max(32px, calc(16px + env(safe-area-inset-bottom))) max(16px, env(safe-area-inset-left));
   box-sizing: border-box;
 }
 
@@ -714,12 +722,12 @@
 
 .form-input {
   width: 100%;
-  padding: 10px 14px;
+  padding: 12px 14px;
   background-color: #FFFFFF;
   border: var(--border-ink-thin);
   border-radius: var(--radius-sm);
   font-family: var(--font-body);
-  font-size: 0.88rem;
+  font-size: 16px; /* Minimum 16px to prevent iOS auto-zoom */
   color: var(--ink-primary);
   outline: none;
   box-shadow: inset 1px 1px 2px rgba(0,0,0,0.06);
@@ -734,13 +742,13 @@
 
 .form-textarea {
   width: 100%;
-  min-height: 90px;
-  padding: 10px 14px;
+  min-height: 96px;
+  padding: 12px 14px;
   background-color: #FFFFFF;
   border: var(--border-ink-thin);
   border-radius: var(--radius-sm);
   font-family: var(--font-body);
-  font-size: 0.88rem;
+  font-size: 16px; /* Minimum 16px to prevent iOS auto-zoom */
   color: var(--ink-primary);
   outline: none;
   resize: vertical;
@@ -863,32 +871,78 @@ body.slipboard-locked {
 /* Responsive Breakpoints */
 @media (max-width: 980px) {
   .wall-split-layout {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
 
   .wall-sticky-trigger-column {
+    order: -1;
     position: static;
-    max-width: 440px;
+    max-width: 100%;
     margin: 0 auto;
     width: 100%;
   }
 
+  .sticky-note-physical-card {
+    padding: 20px 18px;
+    margin-bottom: 8px;
+  }
+
   .composer-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 }
 
 @media (max-width: 600px) {
   .transparent-notes-overlay {
-    padding: 60px 16px 40px;
+    padding: max(16px, calc(10px + env(safe-area-inset-top))) 12px max(24px, calc(16px + env(safe-area-inset-bottom))) 12px;
+  }
+
+  .wall-header-card {
+    padding: 16px 14px;
+    margin-bottom: 16px;
+  }
+
+  .wall-status-group {
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
   .wall-slips-grid {
     grid-template-columns: 1fr;
+    gap: 14px;
   }
 
-  .slipboard-toggle-wrapper {
-    right: 14px;
-    bottom: 16px;
+  .note-composer-dialog {
+    padding: 20px 16px;
+    max-height: calc(100dvh - 24px);
+    border-radius: var(--radius-md);
+  }
+
+  .color-picker-row {
+    gap: 10px;
+  }
+
+  .color-option {
+    width: 36px;
+    height: 36px;
+  }
+
+  .stamp-picker-row {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .stamp-option {
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+  }
+
+  .btn-paste-on-wall {
+    width: 100%;
+    padding: 12px 20px;
   }
 }

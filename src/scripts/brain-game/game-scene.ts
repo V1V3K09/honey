@@ -173,7 +173,18 @@ export class BrainGameScene {
       updatePointerCoords(e.clientX, e.clientY);
     });
 
-    // Touch drag (passive: false to prevent background scrolling during game interaction)
+    // Touch tap & drag (passive: false to prevent background scrolling during game interaction)
+    this.canvas.addEventListener(
+      'touchstart',
+      (e) => {
+        if (e.touches.length > 0) {
+          e.preventDefault();
+          updatePointerCoords(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      },
+      { passive: false }
+    );
+
     this.canvas.addEventListener(
       'touchmove',
       (e) => {

@@ -12,6 +12,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   z-index: 2;
   pointer-events: none;
   overflow: hidden;
@@ -26,9 +27,12 @@
 /* Persistent HUD Header */
 .hud-header {
   position: fixed;
-  top: 16px;
-  left: 16px;
-  right: 16px;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding-top: max(12px, env(safe-area-inset-top));
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
   z-index: 50;
   display: flex;
   justify-content: space-between;
@@ -89,6 +93,7 @@
 
 .experience-stage {
   min-height: 100vh;
+  min-height: 100svh;
   width: 100%;
   position: relative;
   display: flex;
@@ -184,7 +189,7 @@
   transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .anatomical-pointer-item:hover {
     transform: translateX(4px);
     box-shadow: var(--shadow-hard-md);
@@ -347,10 +352,16 @@
   user-select: none;
 }
 
-.btn-replay-rocket:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-hard-md);
-  background-color: #FFE766;
+@media (hover: hover) and (pointer: fine) {
+  .btn-replay-rocket:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hard-md);
+    background-color: #FFE766;
+  }
+
+  .btn-replay-rocket:hover .rocket-icon {
+    transform: translateY(-3px) rotate(-15deg);
+  }
 }
 
 .btn-replay-rocket:active {
@@ -362,10 +373,6 @@
   display: inline-block;
   font-size: 0.95rem;
   transition: transform 180ms cubic-bezier(0.2, 0, 0, 1);
-}
-
-.btn-replay-rocket:hover .rocket-icon {
-  transform: translateY(-3px) rotate(-15deg);
 }
 
 .scroll-prompt-landing {
@@ -447,9 +454,11 @@
   transition: transform 140ms ease, box-shadow 140ms ease;
 }
 
-.envelope-trigger:hover {
-  transform: translateY(-3px);
-  box-shadow: 9px 9px 0 var(--ink-primary);
+@media (hover: hover) and (pointer: fine) {
+  .envelope-trigger:hover {
+    transform: translateY(-3px);
+    box-shadow: 9px 9px 0 var(--ink-primary);
+  }
 }
 
 .wax-seal {
@@ -709,6 +718,7 @@
 /* Stage E — The Footer Punchline (Feet Section on the LEFT, Bare Feet on the RIGHT) */
 #stage-footer {
   min-height: 100vh;
+  min-height: 100svh;
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   align-items: center;

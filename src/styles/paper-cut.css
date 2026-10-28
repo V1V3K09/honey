@@ -27,7 +27,7 @@
   transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .cut-chunk:hover {
     transform: scale(1.03) rotate(0deg);
     box-shadow: var(--shadow-hard-lg);
