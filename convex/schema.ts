@@ -22,4 +22,12 @@ export default defineSchema({
   })
     .index("by_created_at", ["createdAt"])
     .index("by_client_id", ["clientSubmissionId"]),
+
+  // Operation idempotency log to guarantee like deltas cannot double-apply on network retry
+  appliedOps: defineTable({
+    opId: v.string(),
+    createdAt: v.number(),
+  })
+    .index("by_op_id", ["opId"])
+    .index("by_created_at", ["createdAt"]),
 });

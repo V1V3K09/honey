@@ -15,8 +15,17 @@ export interface NewSlipPayload {
 }
 
 export interface LikeDeltaPayload {
+  opId?: string;
   slipId: string;
   delta: number;
+}
+
+export interface LikeOperationEntry {
+  sqeId: number;
+  opId: string;
+  slipId: string;
+  delta: number;
+  timestamp: number;
 }
 
 export type IoOpType = 'INSERT_SLIP' | 'TOGGLE_LIKE';
@@ -33,15 +42,22 @@ export interface IoSubmissionEntry {
 export interface IoCompletionEntry {
   cqeId: number;
   sqeId: number;
+  op: IoOpType;
   success: boolean;
   timestamp: number;
-  insertedCount?: number;
+  clientSubmissionId?: string;
+  slipId?: string;
+  status?: string;
+  newLikes?: number;
+  isNew?: boolean;
   error?: string;
 }
 
 export interface IoUringStats {
   sqPending: number;
+  inFlight: number;
   cqCompleted: number;
+  cqDropped: number;
   coalescedLikesSaved: number;
   totalBatchesFlushed: number;
   lastSyncTimestamp: number;
@@ -55,16 +71,27 @@ export class IoUringBatcher {
   private convex: ConvexClient | null = null;
   private isOnline = true;
   private isFlushing = false;
+  private hasPendingReflush = false;
+  private currentFlushPromise: Promise<boolean> | null = null;
 
-  // Ring Buffer Parameters
-  private readonly RING_CAPACITY = 128;
+  // Capacity bounds
+  private readonly SQ_CAPACITY = 64;
+  private readonly LIKE_CAPACITY = 128;
+  private readonly CQ_CAPACITY = 128;
+
+  // Submission & Completion Rings
   private sqRing: IoSubmissionEntry[] = [];
   private cqRing: IoCompletionEntry[] = [];
   private nextSqeId = 1;
   private nextCqeId = 1;
+  private cqDropped = 0;
 
-  // Write Coalescing Map for Likes (slipId ➔ Net Delta)
-  private likeDeltas = new Map<string, number>();
+  // In-flight storage for rollback and retry safety
+  private inFlightSlips: IoSubmissionEntry[] = [];
+  private inFlightLikes: LikeOperationEntry[] = [];
+
+  // Write Coalescing Map for Likes (slipId ➔ LikeOperationEntry with unique opId)
+  private likeDeltas = new Map<string, LikeOperationEntry>();
 
   // Token Bucket Rate Limiter
   private lastSlipSubmitTime = 0;
@@ -79,8 +106,15 @@ export class IoUringBatcher {
   private flushTimer: number | null = null;
   private readonly FLUSH_INTERVAL_MS = 2200; // 2.2 second debounce window
 
+  // Stored event listener references for clean teardown
+  private onlineHandler: (() => void) | null = null;
+  private offlineHandler: (() => void) | null = null;
+  private visibilityHandler: (() => void) | null = null;
+  private unloadHandler: (() => void) | null = null;
+
   constructor(convexClient: ConvexClient | null = null) {
     this.convex = convexClient;
+    this.isOnline = typeof navigator !== 'undefined' ? (navigator.onLine ?? true) : true;
     this.initLifecycle();
   }
 
@@ -89,35 +123,41 @@ export class IoUringBatcher {
   }
 
   private initLifecycle() {
-    // Start background drainer timer
+    // Start background drainer timer (guarded for SSR)
     this.startTicker();
 
-    // Listen to network status
+    // Listen to network & lifecycle status in browser runtimes
     if (typeof window !== 'undefined') {
-      window.addEventListener('online', () => {
+      this.onlineHandler = () => {
         this.isOnline = true;
         this.flushQueue();
-      });
+      };
 
-      window.addEventListener('offline', () => {
+      this.offlineHandler = () => {
         this.isOnline = false;
-      });
+      };
 
-      // Emergency flush on tab background or close
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'hidden') {
+      this.visibilityHandler = () => {
+        if (typeof document !== 'undefined' && document.visibilityState === 'hidden') {
           this.flushQueue();
         }
-      });
+      };
 
-      window.addEventListener('beforeunload', () => {
+      this.unloadHandler = () => {
         this.flushQueue();
-      });
+      };
+
+      window.addEventListener('online', this.onlineHandler);
+      window.addEventListener('offline', this.offlineHandler);
+      if (typeof document !== 'undefined') {
+        document.addEventListener('visibilitychange', this.visibilityHandler);
+      }
+      window.addEventListener('beforeunload', this.unloadHandler);
     }
   }
 
   private startTicker() {
-    if (this.flushTimer) return;
+    if (this.flushTimer || typeof window === 'undefined') return;
     this.flushTimer = window.setInterval(() => {
       if (this.hasPendingWrites()) {
         this.flushQueue();
@@ -140,7 +180,7 @@ export class IoUringBatcher {
       return { accepted: false, reason: 'Please wait a moment before pinning another slip.' };
     }
 
-    if (this.sqRing.length >= this.RING_CAPACITY) {
+    if (this.sqRing.length + this.inFlightSlips.length >= this.SQ_CAPACITY) {
       return { accepted: false, reason: 'Submission queue full. Syncing in progress...' };
     }
 
@@ -163,131 +203,263 @@ export class IoUringBatcher {
   /**
    * Enqueue a like toggle with instant local write-coalescing (SQE)
    * Rapid repeated clicks collapse into a single net delta (e.g. +1, 0, -1).
+   * Validates delta to reject non-integers, NaN, Infinity, and out-of-range values.
    */
-  public enqueueLike(slipId: string, delta: number): { netDelta: number; isCoalesced: boolean } {
-    const currentNet = this.likeDeltas.get(slipId) || 0;
-    const newNet = currentNet + delta;
+  public enqueueLike(slipId: string, delta: number): { netDelta: number; isCoalesced: boolean; accepted: boolean; sqeId?: number; reason?: string } {
+    if (!slipId || typeof slipId !== 'string') {
+      return { netDelta: 0, isCoalesced: false, accepted: false, reason: 'Invalid slip ID.' };
+    }
 
-    if (currentNet !== 0) {
+    if (!Number.isFinite(delta) || !Number.isInteger(delta) || delta === 0 || Math.abs(delta) > 10) {
+      const cur = this.likeDeltas.get(slipId)?.delta || 0;
+      return { netDelta: cur, isCoalesced: false, accepted: false, reason: 'Invalid like delta.' };
+    }
+
+    const existingEntry = this.likeDeltas.get(slipId);
+
+    // Check capacity for new unique keys
+    if (!existingEntry && this.likeDeltas.size >= this.LIKE_CAPACITY) {
+      return { netDelta: 0, isCoalesced: false, accepted: false, reason: 'Like coalescer capacity reached. Sync in progress...' };
+    }
+
+    if (existingEntry) {
+      const newNet = existingEntry.delta + delta;
       this.coalescedLikesSaved++;
-    }
 
-    if (newNet === 0) {
-      // Net change cancelled out (e.g. liked and unliked before flush) ➔ 0 DB writes needed!
-      this.likeDeltas.delete(slipId);
+      if (newNet === 0) {
+        // Net change cancelled out (e.g. liked and unliked before flush) ➔ 0 DB writes needed!
+        this.likeDeltas.delete(slipId);
+        this.notifyTelemetry();
+        return { netDelta: 0, isCoalesced: true, accepted: true, sqeId: existingEntry.sqeId };
+      } else {
+        existingEntry.delta = newNet;
+        this.notifyTelemetry();
+        return { netDelta: newNet, isCoalesced: true, accepted: true, sqeId: existingEntry.sqeId };
+      }
     } else {
-      this.likeDeltas.set(slipId, newNet);
-    }
+      const sqeId = this.nextSqeId++;
+      const opId = `like-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 
-    this.notifyTelemetry();
-    return { netDelta: newNet, isCoalesced: currentNet !== 0 };
+      this.likeDeltas.set(slipId, {
+        sqeId,
+        opId,
+        slipId,
+        delta,
+        timestamp: Date.now(),
+      });
+
+      this.notifyTelemetry();
+      return { netDelta: delta, isCoalesced: false, accepted: true, sqeId };
+    }
   }
 
   /**
    * Returns any un-flushed coalesced like delta for a specific slipId
+   * (checks both queued deltas and in-flight deltas to prevent UI flicker)
    */
   public getPendingLikeDelta(slipId: string): number {
-    return this.likeDeltas.get(slipId) || 0;
+    const queued = this.likeDeltas.get(slipId)?.delta || 0;
+    const inFlight = this.inFlightLikes.find(l => l.slipId === slipId)?.delta || 0;
+    return queued + inFlight;
   }
 
   /**
-   * Drain the SQ Ring Buffer into a single Convex batchSync transaction
+   * Drain the SQ Ring Buffer into a single Convex batchSync transaction.
+   * Serializes flushes and continuously drains new entries accumulated while in flight.
    */
   public async flushQueue(): Promise<boolean> {
-    if (this.isFlushing || !this.hasPendingWrites()) {
-      return true;
+    if (this.isFlushing) {
+      this.hasPendingReflush = true;
+      return this.currentFlushPromise || Promise.resolve(false);
     }
 
-    // If Convex is not configured or offline, preserve in queue or fallback
-    if (!this.convex || !this.isOnline) {
-      return false;
+    this.currentFlushPromise = this.drainLoop();
+    try {
+      return await this.currentFlushPromise;
+    } finally {
+      this.currentFlushPromise = null;
     }
+  }
 
+  private async drainLoop(): Promise<boolean> {
     this.isFlushing = true;
-
-    // 1. Drain pending slips from SQ
-    const drainedSlips: NewSlipPayload[] = [];
-    const drainedSqeIds: number[] = [];
-
-    while (this.sqRing.length > 0) {
-      const entry = this.sqRing.shift();
-      if (entry && entry.op === 'INSERT_SLIP' && entry.slipPayload) {
-        drainedSlips.push(entry.slipPayload);
-        drainedSqeIds.push(entry.sqeId);
-      }
-    }
-
-    // 2. Drain coalesced like deltas
-    const drainedLikes: LikeDeltaPayload[] = [];
-    for (const [slipId, delta] of this.likeDeltas.entries()) {
-      if (delta !== 0) {
-        drainedLikes.push({ slipId, delta });
-      }
-    }
-    this.likeDeltas.clear();
-
-    if (drainedSlips.length === 0 && drainedLikes.length === 0) {
-      this.isFlushing = false;
-      return true;
-    }
+    let overallSuccess = true;
 
     try {
-      // Execute 1 Single Atomic Batched Mutation
-      const result = await this.convex.mutation(api.slips.batchSync, {
-        newSlips: drainedSlips,
-        likeDeltas: drainedLikes,
-      });
+      while (this.hasPendingWrites()) {
+        this.hasPendingReflush = false;
 
-      this.totalBatchesFlushed++;
-      this.lastSyncTimestamp = Date.now();
+        // If offline or Convex not connected, pause flushing
+        if (!this.convex || !this.isOnline) {
+          overallSuccess = false;
+          break;
+        }
 
-      // Emit CQE completions
-      for (const sqeId of drainedSqeIds) {
-        this.cqRing.push({
-          cqeId: this.nextCqeId++,
-          sqeId,
-          success: true,
-          timestamp: Date.now(),
-          insertedCount: result.insertedCount,
-        });
+        // 1. Move pending slips to in-flight
+        this.inFlightSlips = [...this.sqRing];
+        this.sqRing = [];
+
+        // 2. Move pending like deltas to in-flight
+        this.inFlightLikes = Array.from(this.likeDeltas.values()).filter(l => l.delta !== 0);
+        this.likeDeltas.clear();
+
+        if (this.inFlightSlips.length === 0 && this.inFlightLikes.length === 0) {
+          break;
+        }
+
+        this.notifyTelemetry();
+
+        try {
+          const payloadSlips: NewSlipPayload[] = [];
+          for (const entry of this.inFlightSlips) {
+            if (entry.slipPayload) {
+              payloadSlips.push(entry.slipPayload);
+            }
+          }
+
+          const payloadLikes: LikeDeltaPayload[] = this.inFlightLikes.map(l => ({
+            opId: l.opId,
+            slipId: l.slipId,
+            delta: l.delta,
+          }));
+
+          // Execute 1 Single Atomic Batched Mutation
+          const result = await this.convex.mutation(api.slips.batchSync, {
+            newSlips: payloadSlips,
+            likeDeltas: payloadLikes,
+          });
+
+          this.totalBatchesFlushed++;
+          this.lastSyncTimestamp = Date.now();
+
+          // 3. Emit per-slip CQE completions with accurate IDs and flags
+          const slipResultsMap = new Map<string, { slipId?: string; status: string; reason?: string }>();
+          if (result?.slips && Array.isArray(result.slips)) {
+            for (const r of result.slips) {
+              slipResultsMap.set(r.clientSubmissionId, r);
+            }
+          }
+
+          for (const sqe of this.inFlightSlips) {
+            const clientSubId = sqe.slipPayload?.clientSubmissionId;
+            const match = clientSubId ? slipResultsMap.get(clientSubId) : undefined;
+            const isSuccess = match?.status === 'inserted' || match?.status === 'duplicate';
+
+            this.pushCqe({
+              cqeId: this.nextCqeId++,
+              sqeId: sqe.sqeId,
+              op: 'INSERT_SLIP',
+              success: isSuccess,
+              timestamp: Date.now(),
+              clientSubmissionId: clientSubId,
+              slipId: match?.slipId,
+              status: match?.status,
+              isNew: match?.status === 'inserted',
+              error: match?.reason,
+            });
+          }
+
+          // 4. Emit per-like CQE completions
+          const likeResultsMap = new Map<string, { status: string; newLikes?: number; error?: string }>();
+          if (result?.likes && Array.isArray(result.likes)) {
+            for (const l of result.likes) {
+              if (l.opId) likeResultsMap.set(l.opId, l);
+              else likeResultsMap.set(l.slipId, l);
+            }
+          }
+
+          for (const item of this.inFlightLikes) {
+            const match = likeResultsMap.get(item.opId) || likeResultsMap.get(item.slipId);
+            const isSuccess = match?.status === 'applied' || match?.status === 'already_applied';
+
+            this.pushCqe({
+              cqeId: this.nextCqeId++,
+              sqeId: item.sqeId,
+              op: 'TOGGLE_LIKE',
+              success: isSuccess,
+              timestamp: Date.now(),
+              slipId: item.slipId,
+              status: match?.status,
+              newLikes: match?.newLikes,
+              error: match?.error,
+            });
+          }
+
+          // Discard in-flight batch on confirmed commit
+          this.inFlightSlips = [];
+          this.inFlightLikes = [];
+          this.notifyTelemetry();
+
+        } catch (err: any) {
+          console.warn('[io_uring] Batch flush failed, returning in-flight items safely:', err);
+          overallSuccess = false;
+
+          // Safe rollback: restore in-flight slips to head of sqRing without exceeding capacity
+          const availableSlots = Math.max(0, this.SQ_CAPACITY - this.sqRing.length);
+          const slipsToRestore = this.inFlightSlips.slice(0, availableSlots);
+          const droppedSlips = this.inFlightSlips.slice(availableSlots);
+
+          for (const d of droppedSlips) {
+            this.pushCqe({
+              cqeId: this.nextCqeId++,
+              sqeId: d.sqeId,
+              op: 'INSERT_SLIP',
+              success: false,
+              timestamp: Date.now(),
+              clientSubmissionId: d.slipPayload?.clientSubmissionId,
+              error: 'Queue capacity exceeded during rollback',
+            });
+          }
+
+          this.sqRing = [...slipsToRestore, ...this.sqRing];
+
+          // Safe rollback: merge failed like deltas additively with newly accumulated deltas
+          for (const item of this.inFlightLikes) {
+            const curEntry = this.likeDeltas.get(item.slipId);
+            if (curEntry) {
+              const merged = curEntry.delta + item.delta;
+              if (merged === 0) {
+                this.likeDeltas.delete(item.slipId);
+              } else {
+                curEntry.delta = merged;
+              }
+            } else {
+              // Preserve original opId for idempotent retry on the server!
+              this.likeDeltas.set(item.slipId, item);
+            }
+          }
+
+          this.inFlightSlips = [];
+          this.inFlightLikes = [];
+          this.notifyTelemetry();
+
+          // Stop loop on failure to let ticker or backoff retry later
+          break;
+        }
       }
-
-      // Keep CQ Ring within capacity
-      if (this.cqRing.length > this.RING_CAPACITY) {
-        this.cqRing.splice(0, this.cqRing.length - this.RING_CAPACITY);
-      }
-
+    } finally {
+      this.isFlushing = false;
       this.notifyTelemetry();
-      this.isFlushing = false;
-      return true;
-    } catch (err: any) {
-      console.warn('[io_uring] Batch flush failed, returning items to submission queue:', err);
+    }
 
-      // On failure, re-queue drained slips so data is never lost
-      for (let i = drainedSlips.length - 1; i >= 0; i--) {
-        this.sqRing.unshift({
-          sqeId: drainedSqeIds[i] || this.nextSqeId++,
-          op: 'INSERT_SLIP',
-          slipPayload: drainedSlips[i],
-          timestamp: Date.now(),
-        });
-      }
+    return overallSuccess;
+  }
 
-      // Re-queue like deltas
-      for (const item of drainedLikes) {
-        const cur = this.likeDeltas.get(item.slipId) || 0;
-        this.likeDeltas.set(item.slipId, cur + item.delta);
-      }
-
-      this.isFlushing = false;
-      return false;
+  private pushCqe(cqe: IoCompletionEntry) {
+    this.cqRing.push(cqe);
+    if (this.cqRing.length > this.CQ_CAPACITY) {
+      const excess = this.cqRing.length - this.CQ_CAPACITY;
+      this.cqRing.splice(0, excess);
+      this.cqDropped += excess;
     }
   }
 
   public getStats(): IoUringStats {
     return {
       sqPending: this.sqRing.length + this.likeDeltas.size,
+      inFlight: this.inFlightSlips.length + this.inFlightLikes.length,
       cqCompleted: this.cqRing.length,
+      cqDropped: this.cqDropped,
       coalescedLikesSaved: this.coalescedLikesSaved,
       totalBatchesFlushed: this.totalBatchesFlushed,
       lastSyncTimestamp: this.lastSyncTimestamp,
@@ -304,11 +476,21 @@ export class IoUringBatcher {
     }
   }
 
-  public destroy() {
-    if (this.flushTimer) {
+  public async destroy(): Promise<boolean> {
+    if (this.flushTimer && typeof window !== 'undefined') {
       clearInterval(this.flushTimer);
       this.flushTimer = null;
     }
-    this.flushQueue();
+
+    if (typeof window !== 'undefined') {
+      if (this.onlineHandler) window.removeEventListener('online', this.onlineHandler);
+      if (this.offlineHandler) window.removeEventListener('offline', this.offlineHandler);
+      if (this.visibilityHandler && typeof document !== 'undefined') {
+        document.removeEventListener('visibilitychange', this.visibilityHandler);
+      }
+      if (this.unloadHandler) window.removeEventListener('beforeunload', this.unloadHandler);
+    }
+
+    return await this.flushQueue();
   }
 }

@@ -333,8 +333,9 @@ import '../styles/slipboard.css';
       // Listen to io_uring background batch telemetry
       window.addEventListener('birthday:io-uring-stats', (e: Event) => {
         const stats = (e as CustomEvent<IoUringStats>).detail;
-        if (stats.sqPending > 0) {
-          this.setSyncStatus('syncing', `SYNCING (${stats.sqPending} IN SQ RING)`);
+        const totalPending = (stats.sqPending || 0) + (stats.inFlight || 0);
+        if (totalPending > 0) {
+          this.setSyncStatus('syncing', `SYNCING (${totalPending} IN SQ RING)`);
         } else if (this.convex) {
           this.setSyncStatus('live', 'LIVE MULTIPLAYER ACTIVE');
         } else {
