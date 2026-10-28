@@ -28,7 +28,7 @@ export function initCharacterScroll() {
       // 4. Knees & Mini-Game: knees framed above the brain defense card
       { scale: 2.2, x: '0vw', y: '-95vh' },
       // 5. Feet & Footer punchline: bare feet framed cleanly above footer card
-      { scale: 2.8, x: '0vw', y: '-128vh' }
+      { scale: 2.6, x: '0vw', y: '-138vh' }
     ] : [
       // Desktop Milestones: Horizontal split screen framing
       // 0. Full-body landing: entire body visible from head to bare feet
@@ -41,8 +41,8 @@ export function initCharacterScroll() {
       { scale: 3.2, x: '-24vw', y: '6vh' },
       // 4. Knees & Mini-Game: knees framed on RIGHT opposite game on left
       { scale: 2.3, x: '24vw', y: '-72vh' },
-      // 5. Feet & Footer punchline: feet framed cleanly on the RIGHT, feet section on the LEFT
-      { scale: 3.0, x: '24vw', y: '-94vh' }
+      // 5. Feet & Footer punchline: feet framed on the RIGHT, feet section on the LEFT
+      { scale: 2.7, x: '24vw', y: '-122vh' }
     ];
   };
 

@@ -316,45 +316,18 @@
 
   .footer-punchline-card {
     width: 100%;
-    padding: 14px 14px;
+    padding: 16px 16px;
     box-sizing: border-box;
   }
 
   .footer-punchline-card .paper-headline {
-    font-size: 1.25rem !important;
-    margin-bottom: 8px !important;
-  }
-
-  .footer-punchline-card .footer-desc {
-    font-size: 0.82rem;
-    line-height: 1.45;
-    margin-bottom: 10px;
-  }
-
-  .footer-pointer-arrow {
-    margin: 0 0 10px 0;
-    padding: 6px 10px;
-    font-size: 0.72rem;
-    font-weight: 800;
-    justify-content: center;
-    text-align: center;
-    background: var(--accent-yellow);
-    color: #000000;
-    border: 2px solid #000000;
-    box-shadow: 2px 2px 0px #000000;
-  }
-
-  .pointer-desktop-text {
-    display: none !important;
-  }
-
-  .pointer-mobile-text {
-    display: inline !important;
+    font-size: 1.35rem !important;
+    margin-bottom: 12px !important;
   }
 
   .footer-find-me {
-    margin: 0 0 10px 0;
-    padding: 6px 10px;
+    margin: 0 0 12px 0;
+    padding: 8px 12px;
     width: 100%;
     justify-content: space-between;
     box-sizing: border-box;
@@ -363,19 +336,19 @@
   .footer-nav {
     justify-content: center;
     gap: 8px;
-    margin-top: 8px;
+    margin-top: 10px;
   }
 
   .footer-nav .btn-action {
     flex: 1 1 auto;
     font-size: 0.78rem;
-    padding: 8px 10px;
-    min-height: 40px;
+    padding: 8px 12px;
+    min-height: 42px;
   }
 
   .footer-credit {
-    margin-top: 8px;
-    font-size: 0.68rem;
+    margin-top: 10px;
+    font-size: 0.7rem;
     line-height: 1.35;
   }
 
